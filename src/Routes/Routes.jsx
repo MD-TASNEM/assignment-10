@@ -14,6 +14,7 @@ import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
 import Impact from "../Pages/Impact";
 import EcoTips from './../Pages/EcoTips';
+import Leaderboard from './../Pages/Leaderboard';
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "Impact",
         Component: Impact,
+      },
+      {
+        path: "Leaderboard",
+        Component: Leaderboard,
       },
       {
         path: "EcoTips",
