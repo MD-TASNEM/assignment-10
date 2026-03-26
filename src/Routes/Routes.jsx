@@ -15,6 +15,7 @@ import UpdateProfile from "../Pages/UpdateProfile";
 import Impact from "../Pages/Impact";
 import EcoTips from './../Pages/EcoTips';
 import Leaderboard from './../Pages/Leaderboard';
+import About from './../Pages/About';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "Leaderboard",
         Component: Leaderboard,
+      },
+      {
+        path: "About",
+        Component: About,
       },
       {
         path: "EcoTips",
