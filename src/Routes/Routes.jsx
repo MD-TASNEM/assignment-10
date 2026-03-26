@@ -10,7 +10,7 @@ import ForgetPass from "../Pages/ForgetPass";
 
 import ServiceDetails from "../Pages/ServiceDetails";
 import PrivateRoutes from "./PrivateRoutes";
-import ServicesAll from "../Pages/ServicesAll";
+import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
 
 export const router = createBrowserRouter([
@@ -38,20 +38,20 @@ export const router = createBrowserRouter([
       //   path: "services",
       //   Component: Services,
       // },
-     
+
       {
         path: "forgetpass",
         Component: ForgetPass,
       },
-     
+
       // {
       //   path:'service/:id',
       //   Component:Service
       // },
       {
-        path: "servicesAll",
+        path: "Challenges",
 
-        element: <ServicesAll></ServicesAll>,
+        element: <Challenges></Challenges>,
       },
       {
         path: "serviceDetails/:serviceId",
@@ -63,23 +63,23 @@ export const router = createBrowserRouter([
         ),
       },
       {
-         path: "profile",
+        path: "profile",
 
         element: (
           <PrivateRoutes>
-           <MyProfile></MyProfile>
+            <MyProfile></MyProfile>
           </PrivateRoutes>
         ),
       },
       {
-         path: "updateprofile",
+        path: "updateprofile",
 
         element: (
           <PrivateRoutes>
             <UpdateProfile></UpdateProfile>
           </PrivateRoutes>
         ),
-      }
+      },
     ],
   },
 ]);

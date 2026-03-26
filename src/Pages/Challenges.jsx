@@ -1,116 +1,7 @@
-// import { useState, useEffect } from "react";
-
-// const ServicesAll = () => {
-//   const [services, setServices] = useState([]);
-//   const [filter, setFilter] = useState("All");
-
-//   useEffect(() => {
-//     fetch("/data.json")
-//       .then((res) => res.json())
-//       .then((data) => setServices(data))
-//       .catch((err) => console.error("Error loading data:", err));
-//   }, []);
-
-//   const filteredServices =
-//     filter === "All"
-//       ? services
-//       : services.filter((service) => service.badge === filter);
-
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       <h1>All Challenges</h1>
-
-//       {/* Filter Buttons */}
-//       <div style={{ marginBottom: "20px" }}>
-//         {["All", "Popular", "Trending", "New"].map((b) => (
-//           <button
-//             key={b}
-//             onClick={() => setFilter(b)}
-//             style={{
-//               marginRight: "10px",
-//               padding: "8px 16px",
-//               backgroundColor: filter === b ? "#4CAF50" : "#eee",
-//               color: filter === b ? "white" : "black",
-//               border: "none",
-//               borderRadius: "4px",
-//               cursor: "pointer",
-//             }}
-//           >
-//             {b}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Services Grid */}
-//       <div
-//         style={{
-//           display: "grid",
-//           gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-//           gap: "20px",
-//         }}
-//       >
-//         {filteredServices.map((service) => (
-//           <div
-//             key={service._id}
-//             style={{
-//               border: "1px solid #ddd",
-//               borderRadius: "10px",
-//               padding: "16px",
-//               boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-//             }}
-//           >
-//             <img
-//               src={service.imageUrl}
-//               alt={service.title}
-//               style={{ width: "100%", borderRadius: "8px" }}
-//             />
-//             <h2>{service.title}</h2>
-//             <p>{service.shortDescription}</p>
-//             <p>
-//               <strong>Duration:</strong> {service.duration} days |{" "}
-//               <strong>Participants:</strong> {service.participants}
-//             </p>
-//             <div style={{ marginTop: "10px" }}>
-//               <button
-//                 style={{
-//                   marginRight: "10px",
-//                   padding: "6px 12px",
-//                   backgroundColor: "#4CAF50",
-//                   color: "white",
-//                   border: "none",
-//                   borderRadius: "4px",
-//                   cursor: "pointer",
-//                 }}
-//               >
-//                 {service.cta.primary}
-//               </button>
-//               <button
-//                 style={{
-//                   padding: "6px 12px",
-//                   backgroundColor: "#eee",
-//                   border: "none",
-//                   borderRadius: "4px",
-//                   cursor: "pointer",
-//                 }}
-//               >
-//                 {service.cta.secondary}
-//               </button>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ServicesAll;
-
-
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 
-const ServicesAll = () => {
+const Challenges = () => {
   const [services, setServices] = useState([]);
   const [filter, setFilter] = useState("All");
 
@@ -155,8 +46,12 @@ const ServicesAll = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">All Challenges</h1>
-        <p className="text-gray-600">Join our eco-friendly challenges and make a difference</p>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          All Challenges
+        </h1>
+        <p className="text-gray-600">
+          Join our eco-friendly Challenges and make a difference
+        </p>
       </div>
 
       {/* Filter Buttons - Styled like tabs */}
@@ -185,7 +80,10 @@ const ServicesAll = () => {
           >
             <div className="relative">
               <img
-                src={service.imageUrl || "https://via.placeholder.com/400x250?text=EcoTrack"}
+                src={
+                  service.imageUrl ||
+                  "https://via.placeholder.com/400x250?text=EcoTrack"
+                }
                 alt={service.title}
                 className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -193,7 +91,7 @@ const ServicesAll = () => {
               {service.badge && (
                 <div
                   className={`absolute top-4 right-4 ${getBadgeColor(
-                    service.badge
+                    service.badge,
                   )} text-white text-xs px-4 py-1.5 rounded-full font-medium`}
                 >
                   {service.badge}
@@ -240,7 +138,7 @@ const ServicesAll = () => {
                   <p className="text-gray-500 text-xs mb-1">Difficulty</p>
                   <span
                     className={`inline-block px-3 py-1 text-xs rounded-full ${getDifficultyColor(
-                      service.difficulty
+                      service.difficulty,
                     )}`}
                   >
                     {service.difficulty || "Unknown"}
@@ -250,14 +148,14 @@ const ServicesAll = () => {
 
               <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
                 <Link
-                  to={`/challenges/${service._id}`}
+                  to={`/Challenges/${service._id}`}
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
                 >
                   Join Challenge
                 </Link>
 
                 <Link
-                  to={`/challenges/${service._id}`}
+                  to={`/Challenges/${service._id}`}
                   className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
                 >
                   View Details
@@ -270,11 +168,13 @@ const ServicesAll = () => {
 
       {filteredServices.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-gray-500 text-lg">No challenges found in this category.</p>
+          <p className="text-gray-500 text-lg">
+            No Challenges found in this category.
+          </p>
         </div>
       )}
     </div>
   );
 };
 
-export default ServicesAll;
+export default Challenges;

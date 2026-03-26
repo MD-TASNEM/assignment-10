@@ -43,7 +43,7 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home", icon: <FaLeaf className="mr-2" /> },
     {
-      path: "/challenges",
+      path: "/Challenges",
       label: "Challenges",
       icon: <FaTrophy className="mr-2" />,
     },
@@ -154,7 +154,7 @@ const Navbar = () => {
                         </p>
                         <div className="mt-2 flex items-center space-x-2">
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                            🌿 0 challenges
+                            🌿 0 Challenges
                           </span>
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">
                             🏆 0 badges

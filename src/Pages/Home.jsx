@@ -15,7 +15,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 // banner Images
-import bannerOne from "../assets/Json-mages/bannerOne.jpg";
+import bannerOne from "../assets/Json-mages/bannerOne.png";
 import bannerTwo from "../assets/Json-mages/nutrition.jpg";
 import bannerThree from "../assets/Json-mages/three.jpg";
 import bannerFour from "../assets/Json-mages/rec-5.jpg";
@@ -46,7 +46,8 @@ const Home = () => {
           <div className="py-3" data-aos="fade-down">
             <Marquee gradient={false} speed={50}>
               <span className="text-sm md:text-base font-medium text-white">
-                🌍 Join 12,000+ changemakers making a difference! Track your impact, transform our planet 🌱
+                🌍 Join 12,000+ changemakers making a difference! Track your
+                impact, transform our planet 🌱
               </span>
             </Marquee>
           </div>
@@ -67,10 +68,11 @@ const Home = () => {
                 transform our planet
               </h1>
               <p className="text-lg text-slate-300 mb-8 max-w-lg">
-                Turn everyday actions into measurable climate wins. Join our community of eco-conscious heroes making real change.
+                Turn everyday actions into measurable climate wins. Join our
+                community of eco-conscious heroes making real change.
               </p>
               <div className="flex gap-4 flex-wrap">
-                <NavLink to="/challenges">
+                <NavLink to="/Challenges">
                   <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
                     Start Journey
                   </button>
@@ -91,8 +93,12 @@ const Home = () => {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h3 className="font-bold text-xl text-gray-800">🌿 Weekend Rewilding</h3>
-                  <p className="text-sm text-gray-600 mt-1">350+ joined this month</p>
+                  <h3 className="font-bold text-xl text-gray-800">
+                    🌿 Weekend Rewilding
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    350+ joined this month
+                  </p>
                   <button className="mt-4 w-full bg-emerald-600 text-white py-2 rounded-full font-semibold hover:bg-emerald-700 transition-colors">
                     Join Challenge
                   </button>
@@ -107,8 +113,12 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Community Impact</h2>
-            <p className="text-gray-600 text-lg">Together we're making a difference</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Community Impact
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Together we're making a difference
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -125,7 +135,9 @@ const Home = () => {
                 data-aos-delay={idx * 100}
               >
                 <div className="text-4xl mb-3">{stat.icon}</div>
-                <h3 className="text-3xl font-bold text-emerald-600 mb-2">{stat.value}</h3>
+                <h3 className="text-3xl font-bold text-emerald-600 mb-2">
+                  {stat.value}
+                </h3>
                 <p className="text-gray-600 font-medium">{stat.label}</p>
               </div>
             ))}
@@ -137,8 +149,12 @@ const Home = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Sustainability Challenges</h2>
-            <p className="text-gray-600 text-lg">Choose your path to make a difference</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Sustainability Challenges
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Choose your path to make a difference
+            </p>
           </div>
 
           <Swiper
@@ -150,11 +166,36 @@ const Home = () => {
             className="rounded-3xl shadow-xl overflow-hidden"
           >
             {[
-              { img: bannerOne, title: "Urban Gardening", desc: "Grow your own food", color: "bg-emerald-600" },
-              { img: bannerTwo, title: "Zero Waste Living", desc: "Reduce plastic usage", color: "bg-teal-600" },
-              { img: bannerThree, title: "Tree Plantation", desc: "Restore forests", color: "bg-green-600" },
-              { img: bannerFour, title: "Clean Energy", desc: "Switch to renewables", color: "bg-cyan-600" },
-              { img: bannerFive, title: "Water Conservation", desc: "Save every drop", color: "bg-blue-600" },
+              {
+                img: bannerOne,
+                title: "Urban Gardening",
+                desc: "Grow your own food",
+                color: "bg-emerald-600",
+              },
+              {
+                img: bannerTwo,
+                title: "Zero Waste Living",
+                desc: "Reduce plastic usage",
+                color: "bg-teal-600",
+              },
+              {
+                img: bannerThree,
+                title: "Tree Plantation",
+                desc: "Restore forests",
+                color: "bg-green-600",
+              },
+              {
+                img: bannerFour,
+                title: "Clean Energy",
+                desc: "Switch to renewables",
+                color: "bg-cyan-600",
+              },
+              {
+                img: bannerFive,
+                title: "Water Conservation",
+                desc: "Save every drop",
+                color: "bg-blue-600",
+              },
             ].map((slide, idx) => (
               <SwiperSlide key={idx}>
                 <div className="relative h-[500px]">
@@ -165,7 +206,9 @@ const Home = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                   <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full px-4">
-                    <span className={`${slide.color} text-white px-8 py-3 rounded-full text-2xl font-bold shadow-lg inline-block mb-3`}>
+                    <span
+                      className={`${slide.color} text-white px-8 py-3 rounded-full text-2xl font-bold shadow-lg inline-block mb-3`}
+                    >
                       {slide.title}
                     </span>
                     <p className="text-white text-lg">{slide.desc}</p>
@@ -185,7 +228,7 @@ const Home = () => {
               Active Challenges
             </h2>
             <p className="text-gray-600 text-lg">
-              Join these eco-challenges and start making an impact today
+              Join these eco-Challenges and start making an impact today
             </p>
           </div>
 
@@ -198,7 +241,7 @@ const Home = () => {
           </div>
 
           <div className="text-center mt-12">
-            <NavLink to="/servicesAll">
+            <NavLink to="/Challenges">
               <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
                 Explore All Challenges
               </button>
@@ -214,15 +257,41 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               💡 Eco Wisdom from the Tribe
             </h2>
-            <p className="text-gray-600 text-lg">Practical tips shared by our community</p>
+            <p className="text-gray-600 text-lg">
+              Practical tips shared by our community
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: "☀️", title: "Air-dry laundry", tip: "Skip dryer — saves 2.4kg CO₂ per load", user: "Elena", likes: "3.2k" },
-              { icon: "🚗", title: "Carpool", tip: "Cut emissions by 75% compared to solo driving", user: "Marcus", likes: "2.1k" },
-              { icon: "🥗", title: "Meatless Mondays", tip: "Reduce carbon footprint by 15% weekly", user: "Sarah", likes: "4.5k" },
-              { icon: "♻️", title: "Upcycle jars", tip: "Avoid 500+ plastic containers yearly", user: "James", likes: "1.8k" },
+              {
+                icon: "☀️",
+                title: "Air-dry laundry",
+                tip: "Skip dryer — saves 2.4kg CO₂ per load",
+                user: "Elena",
+                likes: "3.2k",
+              },
+              {
+                icon: "🚗",
+                title: "Carpool",
+                tip: "Cut emissions by 75% compared to solo driving",
+                user: "Marcus",
+                likes: "2.1k",
+              },
+              {
+                icon: "🥗",
+                title: "Meatless Mondays",
+                tip: "Reduce carbon footprint by 15% weekly",
+                user: "Sarah",
+                likes: "4.5k",
+              },
+              {
+                icon: "♻️",
+                title: "Upcycle jars",
+                tip: "Avoid 500+ plastic containers yearly",
+                user: "James",
+                likes: "1.8k",
+              },
             ].map((tip, idx) => (
               <div
                 key={idx}
@@ -231,11 +300,17 @@ const Home = () => {
                 data-aos-delay={idx * 100}
               >
                 <div className="text-3xl mb-3">{tip.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">{tip.title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  {tip.title}
+                </h3>
                 <p className="text-sm text-gray-600 mb-3">{tip.tip}</p>
                 <div className="flex justify-between items-center text-xs text-gray-400">
-                  <span>⭐ {tip.likes} • {tip.user}</span>
-                  <button className="text-emerald-600 hover:text-emerald-700 font-medium">Save Tip</button>
+                  <span>
+                    ⭐ {tip.likes} • {tip.user}
+                  </span>
+                  <button className="text-emerald-600 hover:text-emerald-700 font-medium">
+                    Save Tip
+                  </button>
                 </div>
               </div>
             ))}
@@ -250,14 +325,34 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               📅 Upcoming Green Events
             </h2>
-            <p className="text-gray-600 text-lg">Join local events and meet fellow eco-enthusiasts</p>
+            <p className="text-gray-600 text-lg">
+              Join local events and meet fellow eco-enthusiasts
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { img: bannerFour, title: "River Cleanup", date: "March 15, 2026", location: "Central Park", spots: "45 spots left" },
-              { img: bannerTwo, title: "Permaculture Workshop", date: "March 22, 2026", location: "Community Garden", spots: "28 spots left" },
-              { img: bannerThree, title: "Tree Nursery Day", date: "March 29, 2026", location: "Forest Reserve", spots: "100+ spots" },
+              {
+                img: bannerFour,
+                title: "River Cleanup",
+                date: "March 15, 2026",
+                location: "Central Park",
+                spots: "45 spots left",
+              },
+              {
+                img: bannerTwo,
+                title: "Permaculture Workshop",
+                date: "March 22, 2026",
+                location: "Community Garden",
+                spots: "28 spots left",
+              },
+              {
+                img: bannerThree,
+                title: "Tree Nursery Day",
+                date: "March 29, 2026",
+                location: "Forest Reserve",
+                spots: "100+ spots",
+              },
             ].map((event, idx) => (
               <div
                 key={idx}
@@ -276,11 +371,17 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold text-xl text-gray-900 mb-2">{event.title}</h3>
+                  <h3 className="font-bold text-xl text-gray-900 mb-2">
+                    {event.title}
+                  </h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
                     <p className="flex items-center gap-2">📅 {event.date}</p>
-                    <p className="flex items-center gap-2">📍 {event.location}</p>
-                    <p className="flex items-center gap-2 text-emerald-600 font-medium">👥 {event.spots}</p>
+                    <p className="flex items-center gap-2">
+                      📍 {event.location}
+                    </p>
+                    <p className="flex items-center gap-2 text-emerald-600 font-medium">
+                      👥 {event.spots}
+                    </p>
                   </div>
                   <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-semibold transition-colors">
                     Register Now
@@ -299,15 +400,33 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               ✨ Why Go Green?
             </h2>
-            <p className="text-gray-600 text-lg">Benefits beyond just saving the planet</p>
+            <p className="text-gray-600 text-lg">
+              Benefits beyond just saving the planet
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: "📊", title: "Track Impact", desc: "See your real environmental contribution" },
-              { icon: "❤️", title: "Community", desc: "Connect with like-minded people" },
-              { icon: "🌱", title: "Wellbeing", desc: "Improve mental and physical health" },
-              { icon: "💰", title: "Save Money", desc: "Reduce bills through sustainable choices" },
+              {
+                icon: "📊",
+                title: "Track Impact",
+                desc: "See your real environmental contribution",
+              },
+              {
+                icon: "❤️",
+                title: "Community",
+                desc: "Connect with like-minded people",
+              },
+              {
+                icon: "🌱",
+                title: "Wellbeing",
+                desc: "Improve mental and physical health",
+              },
+              {
+                icon: "💰",
+                title: "Save Money",
+                desc: "Reduce bills through sustainable choices",
+              },
             ].map((benefit, idx) => (
               <div
                 key={idx}
@@ -316,7 +435,9 @@ const Home = () => {
                 data-aos-delay={idx * 100}
               >
                 <div className="text-4xl mb-3">{benefit.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  {benefit.title}
+                </h3>
                 <p className="text-sm text-gray-600">{benefit.desc}</p>
               </div>
             ))}
@@ -327,15 +448,33 @@ const Home = () => {
       {/* How It Works */}
       <section className="py-20 bg-gradient-to-br from-emerald-900 to-teal-900 text-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12" data-aos="fade-up">
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-12"
+            data-aos="fade-up"
+          >
             ⚡ How It Works
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { step: "1", title: "Pick a Challenge", desc: "Choose from various eco-challenges that match your interests", icon: "🎯" },
-              { step: "2", title: "Log Your Actions", desc: "Track your progress and log your sustainable activities", icon: "📝" },
-              { step: "3", title: "Level Up", desc: "Earn badges, climb leaderboards, and see your impact", icon: "🏆" },
+              {
+                step: "1",
+                title: "Pick a Challenge",
+                desc: "Choose from various eco-Challenges that match your interests",
+                icon: "🎯",
+              },
+              {
+                step: "2",
+                title: "Log Your Actions",
+                desc: "Track your progress and log your sustainable activities",
+                icon: "📝",
+              },
+              {
+                step: "3",
+                title: "Level Up",
+                desc: "Earn badges, climb leaderboards, and see your impact",
+                icon: "🏆",
+              },
             ].map((step, idx) => (
               <div
                 key={idx}
@@ -353,7 +492,7 @@ const Home = () => {
             ))}
           </div>
 
-          <NavLink to="/challenges">
+          <NavLink to="/Challenges">
             <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
               Get Started Now
             </button>
@@ -364,7 +503,10 @@ const Home = () => {
       {/* Testimonials */}
       <section className="py-20 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" data-aos="fade-up">
+          <h2
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            data-aos="fade-up"
+          >
             What Our Community Says
           </h2>
 
@@ -402,7 +544,7 @@ const Home = () => {
                   name: "Michael Chen",
                   role: "Urban Gardener",
                   img: user2,
-                  text: "The challenges are engaging and the community is so supportive. I've connected with amazing people who share my passion.",
+                  text: "The Challenges are engaging and the community is so supportive. I've connected with amazing people who share my passion.",
                 },
                 {
                   name: "Emma Watson",
@@ -425,7 +567,9 @@ const Home = () => {
                       <div className="flex justify-between items-start flex-wrap gap-2">
                         <div>
                           <h4 className="font-bold text-lg">{review.name}</h4>
-                          <p className="text-sm text-emerald-300">{review.role}</p>
+                          <p className="text-sm text-emerald-300">
+                            {review.role}
+                          </p>
                         </div>
                         <div className="text-emerald-400">⭐⭐⭐⭐⭐</div>
                       </div>
@@ -444,14 +588,18 @@ const Home = () => {
       {/* CTA Footer */}
       <section className="bg-gradient-to-r from-emerald-600 to-teal-600 py-16">
         <div className="max-w-7xl mx-auto px-6 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-6"
+            data-aos="fade-up"
+          >
             Ready to Make an Impact?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of changemakers already making a difference. Start your sustainability journey today!
+            Join thousands of changemakers already making a difference. Start
+            your sustainability journey today!
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <NavLink to="/challenges">
+            <NavLink to="/Challenges">
               <button className="bg-white text-emerald-700 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg">
                 Explore Challenges
               </button>

@@ -68,7 +68,7 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "About EcoTrack", path: "/about" },
-    { name: "Challenges", path: "/challenges" },
+    { name: "Challenges", path: "/Challenges" },
     { name: "Leaderboard", path: "/leaderboard" },
     { name: "Eco Blog", path: "/blog" },
     { name: "Contact Us", path: "/contact" },
