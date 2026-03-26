@@ -93,7 +93,7 @@ EcoTrack brings together people who want to live more sustainably. Users can joi
 - © 2025 EcoTrack
 - Quick links: About, Contact
 - Social media icons (X, Facebook, Instagram)
-- Accessibility & privacy note
+- Accessibility & PrivacyPolicy note
 
 **Layouts**
 

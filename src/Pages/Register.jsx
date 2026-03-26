@@ -147,7 +147,6 @@ const Register = () => {
     }
   };
 
-
   const currentPassword = formData.password;
   const hasUppercaseCheck = /[A-Z]/.test(currentPassword);
   const hasLowercaseCheck = /[a-z]/.test(currentPassword);
@@ -312,8 +311,8 @@ const Register = () => {
                         passwordStrength <= 2
                           ? "text-red-600"
                           : passwordStrength <= 3
-                          ? "text-yellow-600"
-                          : "text-green-600"
+                            ? "text-yellow-600"
+                            : "text-green-600"
                       }`}
                     >
                       {getPasswordStrengthText(passwordStrength)}
@@ -322,7 +321,7 @@ const Register = () => {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(
-                        passwordStrength
+                        passwordStrength,
                       )}`}
                       style={{ width: `${(passwordStrength / 5) * 100}%` }}
                     ></div>
@@ -420,7 +419,7 @@ const Register = () => {
                   href="#"
                   className="text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  Privacy Policy
+                  PrivacyPolicy Policy
                 </a>
               </label>
             </div>

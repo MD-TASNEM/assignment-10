@@ -71,14 +71,14 @@ const Footer = () => {
     { name: "Challenges", path: "/Challenges" },
     { name: "Leaderboard", path: "/leaderboard" },
     { name: "Eco Tips", path: "/EcoTips" },
-    { name: "Contact Us", path: "/contact" },
+    { name: "Contact Us", path: "/about" },
   ];
 
   const supportLinks = [
-    { name: "FAQs", path: "/faq" },
-    { name: "Privacy Policy", path: "/privacy" },
-    { name: "Terms of Service", path: "/terms" },
-    { name: "Accessibility", path: "/accessibility" },
+    { name: "FAQS", path: "/FAQS" },
+    { name: "Privacy Policy", path: "/PrivacyPolicy" },
+    { name: "Terms of Service", path: "/TermsOfService" },
+    { name: "Accessibility", path: "/Accessibility" },
   ];
 
   const contactInfo = [

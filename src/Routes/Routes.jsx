@@ -13,9 +13,13 @@ import PrivateRoutes from "./PrivateRoutes";
 import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
 import Impact from "../Pages/Impact";
-import EcoTips from './../Pages/EcoTips';
-import Leaderboard from './../Pages/Leaderboard';
-import About from './../Pages/About';
+import EcoTips from "./../Pages/EcoTips";
+import Leaderboard from "./../Pages/Leaderboard";
+import About from "./../Pages/About";
+import FAQS from "./../Pages/FAQS";
+import PrivacyPolicy from "./../Pages/PrivacyPolicy";
+import TermsOfService from "./../Pages/TermsOfService";
+import Accessibility from "./../Pages/Accessibility";
 
 export const router = createBrowserRouter([
   {
@@ -51,8 +55,28 @@ export const router = createBrowserRouter([
         Component: About,
       },
       {
+        path: "About",
+        Component: About,
+      },
+      {
         path: "EcoTips",
         Component: EcoTips,
+      },
+      {
+        path: "FAQS",
+        Component: FAQS,
+      },
+      {
+        path: "PrivacyPolicy",
+        Component: PrivacyPolicy,
+      },
+      {
+        path: "TermsOfService",
+        Component: TermsOfService,
+      },
+      {
+        path: "Accessibility",
+        Component: Accessibility,
       },
 
       {
