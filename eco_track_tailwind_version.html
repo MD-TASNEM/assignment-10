@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoTrack | Tailwind Version</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts & Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+            colors: {
+              emeraldCustom: "#10b981",
+              emeraldDark: "#059669",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body class="font-inter bg-white text-slate-900">
+    <!-- NAVBAR -->
+    <header
+      id="navbar"
+      class="fixed w-full top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-white/10 transition-all"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-extrabold text-emerald-400">
+          <i class="fas fa-leaf"></i> EcoTrack
+        </h1>
+
+        <nav class="hidden md:flex items-center gap-8 text-slate-200">
+          <a href="#" class="hover:text-emerald-400">Home</a>
+          <a href="#" class="hover:text-emerald-400">Impact</a>
+          <a href="#" class="hover:text-emerald-400">Challenges</a>
+          <a href="#" class="hover:text-emerald-400">Events</a>
+
+          <button class="border border-emerald-400 px-4 py-1 rounded-full">
+            Login
+          </button>
+          <button
+            class="bg-emeraldCustom px-5 py-1 rounded-full font-semibold hover:bg-emeraldDark"
+          >
+            Sign up
+          </button>
+        </nav>
+
+        <button id="menuBtn" class="md:hidden text-white text-xl">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section
+      class="pt-32 pb-20 bg-gradient-to-br from-slate-900 to-slate-800 text-white"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center"
+      >
+        <div>
+          <span
+            class="bg-emerald-400/20 text-emerald-300 px-4 py-1 rounded-full text-sm"
+            >🌍 12k+ changemakers</span
+          >
+
+          <h1 class="text-4xl md:text-5xl font-extrabold mt-6 leading-tight">
+            Track your <span class="text-emerald-400">impact</span>,<br />
+            transform our planet
+          </h1>
+
+          <p class="mt-4 text-slate-300 max-w-lg">
+            Turn everyday actions into measurable climate wins.
+          </p>
+
+          <div class="mt-6 flex gap-4 flex-wrap">
+            <button
+              class="bg-emeraldCustom px-6 py-3 rounded-full font-bold hover:bg-emeraldDark"
+            >
+              Start Journey
+            </button>
+            <button class="border border-white px-6 py-3 rounded-full">
+              Explore
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white text-black rounded-3xl shadow-xl overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=800"
+            class="h-56 w-full object-cover"
+          />
+          <div class="p-6">
+            <h3 class="font-bold text-lg">🌿 Weekend Rewilding</h3>
+            <p class="text-sm text-gray-600">350+ joined</p>
+            <button
+              class="mt-4 w-full bg-emeraldCustom text-white py-2 rounded-full"
+            >
+              Join
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-10">Community Impact</h2>
+
+        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="bg-white shadow rounded-2xl p-6">
+            <h3 class="text-3xl font-bold text-emerald-500">48K</h3>
+            <p>Trees planted</p>
+          </div>
+
+          <div class="bg-white shadow rounded-2xl p-6">
+            <h3 class="text-3xl font-bold text-emerald-500">152T</h3>
+            <p>CO₂ saved</p>
+          </div>
+
+          <div class="bg-white shadow rounded-2xl p-6">
+            <h3 class="text-3xl font-bold text-emerald-500">2.8M</h3>
+            <p>Water saved</p>
+          </div>
+
+          <div class="bg-white shadow rounded-2xl p-6">
+            <h3 class="text-3xl font-bold text-emerald-500">14K</h3>
+            <p>Users</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHALLENGES -->
+    <section class="py-16 bg-slate-100">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-10">Challenges</h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg transition"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600"
+              class="h-48 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-bold">Urban Garden</h3>
+              <button
+                class="mt-3 bg-emeraldCustom text-white px-4 py-2 rounded-full"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl overflow-hidden shadow">
+            <img
+              src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600"
+              class="h-48 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-bold">Zero Waste</h3>
+              <button
+                class="mt-3 bg-emeraldCustom text-white px-4 py-2 rounded-full"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl overflow-hidden shadow">
+            <img
+              src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600"
+              class="h-48 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-bold">Solar Shift</h3>
+              <button
+                class="mt-3 bg-emeraldCustom text-white px-4 py-2 rounded-full"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ECO TIPS -->
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-10">
+          💡 Eco wisdom from the tribe
+        </h2>
+
+        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div
+            class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition"
+          >
+            <i class="fas fa-solar-panel text-emerald-500 text-2xl"></i>
+            <h3 class="mt-4 font-semibold">Air-dry laundry</h3>
+            <p class="text-sm text-gray-600 mt-1">Skip dryer — saves CO₂</p>
+            <small class="text-xs text-gray-400">⭐ 3.2k • Elena</small>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-car-side text-emerald-500 text-2xl"></i>
+            <h3 class="mt-4 font-semibold">Carpool</h3>
+            <p class="text-sm text-gray-600">Cut emissions</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-apple-alt text-emerald-500 text-2xl"></i>
+            <h3 class="mt-4 font-semibold">Meatless Mondays</h3>
+            <p class="text-sm text-gray-600">Reduce footprint</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-recycle text-emerald-500 text-2xl"></i>
+            <h3 class="mt-4 font-semibold">Upcycle jars</h3>
+            <p class="text-sm text-gray-600">Avoid plastic</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="py-16 bg-slate-100">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-10">📅 Upcoming events</h2>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-2xl overflow-hidden shadow">
+            <img
+              src="https://images.unsplash.com/photo-1523741548730-78e3872315d6?w=600"
+              class="h-44 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-semibold">River Cleanup</h3>
+              <button
+                class="mt-3 w-full bg-emeraldCustom text-white py-2 rounded-full"
+              >
+                Register
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl overflow-hidden shadow">
+            <img
+              src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600"
+              class="h-44 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-semibold">Permaculture</h3>
+              <button
+                class="mt-3 w-full bg-emeraldCustom text-white py-2 rounded-full"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl overflow-hidden shadow">
+            <img
+              src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600"
+              class="h-44 w-full object-cover"
+            />
+            <div class="p-5">
+              <h3 class="font-semibold">Tree Nursery</h3>
+              <button
+                class="mt-3 w-full bg-emeraldCustom text-white py-2 rounded-full"
+              >
+                Volunteer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-10">✨ Why go green?</h2>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-chart-line text-emerald-500 text-3xl"></i>
+            <h3 class="mt-4 font-semibold">Impact</h3>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-heart text-emerald-500 text-3xl"></i>
+            <h3 class="mt-4 font-semibold">Community</h3>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-leaf text-emerald-500 text-3xl"></i>
+            <h3 class="mt-4 font-semibold">Wellbeing</h3>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow">
+            <i class="fas fa-coins text-emerald-500 text-3xl"></i>
+            <h3 class="mt-4 font-semibold">Save money</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="py-16 bg-green-900 text-white">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-10">⚡ How it works</h2>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-white text-black p-6 rounded-2xl">
+            <h3 class="font-bold">Pick challenge</h3>
+          </div>
+
+          <div class="bg-white text-black p-6 rounded-2xl">
+            <h3 class="font-bold">Log actions</h3>
+          </div>
+
+          <div class="bg-white text-black p-6 rounded-2xl">
+            <h3 class="font-bold">Level up</h3>
+          </div>
+        </div>
+
+        <button class="mt-10 bg-emeraldCustom px-8 py-3 rounded-full">
+          Get Started
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#0a1c12] text-green-100 py-16">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-10 mb-12">
+          <!-- Brand -->
+          <div>
+            <h2 class="text-2xl font-bold text-emerald-400">
+              <i class="fas fa-seedling"></i> EcoTrack
+            </h2>
+            <p class="mt-4 text-sm text-green-200 max-w-xs">
+              Empowering everyday climate heroes since 2024.
+            </p>
+          </div>
+
+          <!-- Explore -->
+          <div>
+            <h4 class="font-semibold mb-3">Explore</h4>
+            <ul class="space-y-2 text-sm text-green-200">
+              <li><a href="#" class="hover:text-emerald-400">Challenges</a></li>
+              <li>
+                <a href="#" class="hover:text-emerald-400">Leaderboard</a>
+              </li>
+              <li><a href="#" class="hover:text-emerald-400">Eco blog</a></li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h4 class="font-semibold mb-3">Support</h4>
+            <ul class="space-y-2 text-sm text-green-200">
+              <li><a href="#" class="hover:text-emerald-400">FAQs</a></li>
+              <li><a href="#" class="hover:text-emerald-400">Contact us</a></li>
+              <li><a href="#" class="hover:text-emerald-400">Privacy</a></li>
+            </ul>
+          </div>
+
+          <!-- Social -->
+          <div>
+            <h4 class="font-semibold mb-3">Connect</h4>
+            <div class="flex gap-4 text-xl text-green-300">
+              <a href="#" class="hover:text-emerald-400"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="hover:text-emerald-400"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="hover:text-emerald-400"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="hover:text-emerald-400"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom -->
+        <div
+          class="text-center border-t border-green-900 pt-8 text-xs text-green-300"
+        >
+          © 2026 EcoTrack — every action matters 🌿
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

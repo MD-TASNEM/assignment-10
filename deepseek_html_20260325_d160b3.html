@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>EcoTrack | Track Impact, Transform Planet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald: #10b981;
+            --emerald-dark: #059669;
+            --forest: #064e3b;
+            --slate-900: #0f172a;
+            --slate-100: #f1f5f9;
+            --white: #ffffff;
+            --gray-200: #e2e8f0;
+            --gray-700: #334155;
+            --shadow-md: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 5px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--white);
+            color: var(--slate-900);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* header */
+        .navbar {
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .navbar.scrolled {
+            padding: 10px 0;
+            background: #0f172a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+        .logo {
+            font-size: 1.9rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo i {
+            color: #10b981;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            margin-right: 6px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #e2e8f0;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .nav-links a:hover { color: #10b981; }
+        .btn-outline-light {
+            border: 1.5px solid #10b981;
+            background: transparent;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-solid {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 2px 6px rgba(16,185,129,0.3);
+        }
+        .btn-solid:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* hero */
+        .hero {
+            background: linear-gradient(120deg, #0b1120 0%, #0a1a1a 100%), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&auto=format') center/cover no-repeat;
+            background-blend-mode: overlay;
+            padding: 160px 0 100px;
+            margin-top: 0;
+        }
+        .hero-grid {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .hero-text {
+            flex: 1.2;
+        }
+        .hero-badge {
+            background: rgba(16,185,129,0.2);
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #6ee7b7;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+        .hero-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: white;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .hero-title span {
+            color: #10b981;
+            border-bottom: 3px solid #10b981;
+        }
+        .hero-desc {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 540px;
+            margin-bottom: 32px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: #10b981;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(16,185,129,0.3);
+        }
+        .btn-primary:hover {
+            background: #059669;
+            transform: scale(1.02);
+        }
+        .btn-outline-white {
+            border: 1.5px solid white;
+            background: transparent;
+            padding: 12px 32px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+        }
+        .hero-card {
+            flex: 0.9;
+            background: rgba(255,255,255,0.97);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(0px);
+        }
+        .hero-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+        .hero-card-content {
+            padding: 24px;
+        }
+
+        /* sections */
+        .section {
+            padding: 90px 0;
+        }
+        .section-light {
+            background: var(--slate-100);
+        }
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 48px;
+            letter-spacing: -0.01em;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 32px 20px;
+            text-align: center;
+            border-radius: 28px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #10b981;
+            line-height: 1;
+        }
+
+        /* challenge cards */
+        .challenge-grid, .tips-grid, .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+        .challenge-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .challenge-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+        }
+        .card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 24px;
+        }
+        .badge-green {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .tip-card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        .event-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            position: relative;
+        }
+        .date-chip {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: #10b981;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+        .benefit-item {
+            text-align: center;
+            padding: 32px 16px;
+            background: white;
+            border-radius: 32px;
+            transition: all 0.2s;
+        }
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        .step {
+            background: white;
+            border-radius: 40px;
+            padding: 40px 28px;
+            text-align: center;
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+        .step-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #10b981;
+            opacity: 0.25;
+            position: absolute;
+            top: 10px;
+            left: 24px;
+        }
+
+        /* footer */
+        footer {
+            background: #0a1c12;
+            color: #cfdfd3;
+            padding: 60px 0 30px;
+        }
+        .footer-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        .social-icons a {
+            color: #b3e4c5;
+            font-size: 1.6rem;
+            margin-right: 18px;
+            transition: 0.2s;
+        }
+        .social-icons a:hover {
+            color: #10b981;
+        }
+
+        /* animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero-title { font-size: 2.4rem; }
+            .container { padding: 0 24px; }
+            .section { padding: 70px 0; }
+        }
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2rem; }
+            .stats-grid { gap: 16px; }
+        }
+        .btn, .btn-primary, .btn-outline-white, .btn-solid { cursor: pointer; text-decoration: none; display: inline-block; }
+        a { text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+    <div class="container nav-container">
+        <a href="#" class="logo"><i class="fas fa-leaf"></i> EcoTrack</a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#impact">Impact</a>
+            <a href="#challenges">Challenges</a>
+            <a href="#howitworks">How it Works</a>
+            <a href="#events">Events</a>
+            <a href="#" class="btn-outline-light">Log in</a>
+            <a href="#" class="btn-solid">Sign up</a>
+        </div>
+        <div class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <div class="hero-badge"><i class="fas fa-globe-asia"></i> Join 12k+ changemakers</div>
+                <h1 class="hero-title">Track your <span>impact</span>,<br>transform our planet.</h1>
+                <p class="hero-desc">Turn everyday actions into measurable climate wins. Join challenges, earn green points, and restore nature — together.</p>
+                <div class="btn-group">
+                    <a href="#" class="btn-primary"><i class="fas fa-seedling"></i> Start your journey</a>
+                    <a href="#challenges" class="btn-outline-white">Explore challenges</a>
+                </div>
+            </div>
+            <div class="hero-card">
+                <img src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=800&auto=format" alt="Volunteers planting trees">
+                <div class="hero-card-content">
+                    <h3>🌿 Weekend Rewilding</h3>
+                    <p style="color: #2d3e2b; margin: 8px 0;">📍 350+ members joined • April 12-13</p>
+                    <a href="#" class="btn-solid" style="width:100%; text-align:center; display:inline-block; padding:10px;">Join this event →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section id="impact" class="section reveal">
+        <div class="container">
+            <h2 class="section-title">🌍 Community impact (real-time)</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number">48.3K</div><p>Trees planted</p><i class="fas fa-tree" style="color:#10b981;"></i></div>
+                <div class="stat-card"><div class="stat-number">152T</div><p>CO₂e avoided</p><i class="fas fa-cloud-moon"></i></div>
+                <div class="stat-card"><div class="stat-number">2.8M</div><p>Litres water saved</p><i class="fas fa-water"></i></div>
+                <div class="stat-card"><div class="stat-number">14.2K</div><p>Active eco-warriors</p><i class="fas fa-users"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Active Challenges -->
+    <section id="challenges" class="section section-light reveal">
+        <div class="container">
+            <h2 class="section-title">🔥 Active challenges — join now</h2>
+            <div class="challenge-grid">
+                <div class="challenge-card"><img class="card-img" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format" alt="garden"><div class="card-body"><span class="badge-green">🌱 124 joined</span><h3 style="margin: 12px 0;">Urban Garden Revolution</h3><p>Transform any balcony into a carbon sink.</p><a href="#" class="btn-solid" style="margin-top:16px; display:inline-block;">Join Challenge</a></div></div>
+                <div class="challenge-card"><img class="card-img" src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&auto=format" alt="composting"><div class="card-body"><span class="badge-green">♻️ 89 joined</span><h3 style="margin: 12px 0;">Zero Waste Home</h3><p>30 days without single-use plastics.</p><a href="#" class="btn-solid" style="margin-top:16px;">Join Challenge</a></div></div>
+                <div class="challenge-card"><img class="card-img" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&auto=format" alt="solar"><div class="card-body"><span class="badge-green">☀️ 210 joined</span><h3 style="margin: 12px 0;">Solar Shift Pledge</h3><p>Switch to renewable energy & track savings.</p><a href="#" class="btn-solid">Join Challenge</a></div></div>
+                <div class="challenge-card"><img class="card-img" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&auto=format" alt="tree planting"><div class="card-body"><span class="badge-green">🌳 346 joined</span><h3 style="margin: 12px 0;">Plant 10 Native Trees</h3><p>Restore local biodiversity & earn badge.</p><a href="#" class="btn-solid">Join Challenge</a></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eco Tips Carousel style (grid) -->
+    <section class="section reveal">
+        <div class="container">
+            <h2 class="section-title">💡 Eco wisdom from the tribe</h2>
+            <div class="tips-grid">
+                <div class="tip-card"><i class="fas fa-solar-panel" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Air-dry laundry</h3><p>Skip the dryer — saves 700 lbs CO₂/year.</p><small>⭐ 3.2k upvotes • Elena R.</small></div>
+                <div class="tip-card"><i class="fas fa-car-side" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Carpool to work</h3><p>Cut emissions & split fuel costs.</p><small>⭐ 2.7k upvotes • Marcus T.</small></div>
+                <div class="tip-card"><i class="fas fa-apple-alt" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Meatless Mondays</h3><p>Reduce water footprint by 15% weekly.</p><small>⭐ 4.1k upvotes • Priya K.</small></div>
+                <div class="tip-card"><i class="fas fa-recycle" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Upcycle glass jars</h3><p>Store bulk goods, avoid plastic.</p><small>⭐ 1.9k upvotes • Ahmed S.</small></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming events -->
+    <section id="events" class="section section-light reveal">
+        <div class="container">
+            <h2 class="section-title">📅 Upcoming green gatherings</h2>
+            <div class="events-grid">
+                <div class="event-card"><div class="date-chip">APR 18</div><img src="https://images.unsplash.com/photo-1523741548730-78e3872315d6?w=600&auto=format" style="width:100%; height:180px; object-fit:cover;"><div class="card-body"><h3>River Cleanup Fest</h3><p>Padma Riverside • 210 spots left</p><a href="#" class="btn-solid" style="margin-top:12px; width:100%; text-align:center;">Register free</a></div></div>
+                <div class="event-card"><div class="date-chip">APR 25</div><img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format" style="width:100%; height:180px; object-fit:cover;"><div class="card-body"><h3>Permaculture Workshop</h3><p>EcoHub Dhaka • 85 going</p><a href="#" class="btn-solid" style="margin-top:12px; width:100%;">Claim seat</a></div></div>
+                <div class="event-card"><div class="date-chip">MAY 02</div><img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600&auto=format" style="width:100%; height:180px; object-fit:cover;"><div class="card-body"><h3>Native Tree Nursery Day</h3><p>Khulna Division • 140+ attending</p><a href="#" class="btn-solid" style="margin-top:12px; width:100%;">Volunteer</a></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why go green benefits -->
+    <section class="section reveal">
+        <div class="container">
+            <h2 class="section-title">✨ Why join the green movement?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item"><i class="fas fa-chart-line" style="font-size:2.8rem; color:#10b981;"></i><h3 style="margin: 18px 0 8px;">Measurable impact</h3><p>Track real kg of CO₂ saved via dashboard</p></div>
+                <div class="benefit-item"><i class="fas fa-hand-holding-heart" style="font-size:2.8rem; color:#10b981;"></i><h3 style="margin: 18px 0 8px;">Community rewards</h3><p>Earn badges, plant trees together</p></div>
+                <div class="benefit-item"><i class="fas fa-leaf" style="font-size:2.8rem; color:#10b981;"></i><h3 style="margin: 18px 0 8px;">Better wellbeing</h3><p>Nature connection lowers stress & anxiety</p></div>
+                <div class="benefit-item"><i class="fas fa-coins" style="font-size:2.8rem; color:#10b981;"></i><h3 style="margin: 18px 0 8px;">Save money</h3><p>Energy efficiency = lower bills</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works interactive -->
+    <section id="howitworks" class="section reveal" style="background: #0b2a1f; color: white;">
+        <div class="container">
+            <h2 class="section-title" style="color:white;">⚡ How EcoTrack works</h2>
+            <div class="process-steps">
+                <div class="step"><span class="step-number">01</span><i class="fas fa-rocket" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Pick a challenge</h3><p>Choose from 20+ eco missions</p></div>
+                <div class="step"><span class="step-number">02</span><i class="fas fa-chart-simple" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Log actions</h3><p>Snap photos, track progress in real-time</p></div>
+                <div class="step"><span class="step-number">03</span><i class="fas fa-users-viewfinder" style="font-size:2rem; color:#10b981;"></i><h3 style="margin: 16px 0 8px;">Inspire & level up</h3><p>Share tips, earn leaderboard glory</p></div>
+            </div>
+            <div style="text-align:center; margin-top:30px;"><a href="#" class="btn-primary" style="padding:14px 40px; font-size:1rem;">🚀 Get started — it's free</a></div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div><h2 style="color:#10b981; font-size:1.8rem;"><i class="fas fa-seedling"></i> EcoTrack</h2><p style="max-width:260px;">Empowering everyday climate heroes since 2024.</p></div>
+            <div><h4>Explore</h4><ul style="list-style:none; margin-top:12px;"><li><a href="#" style="color:#cce5d6;">Challenges</a></li><li><a href="#" style="color:#cce5d6;">Leaderboard</a></li><li><a href="#" style="color:#cce5d6;">Eco blog</a></li></ul></div>
+            <div><h4>Support</h4><ul style="list-style:none; margin-top:12px;"><li><a href="#" style="color:#cce5d6;">FAQs</a></li><li><a href="#" style="color:#cce5d6;">Contact us</a></li><li><a href="#" style="color:#cce5d6;">Privacy</a></li></ul></div>
+            <div class="social-icons"><h4>Connect</h4><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div>
+        </div>
+        <div style="text-align:center; border-top:1px solid #2c4b35; padding-top:32px; font-size:0.85rem;">© 2026 EcoTrack — every action matters. 🌿</div>
+    </div>
+</footer>
+
+<script>
+    // Sticky header scroll effect
+    const header = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 30) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // reveal animation on scroll
+    const revealElements = document.querySelectorAll('.reveal');
+    function checkReveal() {
+        for (let el of revealElements) {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            if (rect.top < windowHeight - 100) {
+                el.classList.add('active');
+            }
+        }
+    }
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('load', checkReveal);
+    checkReveal();
+
+    // smooth scroll for anchor links (excluding those with just "#")
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElem = document.querySelector(targetId);
+            if (targetElem) {
+                e.preventDefault();
+                targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Mobile menu toggle (simple demo)
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', () => {
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '80px';
+                navLinks.style.left = '0';
+                navLinks.style.width = '100%';
+                navLinks.style.backgroundColor = '#0f172a';
+                navLinks.style.padding = '30px 24px';
+                navLinks.style.gap = '24px';
+                navLinks.style.backdropFilter = 'blur(12px)';
+                navLinks.style.zIndex = '999';
+            }
+        });
+    }
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 900 && navLinks) {
+            navLinks.style.display = '';
+            navLinks.style.position = '';
+            navLinks.style.flexDirection = '';
+        }
+    });
+</script>
+</body>
+</html>

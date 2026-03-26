@@ -1,0 +1,582 @@
+[
+  {
+    "_id": "c1",
+    "title": "Plastic-Free July",
+    "category": "Waste Reduction",
+    "description": "Commit to eliminating single-use plastics for 30 days. Replace plastic bags, bottles, and packaging with sustainable alternatives.",
+    "shortDescription": "Avoid single-use plastic for one month.",
+    "duration": 30,
+    "target": "Reduce plastic waste",
+    "participants": 245,
+    "impactMetric": "kg plastic saved",
+    "totalImpact": 780,
+    "difficulty": "Medium",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-07-01",
+    "endDate": "2026-07-31",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Challenge",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Reduce plastic usage daily",
+      "Track your waste reduction",
+      "Earn eco badge"
+    ],
+    "createdAt": "2026-01-10T10:00:00Z",
+    "updatedAt": "2026-02-01T12:00:00Z"
+  },
+  {
+    "_id": "c2",
+    "title": "30-Day Energy Saving Challenge",
+    "category": "Energy Conservation",
+    "description": "Lower your electricity consumption by adopting simple daily habits like turning off unused devices and using natural light.",
+    "shortDescription": "Reduce daily energy consumption.",
+    "duration": 30,
+    "target": "Reduce electricity usage",
+    "participants": 180,
+    "impactMetric": "kWh saved",
+    "totalImpact": 520,
+    "difficulty": "Easy",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-30",
+    "imageUrl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Lower electricity bills",
+      "Reduce carbon footprint",
+      "Simple daily actions"
+    ],
+    "createdAt": "2026-01-15T09:00:00Z",
+    "updatedAt": "2026-02-02T11:00:00Z"
+  },
+  {
+    "_id": "c3",
+    "title": "Green Transport Week",
+    "category": "Sustainable Transport",
+    "description": "Avoid personal fuel-based transport and use bicycles, walking, or public transport.",
+    "shortDescription": "Go eco-friendly with transport.",
+    "duration": 7,
+    "target": "Reduce fuel usage",
+    "participants": 95,
+    "impactMetric": "kg CO₂ reduced",
+    "totalImpact": 210,
+    "difficulty": "Medium",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-17",
+    "imageUrl": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600",
+    "cta": {
+      "primary": "Start Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Use bicycle or walking",
+      "Reduce emissions",
+      "Improve health"
+    ],
+    "createdAt": "2026-02-01T08:00:00Z",
+    "updatedAt": "2026-02-05T10:00:00Z"
+  },
+  {
+    "_id": "c4",
+    "title": "Zero Waste Home Challenge",
+    "category": "Waste Reduction",
+    "description": "Learn to minimize household waste through composting, recycling, and conscious shopping habits.",
+    "shortDescription": "Create a zero-waste household.",
+    "duration": 21,
+    "target": "Reduce household waste",
+    "participants": 312,
+    "impactMetric": "kg waste diverted",
+    "totalImpact": 1250,
+    "difficulty": "Hard",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-22",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Challenge",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Master composting",
+      "Reduce packaging waste",
+      "Sustainable shopping"
+    ],
+    "createdAt": "2026-01-20T10:00:00Z",
+    "updatedAt": "2026-02-10T12:00:00Z"
+  },
+  {
+    "_id": "c5",
+    "title": "Water Conservation Month",
+    "category": "Water Conservation",
+    "description": "Implement water-saving techniques like fixing leaks, taking shorter showers, and collecting rainwater.",
+    "shortDescription": "Save water daily.",
+    "duration": 30,
+    "target": "Reduce water usage",
+    "participants": 198,
+    "impactMetric": "liters saved",
+    "totalImpact": 12500,
+    "difficulty": "Easy",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-08-01",
+    "endDate": "2026-08-31",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Reduce water bills",
+      "Fix household leaks",
+      "Smart water habits"
+    ],
+    "createdAt": "2026-01-25T09:00:00Z",
+    "updatedAt": "2026-02-15T11:00:00Z"
+  },
+  {
+    "_id": "c6",
+    "title": "Plant-Based Diet Challenge",
+    "category": "Sustainable Food",
+    "description": "Switch to plant-based meals for 14 days and discover delicious, eco-friendly alternatives to meat and dairy.",
+    "shortDescription": "Go plant-based for 2 weeks.",
+    "duration": 14,
+    "target": "Reduce carbon footprint",
+    "participants": 423,
+    "impactMetric": "kg CO₂ saved",
+    "totalImpact": 3150,
+    "difficulty": "Medium",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-15",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Start Challenge",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Discover new recipes",
+      "Reduce meat consumption",
+      "Lower carbon footprint"
+    ],
+    "createdAt": "2026-02-01T10:00:00Z",
+    "updatedAt": "2026-02-18T12:00:00Z"
+  },
+  {
+    "_id": "c7",
+    "title": "Tree Planting Initiative",
+    "category": "Reforestation",
+    "description": "Plant and care for native trees in your community or participate in local reforestation events.",
+    "shortDescription": "Plant trees for a greener future.",
+    "duration": 30,
+    "target": "Plant trees",
+    "participants": 567,
+    "impactMetric": "trees planted",
+    "totalImpact": 1890,
+    "difficulty": "Medium",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-31",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Support biodiversity",
+      "Carbon sequestration",
+      "Community engagement"
+    ],
+    "createdAt": "2026-02-05T08:00:00Z",
+    "updatedAt": "2026-02-20T10:00:00Z"
+  },
+  {
+    "_id": "c8",
+    "title": "Digital Detox Weekend",
+    "category": "Energy Conservation",
+    "description": "Reduce your digital carbon footprint by limiting screen time and turning off unnecessary devices.",
+    "shortDescription": "Unplug and recharge.",
+    "duration": 3,
+    "target": "Reduce digital energy use",
+    "participants": 334,
+    "impactMetric": "kWh saved",
+    "totalImpact": 890,
+    "difficulty": "Easy",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-11-06",
+    "endDate": "2026-11-09",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Weekend",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Reduce screen time",
+      "Save electricity",
+      "Improve mental health"
+    ],
+    "createdAt": "2026-02-08T09:00:00Z",
+    "updatedAt": "2026-02-22T11:00:00Z"
+  },
+  {
+    "_id": "c9",
+    "title": "Composting Masterclass",
+    "category": "Waste Reduction",
+    "description": "Learn to turn kitchen scraps into nutrient-rich soil for your garden in just 30 days.",
+    "shortDescription": "Start composting at home.",
+    "duration": 30,
+    "target": "Reduce organic waste",
+    "participants": 156,
+    "impactMetric": "kg waste composted",
+    "totalImpact": 2340,
+    "difficulty": "Medium",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-12-01",
+    "endDate": "2026-12-31",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Learn More",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Reduce landfill waste",
+      "Create natural fertilizer",
+      "Save money on soil"
+    ],
+    "createdAt": "2026-02-10T10:00:00Z",
+    "updatedAt": "2026-02-25T12:00:00Z"
+  },
+  {
+    "_id": "c10",
+    "title": "Bike to Work Challenge",
+    "category": "Sustainable Transport",
+    "description": "Commit to cycling to work for two weeks and track your carbon savings.",
+    "shortDescription": "Replace car trips with biking.",
+    "duration": 14,
+    "target": "Reduce emissions",
+    "participants": 287,
+    "impactMetric": "kg CO₂ saved",
+    "totalImpact": 1850,
+    "difficulty": "Hard",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-15",
+    "imageUrl": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600",
+    "cta": {
+      "primary": "Join Challenge",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Improve fitness",
+      "Save fuel costs",
+      "Reduce traffic congestion"
+    ],
+    "createdAt": "2026-01-05T08:00:00Z",
+    "updatedAt": "2026-02-28T10:00:00Z"
+  },
+  {
+    "_id": "c11",
+    "title": "Fast Fashion Free Month",
+    "category": "Sustainable Fashion",
+    "description": "Avoid buying new clothes and explore thrift stores, clothing swaps, and sustainable brands instead.",
+    "shortDescription": "No new fast fashion for 30 days.",
+    "duration": 30,
+    "target": "Reduce textile waste",
+    "participants": 412,
+    "impactMetric": "kg waste prevented",
+    "totalImpact": 890,
+    "difficulty": "Medium",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-04-01",
+    "endDate": "2026-04-30",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Support circular fashion",
+      "Save money",
+      "Discover vintage style"
+    ],
+    "createdAt": "2026-01-12T09:00:00Z",
+    "updatedAt": "2026-02-01T11:00:00Z"
+  },
+  {
+    "_id": "c12",
+    "title": "Solar Panel Adoption Challenge",
+    "category": "Renewable Energy",
+    "description": "Learn about solar energy and take steps toward installing solar panels or subscribing to community solar.",
+    "shortDescription": "Go solar in 30 days.",
+    "duration": 30,
+    "target": "Adopt renewable energy",
+    "participants": 98,
+    "impactMetric": "kWh generated",
+    "totalImpact": 3450,
+    "difficulty": "Hard",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-05-15",
+    "endDate": "2026-06-15",
+    "imageUrl": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600",
+    "cta": {
+      "primary": "Learn More",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Reduce electricity bills",
+      "Clean energy production",
+      "Increase home value"
+    ],
+    "createdAt": "2026-01-18T10:00:00Z",
+    "updatedAt": "2026-02-05T12:00:00Z"
+  },
+  {
+    "_id": "c13",
+    "title": "Beach Cleanup Drive",
+    "category": "Ocean Conservation",
+    "description": "Organize or join local beach cleanup events to remove plastic and debris from coastal areas.",
+    "shortDescription": "Clean up our beaches.",
+    "duration": 1,
+    "target": "Remove ocean waste",
+    "participants": 723,
+    "impactMetric": "kg waste collected",
+    "totalImpact": 2450,
+    "difficulty": "Easy",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-06-05",
+    "endDate": "2026-06-06",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Event",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Protect marine life",
+      "Community impact",
+      "Fun outdoor activity"
+    ],
+    "createdAt": "2026-01-22T08:00:00Z",
+    "updatedAt": "2026-02-08T10:00:00Z"
+  },
+  {
+    "_id": "c14",
+    "title": "Eco-Friendly Home Upgrade",
+    "category": "Energy Conservation",
+    "description": "Make your home more energy-efficient with LED lighting, smart thermostats, and better insulation.",
+    "shortDescription": "Upgrade your home sustainably.",
+    "duration": 30,
+    "target": "Improve home efficiency",
+    "participants": 234,
+    "impactMetric": "kWh saved/year",
+    "totalImpact": 12500,
+    "difficulty": "Medium",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-07-15",
+    "endDate": "2026-08-15",
+    "imageUrl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
+    "cta": {
+      "primary": "Start Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Lower utility bills",
+      "Increase comfort",
+      "Reduce carbon footprint"
+    ],
+    "createdAt": "2026-01-28T09:00:00Z",
+    "updatedAt": "2026-02-12T11:00:00Z"
+  },
+  {
+    "_id": "c15",
+    "title": "Local Food Challenge",
+    "category": "Sustainable Food",
+    "description": "Source 80% of your food from local farmers markets and producers for one month.",
+    "shortDescription": "Eat locally grown food.",
+    "duration": 30,
+    "target": "Support local agriculture",
+    "participants": 176,
+    "impactMetric": "km food miles saved",
+    "totalImpact": 8900,
+    "difficulty": "Medium",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-08-10",
+    "endDate": "2026-09-10",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Challenge",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Fresh seasonal produce",
+      "Support local economy",
+      "Reduce transport emissions"
+    ],
+    "createdAt": "2026-02-02T10:00:00Z",
+    "updatedAt": "2026-02-18T12:00:00Z"
+  },
+  {
+    "_id": "c16",
+    "title": "Rainwater Harvesting Project",
+    "category": "Water Conservation",
+    "description": "Install a rain barrel system to collect and use rainwater for gardening and outdoor needs.",
+    "shortDescription": "Collect rainwater at home.",
+    "duration": 14,
+    "target": "Harvest rainwater",
+    "participants": 145,
+    "impactMetric": "liters collected",
+    "totalImpact": 18450,
+    "difficulty": "Hard",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-19",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Learn How",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Save water bills",
+      "Sustainable gardening",
+      "Reduce stormwater runoff"
+    ],
+    "createdAt": "2026-02-06T08:00:00Z",
+    "updatedAt": "2026-02-22T10:00:00Z"
+  },
+  {
+    "_id": "c17",
+    "title": "Meatless Mondays Initiative",
+    "category": "Sustainable Food",
+    "description": "Commit to meat-free Mondays for three months and track your environmental impact.",
+    "shortDescription": "Go meatless every Monday.",
+    "duration": 90,
+    "target": "Reduce meat consumption",
+    "participants": 891,
+    "impactMetric": "kg CO₂ saved",
+    "totalImpact": 12500,
+    "difficulty": "Easy",
+    "badge": "Popular",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-01-01",
+    "endDate": "2026-04-01",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Discover plant-based recipes",
+      "Reduce carbon footprint",
+      "Improve health"
+    ],
+    "createdAt": "2025-12-15T09:00:00Z",
+    "updatedAt": "2026-01-20T11:00:00Z"
+  },
+  {
+    "_id": "c18",
+    "title": "Wildlife Habitat Restoration",
+    "category": "Biodiversity",
+    "description": "Create a pollinator-friendly garden with native plants to support local bees, butterflies, and birds.",
+    "shortDescription": "Support local wildlife.",
+    "duration": 30,
+    "target": "Increase biodiversity",
+    "participants": 267,
+    "impactMetric": "sq ft habitat created",
+    "totalImpact": 12450,
+    "difficulty": "Medium",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-04-15",
+    "endDate": "2026-05-15",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Start Garden",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Help pollinators",
+      "Beautiful garden",
+      "Native plant education"
+    ],
+    "createdAt": "2026-01-08T10:00:00Z",
+    "updatedAt": "2026-02-25T12:00:00Z"
+  },
+  {
+    "_id": "c19",
+    "title": "Upcycling Challenge",
+    "category": "Waste Reduction",
+    "description": "Transform old items into something new and useful instead of throwing them away.",
+    "shortDescription": "Create instead of discard.",
+    "duration": 21,
+    "target": "Reduce waste through upcycling",
+    "participants": 203,
+    "impactMetric": "kg waste diverted",
+    "totalImpact": 567,
+    "difficulty": "Medium",
+    "badge": "New",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-10-10",
+    "endDate": "2026-10-31",
+    "imageUrl": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600",
+    "cta": {
+      "primary": "Join Now",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Creative reuse",
+      "Save money",
+      "Unique home decor"
+    ],
+    "createdAt": "2026-02-12T08:00:00Z",
+    "updatedAt": "2026-02-28T10:00:00Z"
+  },
+  {
+    "_id": "c20",
+    "title": "Carbon Footprint Reduction Plan",
+    "category": "Climate Action",
+    "description": "Calculate and reduce your personal carbon footprint through lifestyle changes and offsets.",
+    "shortDescription": "Reduce your carbon impact.",
+    "duration": 60,
+    "target": "Lower carbon footprint",
+    "participants": 389,
+    "impactMetric": "kg CO₂ reduced",
+    "totalImpact": 23400,
+    "difficulty": "Hard",
+    "badge": "Trending",
+    "createdBy": "admin@ecotrack.com",
+    "startDate": "2026-03-01",
+    "endDate": "2026-04-30",
+    "imageUrl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
+    "cta": {
+      "primary": "Start Plan",
+      "secondary": "View Details"
+    },
+    "highlights": [
+      "Track emissions",
+      "Sustainable choices",
+      "Carbon offset options"
+    ],
+    "createdAt": "2026-01-02T09:00:00Z",
+    "updatedAt": "2026-02-10T11:00:00Z"
+  }
+]
