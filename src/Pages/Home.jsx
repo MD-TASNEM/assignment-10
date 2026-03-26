@@ -47,7 +47,7 @@ const Home = () => {
             <Marquee gradient={false} speed={50}>
               <span className="text-sm md:text-base font-medium text-white">
                 🌍 Join 12,000+ changemakers making a difference! Track your
-                impact, transform our planet 🌱
+                Impact, transform our planet 🌱
               </span>
             </Marquee>
           </div>
@@ -63,7 +63,7 @@ const Home = () => {
                 🌍 12k+ changemakers
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                Track your <span className="text-emerald-400">impact</span>,
+                Track your <span className="text-emerald-400">Impact</span>,
                 <br />
                 transform our planet
               </h1>
@@ -77,7 +77,7 @@ const Home = () => {
                     Start Journey
                   </button>
                 </NavLink>
-                <NavLink to="/impact">
+                <NavLink to="/Impact">
                   <button className="border-2 border-white hover:bg-white/10 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300">
                     Explore Impact
                   </button>
@@ -228,11 +228,11 @@ const Home = () => {
               Active Challenges
             </h2>
             <p className="text-gray-600 text-lg">
-              Join these eco-Challenges and start making an impact today
+              Join these eco-Challenges and start making an Impact today
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {trimData?.map((service, idx) => (
               <div key={idx} data-aos="fade-up" data-aos-delay={idx * 100}>
                 <Service data={service} />
@@ -250,7 +250,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Eco Tips Section */}
+      {/* Eco EcoTips Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
@@ -258,7 +258,7 @@ const Home = () => {
               💡 Eco Wisdom from the Tribe
             </h2>
             <p className="text-gray-600 text-lg">
-              Practical tips shared by our community
+              Practical EcoTips shared by our community
             </p>
           </div>
 
@@ -472,7 +472,7 @@ const Home = () => {
               {
                 step: "3",
                 title: "Level Up",
-                desc: "Earn badges, climb leaderboards, and see your impact",
+                desc: "Earn badges, climb leaderboards, and see your Impact",
                 icon: "🏆",
               },
             ].map((step, idx) => (
@@ -550,7 +550,7 @@ const Home = () => {
                   name: "Emma Watson",
                   role: "Eco-Warrior",
                   img: user3,
-                  text: "Tracking my impact has been incredibly motivating. Seeing real numbers makes me want to do even more!",
+                  text: "Tracking my Impact has been incredibly motivating. Seeing real numbers makes me want to do even more!",
                 },
               ].map((review, i) => (
                 <div

@@ -70,7 +70,7 @@ const Footer = () => {
     { name: "About EcoTrack", path: "/about" },
     { name: "Challenges", path: "/Challenges" },
     { name: "Leaderboard", path: "/leaderboard" },
-    { name: "Eco Blog", path: "/blog" },
+    { name: "Eco Tips", path: "/EcoTips" },
     { name: "Contact Us", path: "/contact" },
   ];
 
@@ -208,7 +208,7 @@ const Footer = () => {
             {/* Newsletter */}
             <div className="bg-green-800/30 rounded-xl p-4 border border-green-700/50">
               <p className="text-sm text-gray-300 mb-3 font-medium">
-                🌱 Stay updated with eco tips
+                🌱 Stay updated with eco EcoEcoTips
               </p>
               <div className="flex space-x-2">
                 <input
@@ -221,7 +221,7 @@ const Footer = () => {
                 </button>
               </div>
               <p className="text-xs text-gray-400 mt-2">
-                No spam, just sustainability tips.
+                No spam, just sustainability EcoEcoTips.
               </p>
             </div>
           </div>

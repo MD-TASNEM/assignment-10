@@ -48,13 +48,13 @@ const Navbar = () => {
       icon: <FaTrophy className="mr-2" />,
     },
     {
-      path: "/my-activities",
+      path: "/Impact",
       label: "My Activities",
       icon: <FaCalendarAlt className="mr-2" />,
       protected: true,
     },
     {
-      path: "/tips",
+      path: "/EcoTips",
       label: "Eco Tips",
       icon: <FaLightbulb className="mr-2" />,
     },
@@ -171,7 +171,7 @@ const Navbar = () => {
                       </NavLink>
 
                       <NavLink
-                        to="/my-activities"
+                        to="/Impact"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         <FaCalendarAlt className="mr-3 text-gray-400" />

@@ -12,6 +12,8 @@ import ServiceDetails from "../Pages/ServiceDetails";
 import PrivateRoutes from "./PrivateRoutes";
 import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
+import Impact from "../Pages/Impact";
+import EcoTips from './../Pages/EcoTips';
 
 export const router = createBrowserRouter([
   {
@@ -34,10 +36,14 @@ export const router = createBrowserRouter([
         path: "register",
         Component: Register,
       },
-      // {
-      //   path: "services",
-      //   Component: Services,
-      // },
+      {
+        path: "Impact",
+        Component: Impact,
+      },
+      {
+        path: "EcoTips",
+        Component: EcoTips,
+      },
 
       {
         path: "forgetpass",
