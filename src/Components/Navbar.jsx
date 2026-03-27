@@ -11,12 +11,10 @@ import {
   FaTrophy,
   FaCalendarAlt,
   FaLightbulb,
-  FaSpinner,
 } from "react-icons/fa";
 
 const Navbar = () => {
-  // Change 'logout' to 'logOut' to match your AuthContext
-  const { user, logOut, loading } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,7 +28,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     setIsLoggingOut(true);
     try {
-      await logOut(); // Changed from logout() to logOut()
+      await logOut();
       toast.success("Logged out successfully. Come back soon! 🌱", {
         duration: 3000,
         position: "top-right",
@@ -77,19 +75,6 @@ const Navbar = () => {
     },
   ];
 
-  // Show loading spinner while checking auth state
-  if (loading) {
-    return (
-      <nav className="bg-gradient-to-r from-green-900 via-green-800 to-emerald-900 text-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center h-16">
-            <FaSpinner className="animate-spin text-2xl text-emerald-400" />
-          </div>
-        </div>
-      </nav>
-    );
-  }
-
   return (
     <>
       <nav className="bg-gradient-to-r from-green-900 via-green-800 to-emerald-900 text-white shadow-lg sticky top-0 z-50">
@@ -116,7 +101,6 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
               {navLinks.map((link) => {
-                // Skip protected links if not authenticated
                 if (link.protected && !user) return null;
 
                 return (
@@ -280,7 +264,6 @@ const Navbar = () => {
             </div>
 
             <div className="p-6">
-              {/* User Info (if logged in) */}
               {user && (
                 <div className="mb-6 p-4 bg-green-800/30 rounded-xl border border-green-700">
                   <div className="flex items-center space-x-3">
@@ -312,7 +295,6 @@ const Navbar = () => {
                 </div>
               )}
 
-              {/* Navigation Links */}
               <ul className="space-y-2">
                 {navLinks.map((link) => {
                   if (link.protected && !user) return null;
@@ -338,7 +320,6 @@ const Navbar = () => {
                 })}
               </ul>
 
-              {/* Auth Actions */}
               <div className="mt-8 pt-6 border-t border-green-700">
                 {user ? (
                   <button
@@ -380,7 +361,6 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Eco Quote */}
               <div className="mt-6 p-4 bg-green-800/20 rounded-lg text-center">
                 <p className="text-xs text-emerald-300 italic">
                   "Every small action counts towards a greener future 🌍"
