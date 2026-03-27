@@ -6,7 +6,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const ChallengesDetails = () => {
-  const { serviceId } = useParams();
+  const { ChallengesId } = useParams();
+
+  console.log(ChallengesId);
+
   const { data: services } = useContext(AuthContext);
 
   useEffect(() => {
@@ -14,7 +17,7 @@ const ChallengesDetails = () => {
   }, []);
 
   const service = services?.find(
-    (item) => Number(item.serviceId) === Number(serviceId),
+    (item) => Number(item.ChallengesId) === Number(ChallengesId),
   );
 
   const handleBook = (e) => {
@@ -41,7 +44,7 @@ const ChallengesDetails = () => {
     return (
       <div className="min-h-screen flex justify-center items-center bg-gray-50">
         <p className="text-xl text-gray-600 font-medium">
-          Service not found 😿
+          Challenge not found 😿
         </p>
       </div>
     );
@@ -131,10 +134,10 @@ const ChallengesDetails = () => {
                 </button>
 
                 <Link
-                  to="/services"
+                  to="/Challenges"
                   className="flex-1 border-2 border-gray-300 hover:border-gray-400 text-gray-700 py-4 rounded-2xl font-semibold text-lg text-center transition-all"
                 >
-                  Back to Services
+                  Back to Challenges
                 </Link>
               </div>
             </div>
@@ -152,8 +155,8 @@ const ChallengesDetails = () => {
               Reserve Your Spot
             </h3>
             <p className="text-gray-600 max-w-xl mx-auto">
-              Fill in your details below — we'll confirm your winter service
-              booking right away.
+              Fill in your details below — we'll confirm your booking right
+              away.
             </p>
           </div>
 
@@ -227,20 +230,20 @@ const ChallengesDetails = () => {
           data-aos-delay="600"
         >
           <h3 className="text-3xl font-bold text-gray-900 mb-4">
-            Related Winter Services
+            Related Challenges
           </h3>
           <p className="text-gray-600 mb-10">
-            Other premium services your cat might love this winter
+            Other challenges you might enjoy
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {services
-              .filter((s) => s.serviceId !== service.serviceId)
+              .filter((s) => s.ChallengesId !== service.ChallengesId)
               .slice(0, 3)
               .map((related) => (
                 <Link
-                  key={related.serviceId}
-                  to={`/ChallengesDetails/${related.serviceId}`}
+                  key={related.ChallengesId}
+                  to={`/Challenges/${related.ChallengesId}`}
                   className="bg-white rounded-3xl shadow-lg overflow-hidden hover:-translate-y-2 transition-all duration-300 group"
                 >
                   <img

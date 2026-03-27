@@ -4,10 +4,8 @@ import Layouts from "../Layouts/Layouts";
 import User from "../Pages/User";
 import Register from "../Pages/Register";
 import Home from "../Pages/Home";
-
 import MyProfile from "../Pages/MyProfile";
 import ForgetPass from "../Pages/ForgetPass";
-
 import ChallengesDetails from "../Pages/ChallengesDetails";
 import PrivateRoutes from "./PrivateRoutes";
 import Challenges from "../Pages/Challenges";
@@ -30,10 +28,6 @@ export const router = createBrowserRouter([
         index: true,
         Component: Home,
       },
-      // {
-      //     path:'helpContact',
-      //     Component:helpContact,
-      // },
       {
         path: "user",
         Component: User,
@@ -49,10 +43,6 @@ export const router = createBrowserRouter([
       {
         path: "Leaderboard",
         Component: Leaderboard,
-      },
-      {
-        path: "About",
-        Component: About,
       },
       {
         path: "About",
@@ -78,54 +68,35 @@ export const router = createBrowserRouter([
         path: "Accessibility",
         Component: Accessibility,
       },
-
       {
         path: "forgetpass",
         Component: ForgetPass,
       },
-
-      // {
-      //   path:'service/:id',
-      //   Component:Service
-      // },
       {
         path: "Challenges",
-
-        element: <Challenges></Challenges>,
+        element: <Challenges />
       },
       {
-        path: "Challenges/:serviceId",
-
+        path: "Challenges/:ChallengesId",
         element: (
           <PrivateRoutes>
-            <ChallengesDetails></ChallengesDetails>,
-          </PrivateRoutes>
-        ),
-      },
-      {
-        path: "ChallengesDetails/:serviceId",
-
-        element: (
-          <PrivateRoutes>
-            <ChallengesDetails></ChallengesDetails>,
+            <ChallengesDetails />
           </PrivateRoutes>
         ),
       },
       {
         path: "profile",
-
         element: (
           <PrivateRoutes>
-            <MyProfile></MyProfile>
+            <MyProfile />
           </PrivateRoutes>
         ),
       },
       {
         path: "updateprofile",
-
         element: (
           <PrivateRoutes>
-            <UpdateProfile></UpdateProfile>
+            <UpdateProfile />
           </PrivateRoutes>
         ),
       },
