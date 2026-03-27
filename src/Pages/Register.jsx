@@ -1,28 +1,41 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+// pages/Register.jsx
+import React, { useState, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import {
+  FaLeaf,
+  FaEye,
+  FaEyeSlash,
+  FaGoogle,
+  FaEnvelope,
+  FaUser,
+  FaLock,
+  FaCamera,
+} from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const Register = () => {
-  const { createUser, user, setUser, updateUser } =
-    React.useContext(AuthContext);
-  const [showPass, setShowPass] = useState(false);
+  const { createUser, updateUser, signInWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    photo: "",
+    photoURL: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const navigate = useNavigate();
-  const passwordInputRef = useRef(null);
-
-  const handlePassVisibility = () => {
-    setShowPass(!showPass);
-  };
+  const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +46,22 @@ const Register = () => {
 
     if (name === "password") {
       checkPasswordStrength(value);
+      // Clear confirm password error when password changes
+      if (errors.confirmPassword) {
+        setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+      }
+    }
+
+    if (name === "confirmPassword") {
+      // Clear confirm password error
+      if (errors.confirmPassword) {
+        setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+      }
+    }
+
+    // Clear field-specific error when user types
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -46,78 +75,104 @@ const Register = () => {
     setPasswordStrength(strength);
   };
 
-  const getPasswordStrengthColor = (strength) => {
-    if (strength <= 2) return "bg-red-500";
-    if (strength <= 3) return "bg-yellow-500";
+  const validateForm = () => {
+    const newErrors = {};
+    const { firstName, lastName, email, password, confirmPassword } = formData;
+
+    if (!firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    } else if (firstName.length < 2) {
+      newErrors.firstName = "First name must be at least 2 characters";
+    }
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else {
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasLowercase = /[a-z]/.test(password);
+      const isLongEnough = password.length >= 6;
+
+      if (!hasUppercase) {
+        newErrors.password =
+          "Password must contain at least 1 uppercase letter";
+      } else if (!hasLowercase) {
+        newErrors.password =
+          "Password must contain at least 1 lowercase letter";
+      } else if (!isLongEnough) {
+        newErrors.password = "Password must be at least 6 characters long";
+      }
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength <= 2) return "bg-red-500";
+    if (passwordStrength <= 3) return "bg-yellow-500";
     return "bg-green-500";
   };
 
-  const getPasswordStrengthText = (strength) => {
-    if (strength <= 2) return "Weak";
-    if (strength <= 3) return "Medium";
+  const getPasswordStrengthText = () => {
+    if (passwordStrength <= 2) return "Weak";
+    if (passwordStrength <= 3) return "Medium";
     return "Strong";
   };
 
-  const handleSignUp = async (e) => {
+  const getPasswordStrengthWidth = () => {
+    return `${(passwordStrength / 5) * 100}%`;
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
+
     setIsLoading(true);
-
-    const { firstName, lastName, photo, email, password } = formData;
+    const { firstName, lastName, photoURL, email, password } = formData;
     const fullName = `${firstName} ${lastName}`.trim();
-
-    // Password validation
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasLowercase = /[a-z]/.test(password);
-    const isLongEnough = password.length >= 6;
-
-    if (!hasUppercase) {
-      toast.error("Password must contain at least 1 uppercase letter.");
-      setIsLoading(false);
-      return;
-    }
-    if (!hasLowercase) {
-      toast.error("Password must contain at least 1 lowercase letter.");
-      setIsLoading(false);
-      return;
-    }
-    if (!isLongEnough) {
-      toast.error("Password must be at least 6 characters long.");
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const userCredential = await createUser(email, password);
-      await updateUser({ displayName: fullName, photoURL: photo });
-      setUser({
-        ...userCredential.user,
+
+      // Update profile with name and photo
+      await updateUser({
         displayName: fullName,
-        photoURL: photo,
+        photoURL:
+          photoURL ||
+          `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=10B981&color=fff&bold=true`,
       });
 
-      toast.success("Account created successfully! Welcome to WarmPaws!", {
-        duration: 5000,
-        position: "top-right",
-        style: {
-          background: "#10B981",
-          color: "#fff",
-          borderRadius: "12px",
-          fontSize: "14px",
-          fontWeight: "500",
+      toast.success(
+        "Welcome to EcoTrack! 🌱 Your journey to sustainability begins now!",
+        {
+          duration: 5000,
+          position: "top-right",
+          icon: "🎉",
+          style: {
+            background: "#10B981",
+            color: "#fff",
+            borderRadius: "12px",
+          },
         },
-        icon: "🎉",
-      });
+      );
 
-      // Reset form
-      setFormData({
-        firstName: "",
-        lastName: "",
-        photo: "",
-        email: "",
-        password: "",
-      });
-
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       let errorMessage = "Registration failed. Please try again.";
 
@@ -138,8 +193,6 @@ const Register = () => {
           background: "#EF4444",
           color: "#fff",
           borderRadius: "12px",
-          fontSize: "14px",
-          fontWeight: "500",
         },
       });
     } finally {
@@ -147,50 +200,117 @@ const Register = () => {
     }
   };
 
+  const handleGoogleRegister = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+      toast.success("Successfully signed up with Google! 🌍", {
+        duration: 4000,
+        position: "top-right",
+        icon: "🌟",
+        style: {
+          background: "#10B981",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
+      navigate(from, { replace: true });
+    } catch (err) {
+      toast.error("Google sign up failed. Please try again.", {
+        duration: 4000,
+        position: "top-right",
+        style: {
+          background: "#EF4444",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
   const currentPassword = formData.password;
-  const hasUppercaseCheck = /[A-Z]/.test(currentPassword);
-  const hasLowercaseCheck = /[a-z]/.test(currentPassword);
+  const hasUppercase = /[A-Z]/.test(currentPassword);
+  const hasLowercase = /[a-z]/.test(currentPassword);
   const hasMinLength = currentPassword.length >= 6;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-6">
-            <div className="flex items-center justify-center space-x-2 text-2xl font-bold text-gray-900">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">W</span>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                <FaLeaf className="text-white text-2xl" />
               </div>
-              <span>WarmPaws</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent">
+                EcoTrack
+              </span>
             </div>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Create Account
+            Join EcoTrack 🌱
           </h1>
           <p className="text-gray-600">
-            Join WarmPaws and give your pet the care they deserve
+            Start your journey towards sustainable living
           </p>
         </div>
 
         {/* Registration Form */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-          <form onSubmit={handleSignUp} className="space-y-6">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8">
+          {/* Google Register Button */}
+          <button
+            onClick={handleGoogleRegister}
+            disabled={isGoogleLoading}
+            className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isGoogleLoading ? (
+              <div className="w-5 h-5 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin"></div>
+            ) : (
+              <FaGoogle className="text-red-500" />
+            )}
+            <span>
+              {isGoogleLoading ? "Signing up..." : "Continue with Google"}
+            </span>
+          </button>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">
+                Or register with email
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={handleRegister} className="space-y-5">
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   First Name *
                 </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  required
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                  placeholder="John"
-                />
+                <div className="relative">
+                  <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    name="firstName"
+                    required
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className={`w-full pl-10 pr-4 py-3 border ${errors.firstName ? "border-red-500" : "border-gray-300"} rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200`}
+                    placeholder="John"
+                  />
+                </div>
+                {errors.firstName && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -201,7 +321,7 @@ const Register = () => {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
                   placeholder="Doe"
                 />
               </div>
@@ -212,16 +332,19 @@ const Register = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Profile Photo URL
               </label>
-              <input
-                type="url"
-                name="photo"
-                value={formData.photo}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                placeholder="https://example.com/photo.jpg"
-              />
+              <div className="relative">
+                <FaCamera className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="url"
+                  name="photoURL"
+                  value={formData.photoURL}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                  placeholder="https://example.com/photo.jpg"
+                />
+              </div>
               <p className="text-xs text-gray-500 mt-1">
-                Optional - add a profile picture later
+                Optional - we'll create an avatar if not provided
               </p>
             </div>
 
@@ -230,15 +353,21 @@ const Register = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address *
               </label>
-              <input
-                type="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                placeholder="john@example.com"
-              />
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200`}
+                  placeholder="john@example.com"
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -247,57 +376,22 @@ const Register = () => {
                 Password *
               </label>
               <div className="relative">
+                <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
-                  type={showPass ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  ref={passwordInputRef}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white pr-12"
+                  className={`w-full pl-10 pr-12 py-3 border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200`}
                   placeholder="Create a strong password"
-                  autoComplete="new-password"
                 />
                 <button
                   type="button"
-                  onClick={handlePassVisibility}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPass ? (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  )}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
 
@@ -315,15 +409,13 @@ const Register = () => {
                             : "text-green-600"
                       }`}
                     >
-                      {getPasswordStrengthText(passwordStrength)}
+                      {getPasswordStrengthText()}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(
-                        passwordStrength,
-                      )}`}
-                      style={{ width: `${(passwordStrength / 5) * 100}%` }}
+                      className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
+                      style={{ width: getPasswordStrengthWidth() }}
                     ></div>
                   </div>
                 </div>
@@ -336,14 +428,10 @@ const Register = () => {
                 </p>
                 <ul className="text-xs text-gray-500 space-y-1">
                   <li
-                    className={`flex items-center ${
-                      hasMinLength ? "text-green-600" : ""
-                    }`}
+                    className={`flex items-center ${hasMinLength ? "text-green-600" : ""}`}
                   >
                     <svg
-                      className={`w-3 h-3 mr-2 ${
-                        hasMinLength ? "text-green-500" : "text-gray-300"
-                      }`}
+                      className={`w-3 h-3 mr-2 ${hasMinLength ? "text-green-500" : "text-gray-300"}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -356,14 +444,10 @@ const Register = () => {
                     At least 6 characters
                   </li>
                   <li
-                    className={`flex items-center ${
-                      hasUppercaseCheck ? "text-green-600" : ""
-                    }`}
+                    className={`flex items-center ${hasUppercase ? "text-green-600" : ""}`}
                   >
                     <svg
-                      className={`w-3 h-3 mr-2 ${
-                        hasUppercaseCheck ? "text-green-500" : "text-gray-300"
-                      }`}
+                      className={`w-3 h-3 mr-2 ${hasUppercase ? "text-green-500" : "text-gray-300"}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -376,14 +460,10 @@ const Register = () => {
                     One uppercase letter
                   </li>
                   <li
-                    className={`flex items-center ${
-                      hasLowercaseCheck ? "text-green-600" : ""
-                    }`}
+                    className={`flex items-center ${hasLowercase ? "text-green-600" : ""}`}
                   >
                     <svg
-                      className={`w-3 h-3 mr-2 ${
-                        hasLowercaseCheck ? "text-green-500" : "text-gray-300"
-                      }`}
+                      className={`w-3 h-3 mr-2 ${hasLowercase ? "text-green-500" : "text-gray-300"}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -397,6 +477,40 @@ const Register = () => {
                   </li>
                 </ul>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Confirm Password *
+              </label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-12 py-3 border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200`}
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
             {/* Terms and Conditions */}
@@ -404,23 +518,23 @@ const Register = () => {
               <input
                 type="checkbox"
                 required
-                className="mt-1 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                className="mt-1 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
               />
               <label className="text-sm text-gray-600">
                 I agree to the{" "}
-                <a
-                  href="#"
-                  className="text-blue-600 hover:text-blue-700 font-medium"
+                <Link
+                  to="/terms"
+                  className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Terms of Service
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a
-                  href="#"
-                  className="text-blue-600 hover:text-blue-700 font-medium"
+                <Link
+                  to="/privacy"
+                  className="text-green-600 hover:text-green-700 font-medium"
                 >
-                  PrivacyPolicy Policy
-                </a>
+                  Privacy Policy
+                </Link>
               </label>
             </div>
 
@@ -428,7 +542,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -436,7 +550,10 @@ const Register = () => {
                   <span>Creating Account...</span>
                 </div>
               ) : (
-                "Create Account"
+                <div className="flex items-center justify-center space-x-2">
+                  <FaLeaf />
+                  <span>Join EcoTrack</span>
+                </div>
               )}
             </button>
 
@@ -445,8 +562,8 @@ const Register = () => {
               <p className="text-gray-600">
                 Already have an account?{" "}
                 <Link
-                  to="/user"
-                  className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
+                  to="/login"
+                  className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-200"
                 >
                   Sign in here
                 </Link>
@@ -473,6 +590,9 @@ const Register = () => {
             </svg>
             <span>Your data is securely encrypted and protected</span>
           </div>
+          <p className="text-xs text-gray-400 mt-2">
+            By joining, you're helping create a more sustainable future 🌍
+          </p>
         </div>
       </div>
     </div>
