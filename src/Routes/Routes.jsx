@@ -94,6 +94,15 @@ export const router = createBrowserRouter([
         element: <Challenges></Challenges>,
       },
       {
+        path: "Challenges/:serviceId",
+
+        element: (
+          <PrivateRoutes>
+            <ServiceDetails></ServiceDetails>,
+          </PrivateRoutes>
+        ),
+      },
+      {
         path: "serviceDetails/:serviceId",
 
         element: (
