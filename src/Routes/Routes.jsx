@@ -8,7 +8,7 @@ import Home from "../Pages/Home";
 import MyProfile from "../Pages/MyProfile";
 import ForgetPass from "../Pages/ForgetPass";
 
-import ServiceDetails from "../Pages/ServiceDetails";
+import ChallengesDetails from "../Pages/ChallengesDetails";
 import PrivateRoutes from "./PrivateRoutes";
 import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
@@ -98,16 +98,16 @@ export const router = createBrowserRouter([
 
         element: (
           <PrivateRoutes>
-            <ServiceDetails></ServiceDetails>,
+            <ChallengesDetails></ChallengesDetails>,
           </PrivateRoutes>
         ),
       },
       {
-        path: "serviceDetails/:serviceId",
+        path: "ChallengesDetails/:serviceId",
 
         element: (
           <PrivateRoutes>
-            <ServiceDetails></ServiceDetails>,
+            <ChallengesDetails></ChallengesDetails>,
           </PrivateRoutes>
         ),
       },
