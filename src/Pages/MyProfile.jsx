@@ -1,17 +1,61 @@
-import React from "react";
+// pages/MyProfile.jsx
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate, Navigate } from "react-router";
+import {
+  FaLeaf,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaShieldAlt,
+  FaCamera,
+  FaEdit,
+  FaTrophy,
+  FaChartLine,
+  FaRecycle,
+  FaWater,
+  FaBolt,
+  FaTree,
+  FaMedal,
+  FaStar,
+  FaUsers,
+  FaCheckCircle,
+  FaSpinner,
+  FaSignOutAlt,
+  FaHeart,
+} from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const MyProfile = () => {
-  const { user, loading } = React.useContext(AuthContext);
+  const { user, loading, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Mock user impact data (in real app, fetch from API)
+  const userImpact = {
+    totalCO2Saved: 234,
+    totalPlasticReduced: 128,
+    totalWaterSaved: 1250,
+    totalEnergySaved: 890,
+    challengesCompleted: 12,
+    currentStreak: 15,
+    badgesEarned: 5,
+    totalBadges: 12,
+    rank: 124,
+    totalUsers: 3420,
+    contributions: {
+      waste: 45,
+      energy: 38,
+      water: 22,
+      transport: 15,
+    },
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="flex flex-col items-center space-y-4">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600 font-medium">Loading your profile...</p>
+          <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-green-600 font-medium">Loading your profile...</p>
         </div>
       </div>
     );
@@ -25,27 +69,49 @@ const MyProfile = () => {
     navigate("/updateprofile");
   };
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logOut();
+      toast.success("Logged out successfully. Come back soon! 🌱", {
+        duration: 3000,
+        position: "top-right",
+        style: {
+          background: "#10B981",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
+      navigate("/");
+    } catch (error) {
+      toast.error("Failed to logout. Please try again.", {
+        duration: 3000,
+        position: "top-right",
+        style: {
+          background: "#EF4444",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   const formatUserId = (uid) => {
     return `${uid.substring(0, 8)}...${uid.substring(uid.length - 8)}`;
   };
 
-
   const getAvatarUrl = () => {
-
     if (user.photoURL) {
       return user.photoURL;
     }
-
-
     if (user.email) {
       const emailHash = user.email.trim().toLowerCase();
       return `https://www.gravatar.com/avatar/${emailHash}?s=128&d=identicon`;
     }
-
-
     return null;
   };
-
 
   const getUserInitials = () => {
     if (user.displayName) {
@@ -56,26 +122,21 @@ const MyProfile = () => {
         .toUpperCase()
         .substring(0, 2);
     }
-
     if (user.email) {
       return user.email.substring(0, 2).toUpperCase();
     }
-
-    return "U";
+    return "🌱";
   };
-
 
   const getAvatarBackgroundColor = () => {
     const seed = user.uid || user.email || "user";
     const colors = [
-      "from-blue-500 to-blue-600",
-      "from-purple-500 to-purple-600",
-      "from-green-500 to-green-600",
-      "from-red-500 to-red-600",
-      "from-yellow-500 to-yellow-600",
-      "from-indigo-500 to-indigo-600",
-      "from-pink-500 to-pink-600",
-      "from-teal-500 to-teal-600",
+      "from-green-500 to-emerald-600",
+      "from-emerald-500 to-green-600",
+      "from-teal-500 to-green-600",
+      "from-green-600 to-teal-600",
+      "from-emerald-600 to-green-500",
+      "from-green-500 to-teal-500",
     ];
 
     let hash = 0;
@@ -90,15 +151,26 @@ const MyProfile = () => {
   const avatarUrl = getAvatarUrl();
   const userInitials = getUserInitials();
   const avatarBackground = getAvatarBackgroundColor();
+  const joinDate = new Date(user.metadata?.creationTime);
+  const memberSince = joinDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">My Profile</h1>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mb-4 shadow-lg">
+            <FaLeaf className="text-white text-3xl" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-4">
+            My Eco Profile
+          </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Manage your personal information and account settings
+            Track your environmental impact and manage your sustainability
+            journey
           </p>
         </div>
 
@@ -108,7 +180,9 @@ const MyProfile = () => {
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
               {/* Profile Header */}
               <div className="relative">
-                <div className="h-40 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                <div className="h-40 bg-gradient-to-r from-green-500 to-emerald-600 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-black opacity-10"></div>
+                </div>
 
                 {/* Profile Image */}
                 <div className="absolute -bottom-12 left-8">
@@ -120,9 +194,10 @@ const MyProfile = () => {
                           src={avatarUrl}
                           alt={user.displayName || "User"}
                           onError={(e) => {
-                            // If the image fails to load, show the fallback avatar
                             e.target.style.display = "none";
-                            e.target.nextSibling.style.display = "flex";
+                            if (e.target.nextSibling) {
+                              e.target.nextSibling.style.display = "flex";
+                            }
                           }}
                         />
                       ) : null}
@@ -136,7 +211,12 @@ const MyProfile = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-2 border-white"></div>
+                    <button
+                      onClick={handleUpdate}
+                      className="absolute -bottom-2 -right-2 bg-green-500 hover:bg-green-600 w-8 h-8 rounded-full border-2 border-white flex items-center justify-center transition-all duration-200 shadow-md"
+                    >
+                      <FaCamera className="text-white text-sm" />
+                    </button>
                   </div>
                 </div>
 
@@ -144,21 +224,9 @@ const MyProfile = () => {
                 <div className="absolute top-6 right-6">
                   <button
                     onClick={handleUpdate}
-                    className="bg-white/90 hover:bg-white text-gray-800 hover:text-blue-600 px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2"
+                    className="bg-white/90 hover:bg-white text-gray-800 hover:text-green-600 px-5 py-2 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2"
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
+                    <FaEdit className="text-sm" />
                     <span>Edit Profile</span>
                   </button>
                 </div>
@@ -166,37 +234,31 @@ const MyProfile = () => {
 
               {/* Profile Content */}
               <div className="pt-16 pb-8 px-8">
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    {user.displayName || "No Name Provided"}
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                    {user.displayName || "Eco Warrior"}
                   </h2>
-                  <p className="text-gray-500">
-                    Member since{" "}
-                    {new Date(user.metadata?.creationTime).getFullYear() ||
-                      "2024"}
-                  </p>
+                  <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <FaCalendarAlt className="text-green-500" />
+                    <span>Member since {memberSince}</span>
+                    <span className="mx-2">•</span>
+                    <FaCheckCircle className="text-green-500" />
+                    <span>
+                      {user.emailVerified
+                        ? "Verified Account"
+                        : "Email Not Verified"}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Email */}
-                  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="bg-blue-100 p-3 rounded-lg">
-                      <svg
-                        className="w-6 h-6 text-blue-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
+                  <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-xl border border-green-100">
+                    <div className="bg-green-100 p-3 rounded-lg">
+                      <FaEnvelope className="w-5 h-5 text-green-600" />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                      <label className="block text-sm font-medium text-green-700 mb-1">
                         Email Address
                       </label>
                       <p className="text-gray-900 font-medium">{user.email}</p>
@@ -204,24 +266,12 @@ const MyProfile = () => {
                   </div>
 
                   {/* User ID */}
-                  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="bg-purple-100 p-3 rounded-lg">
-                      <svg
-                        className="w-6 h-6 text-purple-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                        />
-                      </svg>
+                  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <div className="bg-gray-100 p-3 rounded-lg">
+                      <FaShieldAlt className="w-5 h-5 text-gray-600" />
                     </div>
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                      <label className="block text-sm font-medium text-gray-600 mb-1">
                         User ID
                       </label>
                       <p className="text-gray-900 font-mono text-sm">
@@ -229,200 +279,260 @@ const MyProfile = () => {
                       </p>
                     </div>
                   </div>
-
-                  {/* Email Verification Status */}
-                  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl">
-                    <div
-                      className={`p-3 rounded-lg ${
-                        user.emailVerified ? "bg-green-100" : "bg-yellow-100"
-                      }`}
-                    >
-                      <svg
-                        className={`w-6 h-6 ${
-                          user.emailVerified
-                            ? "text-green-600"
-                            : "text-yellow-600"
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d={
-                            user.emailVerified
-                              ? "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              : "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                          }
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-500 mb-1">
-                        Account Status
-                      </label>
-                      <div className="flex items-center space-x-2">
-                        <p
-                          className={`font-medium ${
-                            user.emailVerified
-                              ? "text-green-600"
-                              : "text-yellow-600"
-                          }`}
-                        >
-                          {user.emailVerified ? "Verified" : "Not Verified"}
-                        </p>
-                        {!user.emailVerified && (
-                          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                            Verify Now
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Avatar Source Info */}
-                  {!user.photoURL && (
-                    <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-xl">
-                      <div className="bg-blue-100 p-3 rounded-lg">
-                        <svg
-                          className="w-6 h-6 text-blue-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-blue-700 mb-1">
-                          Profile Avatar
-                        </label>
-                        <p className="text-blue-600 text-sm">
-                          This avatar was generated based on your email address.
-                          <button
-                            onClick={handleUpdate}
-                            className="ml-1 font-medium hover:text-blue-800 underline"
-                          >
-                            Upload a custom photo
-                          </button>
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar - Quick Actions */}
+          {/* Sidebar - Stats & Actions */}
           <div className="space-y-6">
-            {/* Account Summary */}
+            {/* Impact Stats Summary */}
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl shadow-xl p-6 text-white">
+              <div className="flex items-center space-x-2 mb-4">
+                <FaChartLine className="text-2xl" />
+                <h3 className="text-lg font-bold">Your Impact</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-2xl font-bold">
+                    {userImpact.totalCO2Saved}
+                  </p>
+                  <p className="text-xs text-green-100">kg CO₂ Saved</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {userImpact.totalPlasticReduced}
+                  </p>
+                  <p className="text-xs text-green-100">kg Plastic Reduced</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {userImpact.totalWaterSaved}
+                  </p>
+                  <p className="text-xs text-green-100">L Water Saved</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {userImpact.totalEnergySaved}
+                  </p>
+                  <p className="text-xs text-green-100">kWh Energy Saved</p>
+                </div>
+              </div>
+              <div className="border-t border-green-500 pt-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Rank</span>
+                  <span className="font-bold">
+                    #{userImpact.rank} of {userImpact.totalUsers}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-sm">Current Streak</span>
+                  <span className="font-bold flex items-center">
+                    <FaHeart className="text-red-400 mr-1" />
+                    {userImpact.currentStreak} days
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Badges Progress */}
             <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-4">
-                Account Summary
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Member since</span>
-                  <span className="font-medium text-gray-900">
-                    {new Date(user.metadata?.creationTime).toLocaleDateString()}
-                  </span>
+              <div className="flex items-center space-x-2 mb-4">
+                <FaMedal className="text-yellow-500 text-xl" />
+                <h3 className="font-semibold text-gray-900">Eco Badges</h3>
+              </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">
+                  Progress to next badge
+                </span>
+                <span className="text-sm font-medium text-green-600">
+                  {userImpact.badgesEarned}/{userImpact.totalBadges}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                <div
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${(userImpact.badgesEarned / userImpact.totalBadges) * 100}%`,
+                  }}
+                ></div>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="text-center p-2 bg-green-50 rounded-lg">
+                  <FaTrophy className="text-yellow-500 mx-auto mb-1" />
+                  <p className="text-xs text-gray-600">Eco Warrior</p>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Last login</span>
-                  <span className="font-medium text-gray-900">
-                    {new Date(
-                      user.metadata?.lastSignInTime
-                    ).toLocaleDateString()}
-                  </span>
+                <div className="text-center p-2 bg-green-50 rounded-lg">
+                  <FaRecycle className="text-green-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-600">Plastic Free</p>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Profile photo</span>
-                  <span className="font-medium text-gray-900">
-                    {user.photoURL ? "Custom" : "Generated"}
-                  </span>
+                <div className="text-center p-2 bg-gray-50 rounded-lg opacity-50">
+                  <FaWater className="text-blue-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-600">Water Saver</p>
                 </div>
               </div>
             </div>
 
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-4">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <FaLeaf className="text-green-500 mr-2" />
                 Quick Actions
               </h3>
               <div className="space-y-3">
                 <button
-                  onClick={handleUpdate}
-                  className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => navigate("/Impact")}
+                  className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
-                  <div className="bg-blue-100 p-2 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+                  <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
+                    <FaChartLine className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="text-gray-700 font-medium">
-                    Update Profile Photo
+                  <span className="text-gray-700 font-medium group-hover:text-green-600 transition-colors">
+                    View My Activities
                   </span>
                 </button>
 
-                <button className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                  <div className="bg-green-100 p-2 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                <button
+                  onClick={() => navigate("/challenges")}
+                  className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
+                >
+                  <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
+                    <FaTrophy className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="text-gray-700 font-medium">
-                    Change Password
+                  <span className="text-gray-700 font-medium group-hover:text-green-600 transition-colors">
+                    Join New Challenge
                   </span>
                 </button>
 
-                <button className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                  <div className="bg-purple-100 p-2 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                <button
+                  onClick={() => navigate("/EcoTips")}
+                  className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
+                >
+                  <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
+                    <FaStar className="w-5 h-5 text-green-600" />
                   </div>
-                  <span className="text-gray-700 font-medium">
-                    Help & Support
+                  <span className="text-gray-700 font-medium group-hover:text-green-600 transition-colors">
+                    Share Eco Tip
                   </span>
                 </button>
+
+                <button
+                  onClick={() => navigate("/leaderboard")}
+                  className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
+                >
+                  <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
+                    <FaUsers className="w-5 h-5 text-green-600" />
+                  </div>
+                  <span className="text-gray-700 font-medium group-hover:text-green-600 transition-colors">
+                    View Leaderboard
+                  </span>
+                </button>
+
+                <div className="border-t border-gray-200 pt-3 mt-2">
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-red-50 transition-all duration-200 group"
+                  >
+                    <div className="bg-red-100 p-2 rounded-lg group-hover:bg-red-200 transition-colors">
+                      {isLoggingOut ? (
+                        <FaSpinner className="w-5 h-5 text-red-600 animate-spin" />
+                      ) : (
+                        <FaSignOutAlt className="w-5 h-5 text-red-600" />
+                      )}
+                    </div>
+                    <span className="text-red-600 font-medium group-hover:text-red-700 transition-colors">
+                      {isLoggingOut ? "Logging out..." : "Logout"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Eco Quote */}
+            <div className="bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 text-center">
+              <p className="text-green-800 italic text-sm">
+                "The Earth is what we all have in common. Every small action
+                contributes to a greener future."
+              </p>
+              <div className="mt-3 flex justify-center space-x-1">
+                <FaLeaf className="text-green-600 text-xs" />
+                <FaLeaf className="text-green-600 text-xs" />
+                <FaLeaf className="text-green-600 text-xs" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Environmental Impact Breakdown */}
+        <div className="mt-8">
+          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+            <h3 className="font-semibold text-gray-900 mb-6 flex items-center">
+              <FaTree className="text-green-500 mr-2" />
+              Environmental Impact Breakdown
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Waste Reduction</span>
+                  <span className="text-sm font-semibold text-green-600">
+                    {userImpact.contributions.waste}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-green-500 h-2 rounded-full"
+                    style={{ width: `${userImpact.contributions.waste}%` }}
+                  ></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">
+                    Energy Conservation
+                  </span>
+                  <span className="text-sm font-semibold text-green-600">
+                    {userImpact.contributions.energy}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-yellow-500 h-2 rounded-full"
+                    style={{ width: `${userImpact.contributions.energy}%` }}
+                  ></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">
+                    Water Conservation
+                  </span>
+                  <span className="text-sm font-semibold text-green-600">
+                    {userImpact.contributions.water}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: `${userImpact.contributions.water}%` }}
+                  ></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">
+                    Sustainable Transport
+                  </span>
+                  <span className="text-sm font-semibold text-green-600">
+                    {userImpact.contributions.transport}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-purple-500 h-2 rounded-full"
+                    style={{ width: `${userImpact.contributions.transport}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
