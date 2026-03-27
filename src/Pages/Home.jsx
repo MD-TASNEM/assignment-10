@@ -16,11 +16,11 @@ import "aos/dist/aos.css";
 
 // banner Images
 import bannerOne from "../assets/Json-mages/bannerOne.png";
-import bannerTwo from "../assets/Json-mages/nutrition.jpg";
-import bannerThree from "../assets/Json-mages/three.jpg";
-import bannerFour from "../assets/Json-mages/rec-5.jpg";
-import bannerFive from "../assets/Json-mages/cat-on-harness-1024x683.jpg";
-import reviewBg from "../assets/Json-mages/review.webp";
+import bannerTwo from "../assets/Json-mages/banner2.png";
+import bannerThree from "../assets/Json-mages/banner3.png";
+import bannerFour from "../assets/Json-mages/banner4.png";
+import bannerFive from "../assets/Json-mages/banner5.jpg";
+import reviewBg from "../assets/Json-mages/review.png";
 import user1 from "../assets/Json-mages/user1.jpg";
 import user2 from "../assets/Json-mages/user2.jpg";
 import user3 from "../assets/Json-mages/user3.webp";
