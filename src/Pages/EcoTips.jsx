@@ -19,15 +19,26 @@
 
 // export default EcoTips;
 
-
-
-
 // pages/EcoTips.jsx
 import React, { useState, useContext, useEffect } from "react";
 import {
-  FaThumbsUp, FaShare, FaSearch, FaFilter, FaPlus, FaTimes,
-  FaSpinner, FaUser, FaLeaf, FaRecycle, FaWater, FaCar,
-  FaHome, FaApple, FaLightbulb, FaTrash, FaChartLine
+  FaThumbsUp,
+  FaShare,
+  FaSearch,
+  FaFilter,
+  FaPlus,
+  FaTimes,
+  FaSpinner,
+  FaUser,
+  FaLeaf,
+  FaRecycle,
+  FaWater,
+  FaCar,
+  FaHome,
+  FaApple,
+  FaLightbulb,
+  FaTrash,
+  FaChartLine,
 } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -36,135 +47,147 @@ const mockTips = [
   {
     _id: "1",
     title: "Start a Compost Bin at Home",
-    content: "Composting kitchen scraps reduces landfill waste and creates nutrient-rich soil for your garden. Start with a small bin, add brown materials (leaves, paper) and green materials (fruit scraps, coffee grounds), and turn weekly. Within 2-3 months, you'll have beautiful compost for your plants!",
+    content:
+      "Composting kitchen scraps reduces landfill waste and creates nutrient-rich soil for your garden. Start with a small bin, add brown materials (leaves, paper) and green materials (fruit scraps, coffee grounds), and turn weekly. Within 2-3 months, you'll have beautiful compost for your plants!",
     category: "Waste Reduction",
     author: "user1@example.com",
     authorName: "Sarah Green",
     authorPhoto: null,
     upvotes: 47,
-    createdAt: "2026-03-20T10:30:00Z"
+    createdAt: "2026-03-20T10:30:00Z",
   },
   {
     _id: "2",
     title: "Switch to LED Light Bulbs",
-    content: "LED bulbs use 75% less energy than traditional incandescent bulbs and last 25 times longer. Replacing just 5 bulbs in your home can save up to $100 per year on electricity bills. Plus, they're now available in warm colors that feel just like traditional lighting!",
+    content:
+      "LED bulbs use 75% less energy than traditional incandescent bulbs and last 25 times longer. Replacing just 5 bulbs in your home can save up to $100 per year on electricity bills. Plus, they're now available in warm colors that feel just like traditional lighting!",
     category: "Energy Conservation",
     author: "user2@example.com",
     authorName: "Mike Thompson",
     authorPhoto: null,
     upvotes: 32,
-    createdAt: "2026-03-19T14:15:00Z"
+    createdAt: "2026-03-19T14:15:00Z",
   },
   {
     _id: "3",
     title: "Fix Leaky Faucets Immediately",
-    content: "A single dripping faucet can waste over 3,000 gallons of water per year. Most leaks are simple to fix - just replace the washer or O-ring. Check under sinks and around toilets regularly for hidden leaks. This simple maintenance saves water and reduces your utility bills!",
+    content:
+      "A single dripping faucet can waste over 3,000 gallons of water per year. Most leaks are simple to fix - just replace the washer or O-ring. Check under sinks and around toilets regularly for hidden leaks. This simple maintenance saves water and reduces your utility bills!",
     category: "Water Conservation",
     author: "user3@example.com",
     authorName: "Emma Waters",
     authorPhoto: null,
     upvotes: 28,
-    createdAt: "2026-03-18T09:45:00Z"
+    createdAt: "2026-03-18T09:45:00Z",
   },
   {
     _id: "4",
     title: "Use Public Transport Once a Week",
-    content: "If you drive alone to work, try taking public transport just one day a week. This simple switch can reduce your annual carbon footprint by up to 800 kg of CO2. Use the time to read, listen to podcasts, or simply relax while someone else does the driving!",
+    content:
+      "If you drive alone to work, try taking public transport just one day a week. This simple switch can reduce your annual carbon footprint by up to 800 kg of CO2. Use the time to read, listen to podcasts, or simply relax while someone else does the driving!",
     category: "Sustainable Transport",
     author: "user4@example.com",
     authorName: "David Greenfield",
     authorPhoto: null,
     upvotes: 56,
-    createdAt: "2026-03-17T16:20:00Z"
+    createdAt: "2026-03-17T16:20:00Z",
   },
   {
     _id: "5",
     title: "Shop at Local Farmers Markets",
-    content: "Buying locally grown food reduces transportation emissions and supports your local economy. Food from farmers markets travels an average of 27 miles compared to 1,500 miles for conventional groceries. Plus, it's fresher, tastier, and often organic!",
+    content:
+      "Buying locally grown food reduces transportation emissions and supports your local economy. Food from farmers markets travels an average of 27 miles compared to 1,500 miles for conventional groceries. Plus, it's fresher, tastier, and often organic!",
     category: "Sustainable Food",
     author: "user5@example.com",
     authorName: "Lisa Chen",
     authorPhoto: null,
     upvotes: 41,
-    createdAt: "2026-03-16T11:00:00Z"
+    createdAt: "2026-03-16T11:00:00Z",
   },
   {
     _id: "6",
     title: "Start a Meatless Monday Routine",
-    content: "Reducing meat consumption just one day a week can save the equivalent of 348 gallons of water per person. Try delicious plant-based alternatives like lentil burgers, tofu stir-fries, or hearty vegetable stews. Your health and the planet will thank you!",
+    content:
+      "Reducing meat consumption just one day a week can save the equivalent of 348 gallons of water per person. Try delicious plant-based alternatives like lentil burgers, tofu stir-fries, or hearty vegetable stews. Your health and the planet will thank you!",
     category: "Sustainable Food",
     author: "user6@example.com",
     authorName: "Alex Rivera",
     authorPhoto: null,
     upvotes: 63,
-    createdAt: "2026-03-15T13:30:00Z"
+    createdAt: "2026-03-15T13:30:00Z",
   },
   {
     _id: "7",
     title: "Use Reusable Shopping Bags",
-    content: "Keep reusable bags in your car or by the door so you never forget them. A single reusable bag can replace over 500 plastic bags in its lifetime. Many stores now offer bag credits, so you'll save money while saving the environment!",
+    content:
+      "Keep reusable bags in your car or by the door so you never forget them. A single reusable bag can replace over 500 plastic bags in its lifetime. Many stores now offer bag credits, so you'll save money while saving the environment!",
     category: "Waste Reduction",
     author: "user7@example.com",
     authorName: "Natalie Park",
     authorPhoto: null,
     upvotes: 89,
-    createdAt: "2026-03-14T08:45:00Z"
+    createdAt: "2026-03-14T08:45:00Z",
   },
   {
     _id: "8",
     title: "Install a Rain Barrel",
-    content: "Collecting rainwater for your garden reduces water bills and conserves municipal water. One inch of rain on a 1,000 square foot roof yields about 600 gallons of water. Use this free resource for watering plants, washing cars, or cleaning outdoor areas!",
+    content:
+      "Collecting rainwater for your garden reduces water bills and conserves municipal water. One inch of rain on a 1,000 square foot roof yields about 600 gallons of water. Use this free resource for watering plants, washing cars, or cleaning outdoor areas!",
     category: "Water Conservation",
     author: "user8@example.com",
     authorName: "Tom Builder",
     authorPhoto: null,
     upvotes: 34,
-    createdAt: "2026-03-13T10:15:00Z"
+    createdAt: "2026-03-13T10:15:00Z",
   },
   {
     _id: "9",
     title: "Unplug Electronics When Not in Use",
-    content: "Electronics consume energy even when turned off (vampire power). Unplug phone chargers, computers, and kitchen appliances when not in use. Use power strips to make it easy - just flip one switch to cut power to multiple devices at once!",
+    content:
+      "Electronics consume energy even when turned off (vampire power). Unplug phone chargers, computers, and kitchen appliances when not in use. Use power strips to make it easy - just flip one switch to cut power to multiple devices at once!",
     category: "Energy Conservation",
     author: "user9@example.com",
     authorName: "Rachel Smart",
     authorPhoto: null,
     upvotes: 45,
-    createdAt: "2026-03-12T17:30:00Z"
+    createdAt: "2026-03-12T17:30:00Z",
   },
   {
     _id: "10",
     title: "Start a Kitchen Herb Garden",
-    content: "Growing your own herbs reduces packaging waste and food miles. Start with easy herbs like basil, mint, and rosemary on your windowsill. You'll always have fresh herbs for cooking, and they make your kitchen smell amazing!",
+    content:
+      "Growing your own herbs reduces packaging waste and food miles. Start with easy herbs like basil, mint, and rosemary on your windowsill. You'll always have fresh herbs for cooking, and they make your kitchen smell amazing!",
     category: "Green Living",
     author: "user10@example.com",
     authorName: "Oliver Green",
     authorPhoto: null,
     upvotes: 52,
-    createdAt: "2026-03-11T12:00:00Z"
+    createdAt: "2026-03-11T12:00:00Z",
   },
   {
     _id: "11",
     title: "Bike to Work Challenge",
-    content: "Replace car trips with biking for short distances. Even biking once a week can reduce your carbon footprint significantly. Invest in a good helmet, lights, and reflective gear for safety. Many cities now have bike-sharing programs if you don't own a bike!",
+    content:
+      "Replace car trips with biking for short distances. Even biking once a week can reduce your carbon footprint significantly. Invest in a good helmet, lights, and reflective gear for safety. Many cities now have bike-sharing programs if you don't own a bike!",
     category: "Sustainable Transport",
     author: "user11@example.com",
     authorName: "Chris Wheeler",
     authorPhoto: null,
     upvotes: 38,
-    createdAt: "2026-03-10T09:00:00Z"
+    createdAt: "2026-03-10T09:00:00Z",
   },
   {
     _id: "12",
     title: "Say No to Single-Use Plastics",
-    content: "Carry a reusable water bottle, coffee cup, and cutlery set. Refuse plastic straws and takeaway containers when possible. These small choices add up - over 8 million tons of plastic enter our oceans each year, and individual actions make a difference!",
+    content:
+      "Carry a reusable water bottle, coffee cup, and cutlery set. Refuse plastic straws and takeaway containers when possible. These small choices add up - over 8 million tons of plastic enter our oceans each year, and individual actions make a difference!",
     category: "Waste Reduction",
     author: "user12@example.com",
     authorName: "Maya Ocean",
     authorPhoto: null,
     upvotes: 104,
-    createdAt: "2026-03-09T15:45:00Z"
-  }
+    createdAt: "2026-03-09T15:45:00Z",
+  },
 ];
 
 // Toast Notification Component
@@ -176,11 +199,18 @@ const Toast = ({ message, type, onClose }) => {
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
-  const icon = type === 'success' ? '✓' : type === 'error' ? '⚠️' : 'ℹ️';
+  const bgColor =
+    type === "success"
+      ? "bg-green-500"
+      : type === "error"
+        ? "bg-red-500"
+        : "bg-blue-500";
+  const icon = type === "success" ? "✓" : type === "error" ? "⚠️" : "ℹ️";
 
   return (
-    <div className={`fixed top-4 right-4 z-50 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in flex items-center space-x-2`}>
+    <div
+      className={`fixed top-4 right-4 z-50 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in flex items-center space-x-2`}
+    >
       <span>{icon}</span>
       <span>{message}</span>
     </div>
@@ -225,7 +255,7 @@ const EcoTips = () => {
     "Sustainable Food": <FaApple className="text-red-600" />,
   };
 
-  const showToast = (message, type = 'success') => {
+  const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
 
@@ -234,14 +264,15 @@ const EcoTips = () => {
     let filtered = tips;
 
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(tip => tip.category === selectedCategory);
+      filtered = filtered.filter((tip) => tip.category === selectedCategory);
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(tip =>
-        tip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tip.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tip.authorName.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (tip) =>
+          tip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          tip.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          tip.authorName.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -255,7 +286,7 @@ const EcoTips = () => {
 
   const handleUpvote = (tipId) => {
     if (!user) {
-      showToast("🌱 Please login to upvote tips!", 'info');
+      showToast("🌱 Please user to upvote tips!", "info");
       return;
     }
 
@@ -263,11 +294,13 @@ const EcoTips = () => {
 
     // Simulate API call
     setTimeout(() => {
-      setTips(tips.map(tip =>
-        tip._id === tipId ? { ...tip, upvotes: tip.upvotes + 1 } : tip
-      ));
+      setTips(
+        tips.map((tip) =>
+          tip._id === tipId ? { ...tip, upvotes: tip.upvotes + 1 } : tip,
+        ),
+      );
       setUpvotingId(null);
-      showToast("👍 Thanks for upvoting!", 'success');
+      showToast("👍 Thanks for upvoting!", "success");
     }, 500);
   };
 
@@ -275,23 +308,23 @@ const EcoTips = () => {
     e.preventDefault();
 
     if (!user) {
-      showToast("🌱 Please login to share a tip!", 'info');
+      showToast("🌱 Please user to share a tip!", "info");
       return;
     }
 
     // Validation
     if (!newTip.title.trim()) {
-      showToast("Please enter a title for your tip", 'error');
+      showToast("Please enter a title for your tip", "error");
       return;
     }
 
     if (!newTip.content.trim()) {
-      showToast("Please share your eco tip content", 'error');
+      showToast("Please share your eco tip content", "error");
       return;
     }
 
     if (newTip.content.length < 20) {
-      showToast("Please provide at least 20 characters for your tip", 'error');
+      showToast("Please provide at least 20 characters for your tip", "error");
       return;
     }
 
@@ -308,14 +341,17 @@ const EcoTips = () => {
         authorName: user.displayName || user.email.split("@")[0],
         authorPhoto: user.photoURL || null,
         upvotes: 0,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       setTips([newTipObj, ...tips]);
       setShowAddModal(false);
       setNewTip({ title: "", content: "", category: "Waste Reduction" });
       setSubmitting(false);
-      showToast("🎉 Your eco tip has been shared with the community!", 'success');
+      showToast(
+        "🎉 Your eco tip has been shared with the community!",
+        "success",
+      );
     }, 1000);
   };
 
@@ -323,17 +359,19 @@ const EcoTips = () => {
     const shareText = `${tip.title}\n\n${tip.content.substring(0, 150)}...\n\nShared from EcoTrack - Sustainable Living Community\n\nJoin us at: ${window.location.origin}`;
 
     if (navigator.share) {
-      navigator.share({
-        title: tip.title,
-        text: shareText,
-        url: window.location.href,
-      }).catch(() => {
-        navigator.clipboard.writeText(shareText);
-        showToast("📋 Tip copied to clipboard!", 'info');
-      });
+      navigator
+        .share({
+          title: tip.title,
+          text: shareText,
+          url: window.location.href,
+        })
+        .catch(() => {
+          navigator.clipboard.writeText(shareText);
+          showToast("📋 Tip copied to clipboard!", "info");
+        });
     } else {
       navigator.clipboard.writeText(shareText);
-      showToast("📋 Tip copied to clipboard!", 'info');
+      showToast("📋 Tip copied to clipboard!", "info");
     }
   };
 
@@ -381,7 +419,7 @@ const EcoTips = () => {
 
   // Calculate stats
   const totalUpvotes = tips.reduce((sum, tip) => sum + (tip.upvotes || 0), 0);
-  const activeContributors = new Set(tips.map(tip => tip.author)).size;
+  const activeContributors = new Set(tips.map((tip) => tip.author)).size;
   const mostUpvotedTip = [...tips].sort((a, b) => b.upvotes - a.upvotes)[0];
 
   return (
@@ -425,7 +463,9 @@ const EcoTips = () => {
               <div className="text-sm opacity-90 mt-1">Active Contributors</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">⭐ {mostUpvotedTip?.upvotes || 0}</div>
+              <div className="text-3xl font-bold">
+                ⭐ {mostUpvotedTip?.upvotes || 0}
+              </div>
               <div className="text-sm opacity-90 mt-1">Most Upvoted Tip</div>
             </div>
           </div>
@@ -451,7 +491,7 @@ const EcoTips = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="w-full pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white cursor-pointer"
               >
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <option key={cat} value={cat === "All" ? "all" : cat}>
                     {cat}
                   </option>
@@ -576,10 +616,12 @@ const EcoTips = () => {
         {filteredTips.length > 0 && (
           <div className="mt-12 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl p-6 text-center">
             <p className="text-green-800 italic">
-              "The greatest threat to our planet is the belief that someone else will save it." - Robert Swan
+              "The greatest threat to our planet is the belief that someone else
+              will save it." - Robert Swan
             </p>
             <p className="text-sm text-green-600 mt-2">
-              Every tip shared brings us one step closer to a sustainable future!
+              Every tip shared brings us one step closer to a sustainable
+              future!
             </p>
           </div>
         )}
@@ -614,7 +656,9 @@ const EcoTips = () => {
                 <input
                   type="text"
                   value={newTip.title}
-                  onChange={(e) => setNewTip({ ...newTip, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewTip({ ...newTip, title: e.target.value })
+                  }
                   placeholder="e.g., How to reduce plastic waste at home"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   maxLength="100"
@@ -631,13 +675,19 @@ const EcoTips = () => {
                 </label>
                 <select
                   value={newTip.category}
-                  onChange={(e) => setNewTip({ ...newTip, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewTip({ ...newTip, category: e.target.value })
+                  }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent cursor-pointer"
                   required
                 >
-                  {categories.filter(c => c !== "All").map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
+                  {categories
+                    .filter((c) => c !== "All")
+                    .map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -647,7 +697,9 @@ const EcoTips = () => {
                 </label>
                 <textarea
                   value={newTip.content}
-                  onChange={(e) => setNewTip({ ...newTip, content: e.target.value })}
+                  onChange={(e) =>
+                    setNewTip({ ...newTip, content: e.target.value })
+                  }
                   rows="6"
                   placeholder="Share your practical eco-friendly tip with the community... (e.g., specific actions, benefits, and how others can implement it)"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
@@ -661,7 +713,12 @@ const EcoTips = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
                 <p className="text-sm text-green-800 flex items-start space-x-2">
                   <span className="text-lg">💡</span>
-                  <span><strong>Pro Tip:</strong> Share actionable advice that others can easily implement. Include specific steps, estimated time, and environmental benefits. Your tip could inspire someone to make a lasting change!</span>
+                  <span>
+                    <strong>Pro Tip:</strong> Share actionable advice that
+                    others can easily implement. Include specific steps,
+                    estimated time, and environmental benefits. Your tip could
+                    inspire someone to make a lasting change!
+                  </span>
                 </p>
               </div>
 

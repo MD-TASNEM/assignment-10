@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import toast from "react-hot-toast";
 import {
   FaLeaf,
   FaUser,
@@ -14,7 +15,8 @@ import {
 } from "react-icons/fa";
 
 const Navbar = () => {
-  const { user, logout, loading } = useContext(AuthContext);
+  // Change 'logout' to 'logOut' to match your AuthContext
+  const { user, logOut, loading } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -26,15 +28,30 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const handleSignOut = async () => {
+    setIsLoggingOut(true);
     try {
-      setIsLoggingOut(true);
-      await logout();
+      await logOut(); // Changed from logout() to logOut()
+      toast.success("Logged out successfully. Come back soon! 🌱", {
+        duration: 3000,
+        position: "top-right",
+        style: {
+          background: "#10B981",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
       navigate("/");
-      // Show success toast (you can implement your toast notification here)
-      console.log("Logged out successfully");
     } catch (err) {
       console.error("Logout error:", err);
-      // Show error toast
+      toast.error("Failed to logout. Please try again.", {
+        duration: 3000,
+        position: "top-right",
+        style: {
+          background: "#EF4444",
+          color: "#fff",
+          borderRadius: "12px",
+        },
+      });
     } finally {
       setIsLoggingOut(false);
     }
@@ -179,12 +196,10 @@ const Navbar = () => {
                       </NavLink>
                       <NavLink
                         to="/Leaderboard"
-
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       >
-
-                       <span className="mr-3 " >🏆</span>
-                       Leaderboard
+                        <span className="mr-3">🏆</span>
+                        Leaderboard
                       </NavLink>
 
                       <button
@@ -209,7 +224,7 @@ const Navbar = () => {
                 ) : (
                   <div className="flex items-center space-x-3">
                     <NavLink
-                      to="/login"
+                      to="/user"
                       className="px-5 py-2 rounded-full font-medium text-emerald-300 border border-emerald-500 hover:bg-emerald-600/20 transition-all duration-300"
                     >
                       Login
@@ -346,7 +361,7 @@ const Navbar = () => {
                 ) : (
                   <div className="space-y-3">
                     <NavLink
-                      to="/login"
+                      to="/user"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="w-full flex items-center justify-center space-x-2 bg-transparent text-emerald-300 border-2 border-emerald-500 px-4 py-3 rounded-lg font-medium hover:bg-emerald-600 hover:text-white transition-all duration-200"
                     >

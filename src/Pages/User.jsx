@@ -118,7 +118,7 @@ const Login = () => {
 
   const handleForgotPassword = () => {
     if (email) {
-      navigate("/forgot-password", { state: { email } });
+      navigate("/ForgetPass", { state: { email } });
     } else {
       toast.error("Please enter your email address first to reset password.", {
         duration: 4000,

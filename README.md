@@ -29,7 +29,7 @@ EcoTrack brings together people who want to live more sustainably. Users can joi
 - **Authentication**
   - Email & password registration with password strength validation
   - Google sign-in via Firebase Auth
-  - Protected routes redirect to `/login` and return you to the intended page after sign-in
+  - Protected routes redirect to `/user` and return you to the intended page after sign-in
   - Forgot password link (route included; flow optional)
 
 - **Live Statistics**

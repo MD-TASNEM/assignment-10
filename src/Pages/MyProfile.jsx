@@ -62,7 +62,7 @@ const MyProfile = () => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/user" replace />;
   }
 
   const handleUpdate = () => {
