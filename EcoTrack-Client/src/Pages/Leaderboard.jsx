@@ -1,5 +1,6 @@
 // pages/Leaderboard.jsx
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router";
 import {
   FaTrophy, FaMedal, FaStar, FaLeaf, FaRecycle, FaWater,
   FaBolt, FaCalendarAlt, FaChartLine, FaFilter, FaSearch,
@@ -244,6 +245,7 @@ const Toast = ({ message, type, onClose }) => {
 
 const Leaderboard = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTimeframe, setSelectedTimeframe] = useState("all");
@@ -297,6 +299,12 @@ const Leaderboard = () => {
   };
 
   const filteredData = getFilteredLeaderboard();
+  const mostBadgesUser = [...leaderboardData].sort(
+    (a, b) => b.badges - a.badges,
+  )[0];
+  const longestStreakUser = [...leaderboardData].sort(
+    (a, b) => b.streak - a.streak,
+  )[0];
 
   // Calculate global stats
   const globalStats = {
@@ -561,14 +569,14 @@ const Leaderboard = () => {
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
               <div className="text-3xl mb-3">🏅</div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Most Badges</h3>
-              <p className="text-gray-600">{leaderboardData.sort((a,b) => b.badges - a.badges)[0].name}</p>
-              <p className="text-sm text-green-600 mt-1">{leaderboardData.sort((a,b) => b.badges - a.badges)[0].badges} badges earned</p>
+              <p className="text-gray-600">{mostBadgesUser.name}</p>
+              <p className="text-sm text-green-600 mt-1">{mostBadgesUser.badges} badges earned</p>
             </div>
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
               <div className="text-3xl mb-3">🔥</div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Longest Streak</h3>
-              <p className="text-gray-600">{leaderboardData.sort((a,b) => b.streak - a.streak)[0].name}</p>
-              <p className="text-sm text-green-600 mt-1">{leaderboardData.sort((a,b) => b.streak - a.streak)[0].streak} days active</p>
+              <p className="text-gray-600">{longestStreakUser.name}</p>
+              <p className="text-sm text-green-600 mt-1">{longestStreakUser.streak} days active</p>
             </div>
           </div>
         </div>
@@ -577,7 +585,11 @@ const Leaderboard = () => {
         <div className="mt-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center shadow-xl">
           <h3 className="text-2xl font-bold mb-4">Want to See Your Name Here?</h3>
           <p className="text-green-100 mb-6">Join challenges, reduce your carbon footprint, and climb the leaderboard!</p>
-          <button className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
+          <button
+            type="button"
+            onClick={() => navigate("/challenges")}
+            className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
             Join a Challenge Today →
           </button>
         </div>

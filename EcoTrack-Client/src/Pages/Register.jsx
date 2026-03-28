@@ -148,7 +148,7 @@ const Register = () => {
     const fullName = `${firstName} ${lastName}`.trim();
 
     try {
-      const userCredential = await createUser(email, password);
+      await createUser(email, password);
 
       // Update profile with name and photo
       await updateUser({
@@ -523,14 +523,14 @@ const Register = () => {
               <label className="text-sm text-gray-600">
                 I agree to the{" "}
                 <Link
-                  to="/terms"
+                  to="/TermsOfService"
                   className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
-                  to="/privacy"
+                  to="/PrivacyPolicy"
                   className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Privacy Policy
@@ -562,7 +562,7 @@ const Register = () => {
               <p className="text-gray-600">
                 Already have an account?{" "}
                 <Link
-                  to="/user"
+                  to="/login"
                   className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-200"
                 >
                   Sign in here

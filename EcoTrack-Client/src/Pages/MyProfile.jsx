@@ -13,7 +13,6 @@ import {
   FaChartLine,
   FaRecycle,
   FaWater,
-  FaBolt,
   FaTree,
   FaMedal,
   FaStar,
@@ -62,7 +61,7 @@ const MyProfile = () => {
   }
 
   if (!user) {
-    return <Navigate to="/user" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   const handleUpdate = () => {
@@ -107,8 +106,10 @@ const MyProfile = () => {
       return user.photoURL;
     }
     if (user.email) {
-      const emailHash = user.email.trim().toLowerCase();
-      return `https://www.gravatar.com/avatar/${emailHash}?s=128&d=identicon`;
+      const name = encodeURIComponent(
+        user.displayName || user.email.split("@")[0],
+      );
+      return `https://ui-avatars.com/api/?name=${name}&background=10B981&color=fff&bold=true`;
     }
     return null;
   };
@@ -381,7 +382,7 @@ const MyProfile = () => {
               </h3>
               <div className="space-y-3">
                 <button
-                  onClick={() => navigate("/Impact")}
+                    onClick={() => navigate("/my-activities")}
                   className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
                   <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
@@ -417,7 +418,7 @@ const MyProfile = () => {
                 </button>
 
                 <button
-                  onClick={() => navigate("/leaderboard")}
+                  onClick={() => navigate("/Leaderboard")}
                   className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
                   <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">

@@ -1,4 +1,4 @@
-const Event = require('../models/Event');
+const Event = require("../models/Event");
 
 // @desc    Get all events
 // @route   GET /api/events
@@ -22,7 +22,9 @@ const getUpcomingEvents = async (req, res) => {
     const events = await Event.find({ date: { $gte: new Date() } })
       .sort({ date: 1 })
       .limit(4)
-      .select('title date location description');
+      .select(
+        "title date location description organizer imageUrl currentParticipants maxParticipants",
+      );
 
     res.json(events);
   } catch (error) {
@@ -37,7 +39,7 @@ const getEventById = async (req, res) => {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     res.json(event);
@@ -52,7 +54,7 @@ const createEvent = async (req, res) => {
   try {
     const event = new Event({
       ...req.body,
-      organizer: req.user.email
+      organizer: req.user.email,
     });
 
     const savedEvent = await event.save();
@@ -69,17 +71,17 @@ const joinEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     if (event.currentParticipants >= event.maxParticipants) {
-      return res.status(400).json({ message: 'Event is already full' });
+      return res.status(400).json({ message: "Event is already full" });
     }
 
     event.currentParticipants += 1;
     await event.save();
 
-    res.json({ message: 'Successfully joined the event', event });
+    res.json({ message: "Successfully joined the event", event });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -90,5 +92,5 @@ module.exports = {
   getUpcomingEvents,
   getEventById,
   createEvent,
-  joinEvent
+  joinEvent,
 };

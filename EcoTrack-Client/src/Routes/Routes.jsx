@@ -11,13 +11,17 @@ import PrivateRoutes from "./PrivateRoutes";
 import Challenges from "../Pages/Challenges";
 import UpdateProfile from "../Pages/UpdateProfile";
 import Impact from "../Pages/Impact";
+import Community from "../Pages/Community";
+import AddChallenge from "../Pages/AddChallenge";
+import JoinChallenge from "../Pages/JoinChallenge";
 import EcoTips from "./../Pages/EcoTips";
 import Leaderboard from "./../Pages/Leaderboard";
 import About from "./../Pages/About";
-import FAQS from "./../Pages/FAQS";
+import FAQs from "./../Pages/FAQs";
 import PrivacyPolicy from "./../Pages/PrivacyPolicy";
 import TermsOfService from "./../Pages/TermsOfService";
 import Accessibility from "./../Pages/Accessibility";
+import NotFound from "../Pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -33,15 +37,55 @@ export const router = createBrowserRouter([
         Component: User,
       },
       {
+        path: "login",
+        Component: User,
+      },
+      {
         path: "register",
         Component: Register,
+      },
+      {
+        path: "forgot-password",
+        Component: ForgetPass,
       },
       {
         path: "Impact",
         Component: Impact,
       },
       {
+        path: "impact",
+        Component: Impact,
+      },
+      {
+        path: "my-activities",
+        element: (
+          <PrivateRoutes>
+            <Impact />
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "my-activities/:id",
+        element: (
+          <PrivateRoutes>
+            <Impact />
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "Community",
+        Component: Community,
+      },
+      {
+        path: "community",
+        Component: Community,
+      },
+      {
         path: "Leaderboard",
+        Component: Leaderboard,
+      },
+      {
+        path: "leaderboard",
         Component: Leaderboard,
       },
       {
@@ -49,15 +93,31 @@ export const router = createBrowserRouter([
         Component: About,
       },
       {
+        path: "about",
+        Component: About,
+      },
+      {
         path: "EcoTips",
         Component: EcoTips,
       },
       {
-        path: "FAQS",
-        Component: FAQS,
+        path: "ecotips",
+        Component: EcoTips,
+      },
+      {
+        path: "FAQs",
+        Component: FAQs,
+      },
+      {
+        path: "faqs",
+        Component: FAQs,
       },
       {
         path: "PrivacyPolicy",
+        Component: PrivacyPolicy,
+      },
+      {
+        path: "privacy-policy",
         Component: PrivacyPolicy,
       },
       {
@@ -65,7 +125,15 @@ export const router = createBrowserRouter([
         Component: TermsOfService,
       },
       {
+        path: "terms-of-service",
+        Component: TermsOfService,
+      },
+      {
         path: "Accessibility",
+        Component: Accessibility,
+      },
+      {
+        path: "accessibility",
         Component: Accessibility,
       },
       {
@@ -77,12 +145,32 @@ export const router = createBrowserRouter([
         element: <Challenges />
       },
       {
-        path: "Challenges/:ChallengesId",
+        path: "challenges",
+        element: <Challenges />
+      },
+      {
+        path: "challenges/add",
         element: (
           <PrivateRoutes>
-            <ChallengesDetails />
+            <AddChallenge />
           </PrivateRoutes>
         ),
+      },
+      {
+        path: "challenges/join/:id",
+        element: (
+          <PrivateRoutes>
+            <JoinChallenge />
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "Challenges/:ChallengesId",
+        element: <ChallengesDetails />,
+      },
+      {
+        path: "challenges/:id",
+        element: <ChallengesDetails />,
       },
       {
         path: "profile",
@@ -99,6 +187,10 @@ export const router = createBrowserRouter([
             <UpdateProfile />
           </PrivateRoutes>
         ),
+      },
+      {
+        path: "*",
+        Component: NotFound,
       },
     ],
   },

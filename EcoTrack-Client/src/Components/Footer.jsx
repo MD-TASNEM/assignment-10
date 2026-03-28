@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { FaLeaf, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 
 const Footer = () => {
@@ -67,15 +68,15 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { name: "About EcoTrack", path: "/about" },
-    { name: "Challenges", path: "/Challenges" },
-    { name: "Leaderboard", path: "/leaderboard" },
+    { name: "About", path: "/about" },
+    { name: "Challenges", path: "/challenges" },
+    { name: "Leaderboard", path: "/Leaderboard" },
     { name: "Eco Tips", path: "/EcoTips" },
-    { name: "Contact Us", path: "/about" },
+    { name: "Contact", path: "/about" },
   ];
 
   const supportLinks = [
-    { name: "FAQS", path: "/FAQS" },
+    { name: "FAQs", path: "/FAQs" },
     { name: "Privacy Policy", path: "/PrivacyPolicy" },
     { name: "Terms of Service", path: "/TermsOfService" },
     { name: "Accessibility", path: "/Accessibility" },
@@ -132,6 +133,9 @@ const Footer = () => {
                 </div>
               ))}
             </div>
+            <p className="mt-5 text-xs leading-6 text-gray-400">
+              Accessibility note: the layout keeps strong contrast and keyboard-friendly controls. Privacy note: we only keep the data needed for EcoTrack features.
+            </p>
           </div>
 
           {/* Quick Links */}
@@ -143,15 +147,15 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.path}
+                  <Link
+                    to={link.path}
                     className="text-gray-300 hover:text-emerald-400 transition-all duration-200 text-sm flex items-center space-x-2 group"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200" />
                     <span className="group-hover:translate-x-1 transition-transform duration-200">
                       {link.name}
                     </span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -166,15 +170,15 @@ const Footer = () => {
             <ul className="space-y-3">
               {supportLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.path}
+                  <Link
+                    to={link.path}
                     className="text-gray-300 hover:text-emerald-400 transition-all duration-200 text-sm flex items-center space-x-2 group"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200" />
                     <span className="group-hover:translate-x-1 transition-transform duration-200">
                       {link.name}
                     </span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

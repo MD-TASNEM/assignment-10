@@ -1,5 +1,5 @@
 // pages/Login.jsx
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import {
@@ -118,7 +118,7 @@ const Login = () => {
 
   const handleForgotPassword = () => {
     if (email) {
-      navigate("/ForgetPass", { state: { email } });
+      navigate("/forgot-password", { state: { email } });
     } else {
       toast.error("Please enter your email address first to reset password.", {
         duration: 4000,

@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const errorHandler = require('./middleware/errorHandler');
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+const errorHandler = require("./middleware/errorHandler");
 
 // Load env vars
 dotenv.config();
@@ -12,56 +12,80 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const defaultAllowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+const allowedOrigins = [
+  ...new Set([
+    ...defaultAllowedOrigins,
+    ...(process.env.CLIENT_URL || "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  ]),
+];
 
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  }),
+);
 
 // Dev logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
 // Route files
-app.use('/api/challenges', require('./routes/challenges'));
-app.use('/api/user-challenges', require('./routes/userChallenges'));
-app.use('/api/tips', require('./routes/tips'));
-app.use('/api/events', require('./routes/events'));
-app.use('/api/stats', require('./routes/stats'));
+app.use("/api/challenges", require("./routes/challenges"));
+app.use("/api/user-challenges", require("./routes/userChallenges"));
+app.use("/api/tips", require("./routes/tips"));
+app.use("/api/events", require("./routes/events"));
+app.use("/api/stats", require("./routes/stats"));
 
 // Health check
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.status(200).json({
-    status: 'OK',
-    message: 'EcoTrack Server is running',
-    timestamp: new Date().toISOString()
+    status: "OK",
+    message: "EcoTrack Server is running",
+    timestamp: new Date().toISOString(),
   });
 });
 
 // Welcome route
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    name: 'EcoTrack API',
-    version: '1.0.0',
-    description: 'Sustainable Living Community Platform',
+    name: "EcoTrack API",
+    version: "1.0.0",
+    description: "Sustainable Living Community Platform",
     endpoints: {
-      challenges: '/api/challenges',
-      userChallenges: '/api/user-challenges',
-      tips: '/api/tips',
-      events: '/api/events',
-      stats: '/api/stats'
-    }
+      challenges: "/api/challenges",
+      userChallenges: "/api/user-challenges",
+      tips: "/api/tips",
+      events: "/api/events",
+      stats: "/api/stats",
+    },
   });
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({ message: `Route ${req.originalUrl} not found` });
 });
 
@@ -75,7 +99,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
+process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));

@@ -86,11 +86,11 @@ const PrivacyPolicy = () => {
             <FaShieldAlt className="text-white text-4xl" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-4">
-            PrivacyPolicy Policy
+            Privacy Policy
           </h1>
           <p className="text-gray-600">Last Updated: {lastUpdated}</p>
           <p className="text-gray-600 max-w-2xl mx-auto mt-4">
-            Your PrivacyPolicy is important to us. This policy explains how we
+            Your privacy is important to us. This policy explains how we
             collect, use, and protect your information.
           </p>
         </div>
@@ -98,12 +98,11 @@ const PrivacyPolicy = () => {
         {/* Introduction */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
           <p className="text-gray-700 leading-relaxed">
-            At EcoTrack, we are committed to protecting your PrivacyPolicy and
-            ensuring the security of your personal information. This
-            PrivacyPolicy Policy describes our practices regarding the
-            collection, use, and disclosure of information we collect through
-            our platform. By using EcoTrack, you agree to the terms of this
-            policy.
+            At EcoTrack, we are committed to protecting your privacy and
+            ensuring the security of your personal information. This Privacy
+            Policy describes our practices regarding the collection, use, and
+            disclosure of information we collect through our platform. By
+            using EcoTrack, you agree to the terms of this policy.
           </p>
         </div>
 
@@ -149,7 +148,7 @@ const PrivacyPolicy = () => {
         {/* Children's PrivacyPolicy */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            Children's PrivacyPolicy
+            Children's Privacy
           </h2>
           <p className="text-gray-700 leading-relaxed">
             EcoTrack is not intended for children under 13 years of age. We do
@@ -165,8 +164,8 @@ const PrivacyPolicy = () => {
             Changes to This Policy
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            We may update this PrivacyPolicy Policy from time to time. We will
-            notify you of any changes by posting the new policy on this page and
+            We may update this Privacy Policy from time to time. We will notify
+            you of any changes by posting the new policy on this page and
             updating the "Last Updated" date. We encourage you to review this
             policy periodically for any changes.
           </p>
@@ -175,20 +174,20 @@ const PrivacyPolicy = () => {
         {/* Contact Section */}
         <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200">
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Questions About PrivacyPolicy?
+            Questions About Privacy?
           </h2>
           <p className="text-gray-600 mb-4">
-            If you have any questions or concerns about our PrivacyPolicy
-            practices, please contact us:
+            If you have any questions or concerns about our privacy practices,
+            please contact us:
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <div className="flex items-center justify-center space-x-2">
               <FaEnvelope className="text-green-600" />
               <a
-                href="mailto:PrivacyPolicy@ecotrack.com"
+                href="mailto:privacy@ecotrack.com"
                 className="text-green-600 hover:underline"
               >
-                PrivacyPolicy@ecotrack.com
+                privacy@ecotrack.com
               </a>
             </div>
             <div className="flex items-center justify-center space-x-2">

@@ -1,21 +1,18 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
-import { getAuth } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAH0PkQ5_7_43kb71ItxAS7XEomb_fdr78",
-  authDomain: "ecotrack-1837c.firebaseapp.com",
-  projectId: "ecotrack-1837c",
-  storageBucket: "ecotrack-1837c.firebasestorage.app",
-  messagingSenderId: "417652671860",
-  appId: "1:417652671860:web:76e5f41758ca67bdf09821",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
+export const isFirebaseConfigured = Object.values(firebaseConfig).every(
+  (value) => value && !String(value).startsWith('your_firebase_'),
+);
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

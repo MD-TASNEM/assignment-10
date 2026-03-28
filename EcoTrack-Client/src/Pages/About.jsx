@@ -4,9 +4,10 @@ import {
   FaLeaf, FaRecycle, FaWater, FaCar, FaTree, FaBolt,
   FaUsers, FaGlobe, FaHeart, FaHandsHelping, FaChartLine,
   FaCalendarAlt, FaTrophy, FaLightbulb, FaQuoteLeft,
-  FaTwitter, FaFacebook, FaInstagram, FaYoutube,
+  FaFacebook, FaInstagram, FaYoutube,
   FaEnvelope, FaMapMarkerAlt, FaPhone, FaCheckCircle
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 // Team Members Data
 const teamMembers = [
@@ -362,8 +363,8 @@ const About = () => {
                   <p className="text-green-600 text-sm font-semibold mb-2">{member.role}</p>
                   <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
                   <div className="flex justify-center space-x-3">
-                    <a href={member.social.twitter} className="text-gray-400 hover:text-blue-400 transition-colors">
-                      <FaTwitter />
+                    <a href={member.social.twitter} className="text-gray-400 hover:text-slate-900 transition-colors">
+                      <FaXTwitter />
                     </a>
                     <a href={member.social.linkedin} className="text-gray-400 hover:text-blue-600 transition-colors">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -418,7 +419,7 @@ const About = () => {
                   <FaFacebook />
                 </a>
                 <a href="#" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-blue-400 hover:text-white transition-all">
-                  <FaTwitter />
+                  <FaXTwitter />
                 </a>
                 <a href="#" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-pink-500 hover:text-white transition-all">
                   <FaInstagram />

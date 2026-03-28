@@ -6,7 +6,11 @@ import {
   FaCheckCircle, FaSpinner, FaShareAlt, FaDownload,
   FaHeart, FaStar, FaMedal, FaAward
 } from "react-icons/fa";
+import { useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import { getFallbackChallengeById } from "../data/mockEcoContent";
+
+const LOCAL_USER_CHALLENGES_KEY = "ecotrack.localUserChallenges";
 
 // Mock Data - Community Impact Stats
 const communityStats = {
@@ -138,11 +142,13 @@ const LeaderboardItem = ({ user, rank }) => (
 
 const Impact = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [userImpact, setUserImpact] = useState(userImpactData);
   const [shareLoading, setShareLoading] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [toast, setToast] = useState(null);
+  const [localActivities, setLocalActivities] = useState([]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -155,6 +161,21 @@ const Impact = () => {
       setLoading(false);
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      const stored = JSON.parse(
+        window.localStorage.getItem(LOCAL_USER_CHALLENGES_KEY) || "[]",
+      );
+      setLocalActivities(Array.isArray(stored) ? stored : []);
+    } catch {
+      setLocalActivities([]);
+    }
+  }, [user]);
 
   const handleShareImpact = async () => {
     setShareLoading(true);
@@ -188,6 +209,23 @@ const Impact = () => {
   // Calculate total impact
   const totalImpact = communityStats.totalCO2Saved + communityStats.totalPlasticReduced * 2 + communityStats.totalWaterSaved / 1000;
   const treesEquivalent = Math.floor(communityStats.totalCO2Saved / 21); // 21kg CO2 per tree per year
+  const mergedRecentActivities = [
+    ...localActivities.map((record) => {
+      const challenge = getFallbackChallengeById(record.challengeId);
+      return {
+        id: record._id,
+        title: challenge?.title || `Challenge ${record.challengeId}`,
+        impact: `${record.progress}% complete`,
+        date: new Date(record.lastUpdated || record.joinDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
+        status: record.status,
+      };
+    }),
+    ...userImpact.recentActivities,
+  ];
 
   // Skeleton Loader
   const SkeletonCard = () => (
@@ -319,7 +357,7 @@ const Impact = () => {
               Recent Activities
             </h2>
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              {userImpact.recentActivities.map((activity) => (
+              {mergedRecentActivities.map((activity) => (
                 <div key={activity.id} className="flex justify-between items-center p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
                   <div>
                     <p className="font-semibold text-gray-900">{activity.title}</p>
@@ -471,7 +509,11 @@ const Impact = () => {
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center shadow-xl">
           <h3 className="text-2xl font-bold mb-4">Ready to Make More Impact?</h3>
           <p className="text-green-100 mb-6">Join new challenges and earn more badges to increase your positive impact on the environment.</p>
-          <button className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
+          <button
+            type="button"
+            onClick={() => navigate("/challenges")}
+            className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
             Explore New Challenges →
           </button>
         </div>

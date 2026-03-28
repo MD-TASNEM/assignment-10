@@ -1,15 +1,18 @@
-import React, { use } from "react";
-import { Link, useLocation } from "react-router";
+import React, { useContext } from "react";
+import { useLocation } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import toast from "react-hot-toast";
 
 const ForgetPass = () => {
-  const { forgetpass } = use(AuthContext);
+  const { forgetpass } = useContext(AuthContext);
   const { state } = useLocation();
-
-  const { email } = state;
+  const email = state?.email || "";
   const handleForgetPass = (e) => {
     e.preventDefault();
+    if (!email) {
+      toast.error("Please go back to the login page and enter your email first.");
+      return;
+    }
     forgetpass(email)
       .then(() => {
         toast.success("Send to Your Email");
@@ -38,12 +41,12 @@ const ForgetPass = () => {
                 type="email"
                 value={email}
                 readOnly
-                defaultValue={email}
                 className="input sm:w-[400px] sm:h-[50px] border-2 border-gray-400 focus:outline-none"
                 placeholder="Your email"
               />
 
               <button
+                type="button"
                 onClick={handleForgetPass}
                 className="btn btn-neutral mt-3 sm:w-[400px] border-none relative group"
               >

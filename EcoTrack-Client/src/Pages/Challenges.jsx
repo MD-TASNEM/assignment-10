@@ -1,93 +1,123 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router';
+import { challengesAPI } from '../api/api';
+import toast from 'react-hot-toast';
+import { getMergedChallenges } from '../data/mockEcoContent';
+
+const isLocalChallenge = (challenge) =>
+  challenge._id?.toString().startsWith('local-') ||
+  challenge._id?.toString().startsWith('custom-');
 
 const Challenges = () => {
-  const [services, setServices] = useState([]);
-  const [filter, setFilter] = useState("All");
+  const [challenges, setChallenges] = useState(getMergedChallenges());
+  const [filteredChallenges, setFilteredChallenges] = useState(getMergedChallenges());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [usingFallbackData, setUsingFallbackData] = useState(false);
+  const [filters, setFilters] = useState({
+    category: '',
+    status: '',
+    search: ''
+  });
+  const [categories, setCategories] = useState(
+    [...new Set(getMergedChallenges().map((challenge) => challenge.category))],
+  );
 
   useEffect(() => {
-    fetch("/data.json")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch challenges data");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setServices(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading data:", err);
-        setError(err.message);
-        setLoading(false);
-      });
+    const requestState = { cancelled: false };
+    fetchChallenges(requestState);
+
+    return () => {
+      requestState.cancelled = true;
+    };
   }, []);
 
-  const filteredServices =
-    filter === "All"
-      ? services
-      : services.filter((service) => service.badge === filter);
+  const fetchChallenges = async (requestState) => {
+    setLoading(true);
+    try {
+      const response = await challengesAPI.getAll();
+      if (requestState.cancelled) {
+        return;
+      }
 
-  const getBadgeColor = (badge) => {
-    switch (badge) {
-      case "Popular":
-        return "bg-purple-500";
-      case "Trending":
-        return "bg-orange-500";
-      case "New":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-500";
+      const liveChallenges = Array.isArray(response.data) ? response.data : [];
+      const customChallenges = getMergedChallenges().filter(isLocalChallenge);
+      const sourceChallenges =
+        liveChallenges.length > 0
+          ? [...customChallenges, ...liveChallenges]
+          : getMergedChallenges();
+
+      setChallenges(sourceChallenges);
+      setFilteredChallenges(sourceChallenges);
+      setCategories([...new Set(sourceChallenges.map((challenge) => challenge.category))]);
+      setUsingFallbackData(liveChallenges.length === 0);
+    } catch (error) {
+      console.error('Error fetching challenges:', error);
+      if (!requestState.cancelled) {
+        const mergedChallenges = getMergedChallenges();
+        setChallenges(mergedChallenges);
+        setFilteredChallenges(mergedChallenges);
+        setCategories([...new Set(mergedChallenges.map((challenge) => challenge.category))]);
+        setUsingFallbackData(true);
+      }
+      console.warn('Live challenge data is unavailable. Falling back to local sample content.');
+    } finally {
+      if (!requestState.cancelled) {
+        setLoading(false);
+      }
     }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...challenges];
+
+    if (filters.category && filters.category !== 'all') {
+      filtered = filtered.filter(c => c.category === filters.category);
+    }
+
+    if (filters.status && filters.status !== 'all') {
+      filtered = filtered.filter(c => c.status === filters.status);
+    }
+
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      filtered = filtered.filter(c =>
+        c.title.toLowerCase().includes(searchLower) ||
+        c.description.toLowerCase().includes(searchLower)
+      );
+    }
+
+    setFilteredChallenges(filtered);
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [filters, challenges]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
+  };
+
+  const resetFilters = () => {
+    setFilters({ category: '', status: '', search: '' });
   };
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case "Easy":
-        return "text-emerald-600 bg-emerald-100";
-      case "Medium":
-        return "text-amber-600 bg-amber-100";
-      case "Hard":
-        return "text-red-600 bg-red-100";
-      default:
-        return "text-gray-600 bg-gray-100";
+      case 'Easy': return 'text-emerald-600 bg-emerald-100';
+      case 'Medium': return 'text-amber-600 bg-amber-100';
+      case 'Hard': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const stars = [];
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <i key={`star-${i}`} className="fas fa-star text-amber-400"></i>,
-      );
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Active': return 'bg-green-100 text-green-700';
+      case 'Upcoming': return 'bg-blue-100 text-blue-700';
+      case 'Completed': return 'bg-gray-100 text-gray-700';
+      default: return 'bg-gray-100 text-gray-700';
     }
-
-    if (hasHalfStar) {
-      stars.push(
-        <i key="half-star" className="fas fa-star-half-alt text-amber-400"></i>,
-      );
-    }
-
-    const emptyStars = 5 - stars.length;
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <i key={`empty-${i}`} className="far fa-star text-amber-400"></i>,
-      );
-    }
-
-    return stars;
-  };
-
-  const getDurationText = (duration, unit) => {
-    if (!duration) return "0 Days";
-    if (unit) return `${duration} ${unit}`;
-    return `${duration} ${duration === 1 ? "Day" : "Days"}`;
   };
 
   if (loading) {
@@ -103,149 +133,132 @@ const Challenges = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center py-16">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-            <p className="text-red-600 text-lg mb-4">⚠️ {error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          All Challenges
-        </h1>
-        <p className="text-gray-600">
-          Join our eco-friendly Challenges and make a difference
-        </p>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">All Challenges</h1>
+        <p className="text-gray-600">Join our eco-friendly challenges and make a difference</p>
+        <div className="mt-6">
+          <Link
+            to="/challenges/add"
+            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-700"
+          >
+            Add New Challenge
+          </Link>
+        </div>
       </div>
 
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12">
-        {["All", "Popular", "Trending", "New"].map((b) => (
+      {usingFallbackData && (
+        <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Live challenge data is unavailable right now, so sample challenges are shown below.
+        </div>
+      )}
+
+      {/* Filters Section */}
+      <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+            <input
+              type="text"
+              name="search"
+              placeholder="Search challenges..."
+              value={filters.search}
+              onChange={handleFilterChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select
+              name="category"
+              value={filters.category}
+              onChange={handleFilterChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            >
+              <option value="all">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <select
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Upcoming">Upcoming</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-4 text-right">
           <button
-            key={b}
-            onClick={() => setFilter(b)}
-            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-              filter === b
-                ? "bg-emerald-600 text-white shadow-lg transform scale-105"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+            onClick={resetFilters}
+            className="text-emerald-600 hover:text-emerald-700 font-medium"
           >
-            {b}
+            Reset Filters
           </button>
-        ))}
+        </div>
       </div>
 
-      {/* Services Grid */}
+      {/* Challenges Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredServices.map((service) => (
-          <div
-            key={service.ChallengesId || service._id}
-            className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col"
-          >
+        {filteredChallenges.map((challenge) => (
+          <div key={challenge._id} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
             <div className="relative overflow-hidden">
               <img
-                src={
-                  service.imageUrl ||
-                  service.image ||
-                  "https://via.placeholder.com/400x250?text=EcoTrack"
-                }
-                alt={service.title || service.serviceName}
+                src={challenge.imageUrl || 'https://via.placeholder.com/400x250?text=EcoTrack'}
+                alt={challenge.title}
                 className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-
-              {service.badge && (
-                <div
-                  className={`absolute top-4 right-4 ${getBadgeColor(
-                    service.badge,
-                  )} text-white text-xs px-4 py-1.5 rounded-full font-medium shadow-lg`}
-                >
-                  {service.badge}
-                </div>
-              )}
-
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
-                {service.category}
+              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(challenge.status)}`}>
+                {challenge.status}
               </div>
-
-              {service.price && (
-                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white text-sm px-3 py-1.5 rounded-full font-bold">
-                  ${service.price}
-                </div>
-              )}
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
+                {challenge.category}
+              </div>
             </div>
 
             <div className="p-6 flex flex-col flex-1">
-              <h3 className="text-xl font-bold mb-3 text-gray-900 line-clamp-1">
-                {service.title || service.serviceName}
-              </h3>
-
-              <p className="text-gray-600 text-sm mb-5 flex-1 line-clamp-2">
-                {service.shortDescription || service.description}
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">{challenge.title}</h3>
+              <p className="text-gray-600 text-sm mb-5 line-clamp-2 flex-1">{challenge.description}</p>
 
               <div className="grid grid-cols-2 gap-4 text-sm mb-6">
                 <div>
-                  <p className="text-gray-500 text-xs mb-1">Rating</p>
-                  <div className="flex items-center gap-1">
-                    <div className="flex items-center gap-0.5">
-                      {renderStars(service.rating || 4.5)}
-                    </div>
-                    <span className="text-gray-600 ml-1">
-                      ({service.rating || 4.5})
-                    </span>
-                  </div>
-                </div>
-
-                <div>
                   <p className="text-gray-500 text-xs mb-1">Duration</p>
-                  <p className="font-semibold text-gray-900">
-                    {getDurationText(service.duration, service.durationUnit)}
-                  </p>
+                  <p className="font-semibold">{challenge.duration} Days</p>
                 </div>
-
                 <div>
                   <p className="text-gray-500 text-xs mb-1">Participants</p>
-                  <p className="font-semibold text-gray-900">
-                    {service.participants?.toLocaleString() || 0}
-                  </p>
+                  <p className="font-semibold">{challenge.participants?.toLocaleString() || 0}</p>
                 </div>
-
+                <div>
+                  <p className="text-gray-500 text-xs mb-1">Impact</p>
+                  <p className="text-emerald-600 font-semibold">{challenge.impactMetric || 'kg CO₂'}</p>
+                </div>
                 <div>
                   <p className="text-gray-500 text-xs mb-1">Difficulty</p>
-                  <span
-                    className={`inline-block px-3 py-1 text-xs rounded-full ${getDifficultyColor(
-                      service.difficulty,
-                    )}`}
-                  >
-                    {service.difficulty || "Unknown"}
+                  <span className={`inline-block px-3 py-1 text-xs rounded-full ${getDifficultyColor(challenge.difficulty || 'Medium')}`}>
+                    {challenge.difficulty || 'Medium'}
                   </span>
                 </div>
               </div>
 
               <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
                 <Link
-                  to={`/Challenges/${service.ChallengesId || service._id}`}
+                  to={`/challenges/join/${challenge._id}`}
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
                 >
                   Join Challenge
                 </Link>
-
                 <Link
-                  to={`/Challenges/${service.ChallengesId || service._id}`}
+                  to={`/challenges/${challenge._id}`}
                   className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
                 >
                   View Details
@@ -256,16 +269,11 @@ const Challenges = () => {
         ))}
       </div>
 
-      {filteredServices.length === 0 && (
+      {filteredChallenges.length === 0 && (
         <div className="text-center py-16">
           <div className="bg-gray-50 rounded-lg p-8 max-w-md mx-auto">
-            <p className="text-gray-500 text-lg mb-2">
-              No Challenges found in this category.
-            </p>
-            <p className="text-gray-400 text-sm">
-              Try selecting a different filter or check back later for new
-              challenges.
-            </p>
+            <p className="text-gray-500 text-lg mb-2">No challenges found.</p>
+            <p className="text-gray-400 text-sm">Try adjusting your filters or check back later for new challenges.</p>
           </div>
         </div>
       )}

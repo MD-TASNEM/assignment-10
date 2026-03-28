@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router";
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext } from "../Context/AuthContext"; // Make sure this path is correct
 import toast from "react-hot-toast";
 import {
   FaLeaf,
@@ -11,6 +11,7 @@ import {
   FaTrophy,
   FaCalendarAlt,
   FaLightbulb,
+  FaSpinner,
 } from "react-icons/fa";
 
 const Navbar = () => {
@@ -58,12 +59,12 @@ const Navbar = () => {
   const navLinks = [
     { path: "/", label: "Home", icon: <FaLeaf className="mr-2" /> },
     {
-      path: "/Challenges",
+      path: "/challenges",
       label: "Challenges",
       icon: <FaTrophy className="mr-2" />,
     },
     {
-      path: "/Impact",
+      path: "/my-activities",
       label: "My Activities",
       icon: <FaCalendarAlt className="mr-2" />,
       protected: true,
@@ -172,7 +173,7 @@ const Navbar = () => {
                       </NavLink>
 
                       <NavLink
-                        to="/Impact"
+                        to="/my-activities"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         <FaCalendarAlt className="mr-3 text-gray-400" />
@@ -208,7 +209,7 @@ const Navbar = () => {
                 ) : (
                   <div className="flex items-center space-x-3">
                     <NavLink
-                      to="/user"
+                      to="/login"
                       className="px-5 py-2 rounded-full font-medium text-emerald-300 border border-emerald-500 hover:bg-emerald-600/20 transition-all duration-300"
                     >
                       Login
@@ -342,7 +343,7 @@ const Navbar = () => {
                 ) : (
                   <div className="space-y-3">
                     <NavLink
-                      to="/user"
+                      to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="w-full flex items-center justify-center space-x-2 bg-transparent text-emerald-300 border-2 border-emerald-500 px-4 py-3 rounded-lg font-medium hover:bg-emerald-600 hover:text-white transition-all duration-200"
                     >

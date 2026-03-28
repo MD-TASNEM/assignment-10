@@ -116,7 +116,7 @@ const TermsOfService = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-3">Governing Law</h2>
           <p className="text-gray-700 leading-relaxed">
             These terms shall be governed by the laws of the United States, without regard to conflict of law provisions.
-            Any disputes arising under these terms shall be resolved in the courts of [Your Location].
+            Any disputes arising under these terms shall be resolved in the appropriate courts of your local jurisdiction.
           </p>
         </div>
 
