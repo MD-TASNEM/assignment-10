@@ -12,6 +12,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import toast from 'react-hot-toast';
+import { FaThumbsUp, FaSpinner, FaLightbulb, FaRecycle, FaWater, FaCar, FaHome, FaApple, FaFilter } from 'react-icons/fa';
 import {
   fallbackEvents,
   fallbackStats,
@@ -35,18 +36,61 @@ import user1 from '../assets/Json-mages/user1.jpg';
 import user2 from '../assets/Json-mages/user2.jpg';
 import user3 from '../assets/Json-mages/user3.webp';
 
+// Tip Categories
+const TIP_CATEGORIES = [
+  "Waste Management",
+  "Energy Saving",
+  "Water Conservation",
+  "Sustainable Transport",
+  "Green Living",
+  "Food & Diet",
+];
+
+const categoryIcons = {
+  "Waste Management": <FaRecycle className="text-green-600" />,
+  "Energy Saving": <FaLightbulb className="text-yellow-600" />,
+  "Water Conservation": <FaWater className="text-blue-600" />,
+  "Sustainable Transport": <FaCar className="text-purple-600" />,
+  "Green Living": <FaHome className="text-emerald-600" />,
+  "Food & Diet": <FaApple className="text-red-600" />,
+};
+
 // Skeleton Loader Component
 const SkeletonCard = () => (
-  <div className="bg-white rounded-3xl overflow-hidden shadow-md animate-pulse">
-    <div className="h-52 bg-gray-200"></div>
+  <div className="bg-white rounded-2xl overflow-hidden shadow-md animate-pulse">
+    <div className="h-48 bg-gray-200"></div>
     <div className="p-6">
+      <div className="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
       <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
       <div className="h-4 bg-gray-200 rounded w-5/6 mb-4"></div>
-      <div className="flex gap-3">
-        <div className="flex-1 h-10 bg-gray-200 rounded-xl"></div>
-        <div className="flex-1 h-10 bg-gray-200 rounded-xl"></div>
+      <div className="flex justify-between">
+        <div className="h-8 bg-gray-200 rounded w-20"></div>
+        <div className="h-8 bg-gray-200 rounded w-20"></div>
       </div>
+    </div>
+  </div>
+);
+
+const TipSkeletonCard = () => (
+  <div className="bg-white rounded-2xl p-6 shadow-md animate-pulse">
+    <div className="flex justify-between mb-3">
+      <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+      <div className="w-20 h-6 bg-gray-200 rounded-full"></div>
+    </div>
+    <div className="h-5 bg-gray-200 rounded w-3/4 mb-3"></div>
+    <div className="space-y-2 mb-3">
+      <div className="h-4 bg-gray-200 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+      <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+    </div>
+    <div className="flex items-center gap-2 mb-3 pt-2">
+      <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+      <div className="h-3 bg-gray-200 rounded w-24"></div>
+    </div>
+    <div className="flex justify-between">
+      <div className="h-4 bg-gray-200 rounded w-16"></div>
+      <div className="h-4 bg-gray-200 rounded w-16"></div>
     </div>
   </div>
 );
@@ -67,6 +111,8 @@ const Home = () => {
   const [events, setEvents] = useState(fallbackEvents);
   const [stats, setStats] = useState(fallbackStats);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [upvotingId, setUpvotingId] = useState(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000, easing: 'ease-out-cubic', once: false, mirror: true });
@@ -116,7 +162,7 @@ const Home = () => {
         Array.isArray(tipsRes.value?.data) &&
         tipsRes.value.data.length > 0
       ) {
-        setTips(tipsRes.value.data.slice(0, 4));
+        setTips(tipsRes.value.data);
         liveSuccessCount += 1;
       } else {
         setTips(fallbackTips);
@@ -158,16 +204,52 @@ const Home = () => {
     }
   };
 
+  const handleUpvote = async (tip) => {
+    if (!user) {
+      toast.error('Please sign in to upvote tips.', { id: 'upvote-auth-error' });
+      return;
+    }
+
+    setUpvotingId(tip._id);
+    try {
+      const response = await tipsAPI.upvote(tip._id);
+      const updatedTip = response?.data?.tip;
+      const updatedUpvotes = Number(response?.data?.upvotes ?? updatedTip?.upvotes ?? 0);
+
+      setTips((currentTips) =>
+        currentTips.map((t) =>
+          t._id === tip._id
+            ? { ...t, upvotes: updatedUpvotes }
+            : t
+        )
+      );
+      toast.success('Thanks for upvoting!', { id: `upvote-${tip._id}` });
+    } catch (error) {
+      console.error('Failed to upvote tip:', error);
+      toast.error('Unable to upvote this tip right now.', { id: 'upvote-error' });
+    } finally {
+      setUpvotingId(null);
+    }
+  };
+
   const handleSaveTip = (tip) => {
+    if (!user) {
+      toast.error('Please sign in to save tips.', { id: 'save-auth-error' });
+      return;
+    }
+
     if (savedTipIds.includes(tip._id)) {
-      toast('Tip already saved.', { id: `tip-saved-${tip._id}` });
+      const nextSavedTipIds = savedTipIds.filter(id => id !== tip._id);
+      setSavedTipIds(nextSavedTipIds);
+      localStorage.setItem(savedTipIdsKey, JSON.stringify(nextSavedTipIds));
+      toast.success('Tip removed from saved!', { id: `tip-unsaved-${tip._id}` });
       return;
     }
 
     const nextSavedTipIds = [...savedTipIds, tip._id];
     setSavedTipIds(nextSavedTipIds);
     localStorage.setItem(savedTipIdsKey, JSON.stringify(nextSavedTipIds));
-    toast.success(`${tip.title} saved for later.`);
+    toast.success(`${tip.title} saved for later.`, { id: `tip-saved-${tip._id}` });
   };
 
   const handleJoinChallenge = () => navigate('/challenges');
@@ -175,6 +257,14 @@ const Home = () => {
   const handleRegisterNow = () => navigate('/register');
   const handleJoinCommunity = () => navigate('/community');
   const handleExploreChallenges = () => navigate('/challenges');
+  const handleViewAllTips = () => navigate('/eco-tips');
+
+  const filteredTips = tips.filter((tip) => {
+    if (selectedCategory !== "all" && tip.category !== selectedCategory) {
+      return false;
+    }
+    return true;
+  });
 
   const banners = [
     { img: bannerOne, title: 'Urban Gardening', desc: 'Grow your own food', color: 'bg-emerald-600' },
@@ -188,6 +278,15 @@ const Home = () => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
+
+  const getAuthorName = (tip) =>
+    tip.authorName || tip.author?.split('@')[0] || 'EcoTrack User';
+
+  const getInitials = (name) =>
+    String(name || 'E')
+      .trim()
+      .charAt(0)
+      .toUpperCase();
 
   return (
     <>
@@ -366,35 +465,134 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Recent Tips */}
+      {/* Recent Tips - UPDATED VERSION */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">💡 Eco Wisdom from the Tribe</h2>
             <p className="text-gray-600 text-lg">Practical tips shared by our community</p>
           </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8" data-aos="fade-up">
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === "all"
+                  ? "bg-emerald-600 text-white shadow-md"
+                  : "bg-white text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              All Categories
+            </button>
+            {TIP_CATEGORIES.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                  selectedCategory === category
+                    ? "bg-emerald-600 text-white shadow-md"
+                    : "bg-white text-gray-600 hover:bg-gray-100"
+                }`}
+              >
+                {categoryIcons[category]}
+                <span>{category}</span>
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {loading ? (
-              [1,2,3,4].map(i => <SkeletonCard key={i} />)
+              [1, 2, 3, 4].map(i => <TipSkeletonCard key={i} />)
+            ) : filteredTips.length === 0 ? (
+              <div className="col-span-full text-center py-12 bg-white rounded-2xl">
+                <div className="text-6xl mb-4">🌱</div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">No tips found</h3>
+                <p className="text-gray-500">
+                  {selectedCategory !== "all"
+                    ? `No tips available in "${selectedCategory}" category yet.`
+                    : "No tips available at the moment."}
+                </p>
+              </div>
             ) : (
-              tips.slice(0, 4).map((tip, idx) => (
-                <div key={tip._id} className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay={idx * 100}>
-                  <div className="text-3xl mb-3">💡</div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{tip.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-3">{tip.content}</p>
-                  <div className="flex justify-between items-center text-xs text-gray-400">
-                    <span>⭐ {tip.upvotes} upvotes • {tip.authorName}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleSaveTip(tip)}
-                      className="text-emerald-600 hover:text-emerald-700 font-medium"
-                    >
-                      {savedTipIds.includes(tip._id) ? 'Saved' : 'Save Tip'}
-                    </button>
+              filteredTips.slice(0, 4).map((tip, idx) => {
+                const authorName = getAuthorName(tip);
+                return (
+                  <div
+                    key={tip._id}
+                    className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group transform hover:-translate-y-1"
+                    data-aos="fade-up"
+                    data-aos-delay={idx * 100}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-3xl">
+                        {categoryIcons[tip.category] || <FaLightbulb className="text-yellow-600" />}
+                      </div>
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {tip.category || "Green Living"}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-1">
+                      {tip.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-3">{tip.content}</p>
+
+                    {/* Author Info */}
+                    <div className="flex items-center gap-2 mb-3 pt-2 border-t border-gray-100">
+                      <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        {tip.authorPhoto ? (
+                          <img src={tip.authorPhoto} alt={authorName} className="w-full h-full rounded-full object-cover" />
+                        ) : (
+                          getInitials(authorName)
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-500">{authorName}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs">
+                      <button
+                        onClick={() => handleUpvote(tip)}
+                        disabled={upvotingId === tip._id}
+                        className="flex items-center gap-1 text-gray-500 hover:text-emerald-600 transition-colors disabled:opacity-50"
+                      >
+                        {upvotingId === tip._id ? (
+                          <FaSpinner className="animate-spin text-emerald-600" />
+                        ) : (
+                          <>
+                            <FaThumbsUp />
+                            <span>{tip.upvotes || 0}</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => handleSaveTip(tip)}
+                        className={`font-medium transition-colors ${
+                          savedTipIds.includes(tip._id)
+                            ? 'text-emerald-600'
+                            : 'text-gray-400 hover:text-emerald-600'
+                        }`}
+                      >
+                        {savedTipIds.includes(tip._id) ? 'Saved ✓' : 'Save Tip'}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
+          </div>
+
+          {/* View All Tips Link */}
+          <div className="text-center mt-10" data-aos="fade-up">
+            <button
+              onClick={handleViewAllTips}
+              className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold transition-colors"
+            >
+              View All Tips
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </section>
