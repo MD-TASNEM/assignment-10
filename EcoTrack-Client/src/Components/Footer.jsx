@@ -133,9 +133,6 @@ const Footer = () => {
                 </div>
               ))}
             </div>
-            <p className="mt-5 text-xs leading-6 text-gray-400">
-              Accessibility note: the layout keeps strong contrast and keyboard-friendly controls. Privacy note: we only keep the data needed for EcoTrack features.
-            </p>
           </div>
 
           {/* Quick Links */}

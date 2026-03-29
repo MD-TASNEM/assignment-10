@@ -14,6 +14,8 @@ import {
   FaThumbsUp,
   FaTimes,
   FaWater,
+  FaBookmark,
+  FaRegBookmark,
 } from "react-icons/fa";
 import { tipsAPI } from "../api/api";
 import { AuthContext } from "../Context/AuthContext";
@@ -42,7 +44,7 @@ const Toast = ({ message, type, onClose }) => {
         ? "bg-red-500"
         : "bg-blue-500";
 
-  const icon = type === "success" ? "OK" : type === "error" ? "!" : "i";
+  const icon = type === "success" ? "✓" : type === "error" ? "!" : "ℹ";
 
   return (
     <div
@@ -73,6 +75,7 @@ const TipSkeleton = () => (
       <div className="h-4 bg-gray-200 rounded w-4/6"></div>
     </div>
     <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+      <div className="h-8 bg-gray-200 rounded w-20"></div>
       <div className="h-8 bg-gray-200 rounded w-20"></div>
       <div className="h-8 bg-gray-200 rounded w-20"></div>
     </div>
@@ -113,6 +116,7 @@ const EcoTips = () => {
   const [upvotingId, setUpvotingId] = useState(null);
   const [toast, setToast] = useState(null);
   const [apiError, setApiError] = useState("");
+  const [savedTipIds, setSavedTipIds] = useState([]);
   const [newTip, setNewTip] = useState({
     title: "",
     content: "",
@@ -165,6 +169,18 @@ const EcoTips = () => {
       ignore = true;
     };
   }, []);
+
+  // Load saved tips from localStorage
+  useEffect(() => {
+    if (user) {
+      const saved = localStorage.getItem(`savedTips_${user.uid}`);
+      if (saved) {
+        setSavedTipIds(JSON.parse(saved));
+      }
+    } else {
+      setSavedTipIds([]);
+    }
+  }, [user]);
 
   const filteredTips = tips.filter((tip) => {
     if (selectedCategory !== "all" && tip.category !== selectedCategory) {
@@ -228,6 +244,25 @@ const EcoTips = () => {
     }
   };
 
+  const handleSaveTip = (tip) => {
+    if (!user) {
+      showToast("Please sign in to save tips.", "info");
+      return;
+    }
+
+    if (savedTipIds.includes(tip._id)) {
+      const updated = savedTipIds.filter((id) => id !== tip._id);
+      setSavedTipIds(updated);
+      localStorage.setItem(`savedTips_${user.uid}`, JSON.stringify(updated));
+      showToast("Tip removed from saved!", "info");
+    } else {
+      const updated = [...savedTipIds, tip._id];
+      setSavedTipIds(updated);
+      localStorage.setItem(`savedTips_${user.uid}`, JSON.stringify(updated));
+      showToast("Tip saved successfully!", "success");
+    }
+  };
+
   const handleAddTip = async (event) => {
     event.preventDefault();
 
@@ -259,6 +294,8 @@ const EcoTips = () => {
         content: newTip.content.trim(),
         category: newTip.category,
         authorPhoto: user.photoURL || null,
+        authorName:
+          user.displayName || user.email?.split("@")[0] || "EcoTrack User",
       };
       const response = await tipsAPI.create(payload);
       const createdTip = response?.data;
@@ -437,7 +474,7 @@ const EcoTips = () => {
                 onChange={(event) => setSelectedCategory(event.target.value)}
                 className="w-full pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white cursor-pointer"
               >
-                <option value="all">All</option>
+                <option value="all">All Categories</option>
                 {TIP_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
                     {category}
@@ -466,7 +503,7 @@ const EcoTips = () => {
           </div>
         ) : filteredTips.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl shadow-md">
-            <div className="text-6xl mb-4">...</div>
+            <div className="text-6xl mb-4">🌱</div>
             <h3 className="text-2xl font-semibold text-gray-700 mb-2">
               No tips found
             </h3>
@@ -488,6 +525,7 @@ const EcoTips = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTips.map((tip) => {
               const authorName = getAuthorName(tip);
+              const isSaved = savedTipIds.includes(tip._id);
 
               return (
                 <div
@@ -531,7 +569,9 @@ const EcoTips = () => {
                         {categoryIcons[tip.category] || (
                           <FaLeaf className="text-green-600" />
                         )}
-                        <span className="ml-1">{tip.category || "General"}</span>
+                        <span className="ml-1">
+                          {tip.category || "General"}
+                        </span>
                       </span>
                     </div>
 
@@ -557,6 +597,24 @@ const EcoTips = () => {
                           {Number(tip.upvotes || 0)}
                         </span>
                         <span className="text-sm">upvotes</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleSaveTip(tip)}
+                        className={`flex items-center space-x-2 transition-colors group ${
+                          isSaved
+                            ? "text-emerald-600"
+                            : "text-gray-500 hover:text-emerald-600"
+                        }`}
+                      >
+                        {isSaved ? (
+                          <FaBookmark className="group-hover:scale-110 transition-transform" />
+                        ) : (
+                          <FaRegBookmark className="group-hover:scale-110 transition-transform" />
+                        )}
+                        <span className="text-sm">
+                          {isSaved ? "Saved" : "Save"}
+                        </span>
                       </button>
 
                       <button
@@ -680,7 +738,7 @@ const EcoTips = () => {
 
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
                 <p className="text-sm text-green-800">
-                  Share actionable advice with clear steps and a practical
+                  💡 Share actionable advice with clear steps and a practical
                   environmental benefit so other people can try it easily.
                 </p>
               </div>

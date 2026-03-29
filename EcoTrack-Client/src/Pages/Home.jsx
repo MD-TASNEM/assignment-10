@@ -1,40 +1,50 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router';
-import { AuthContext } from '../Context/AuthContext';
-import { challengesAPI, tipsAPI, eventsAPI, statsAPI } from '../api/api';
-import Service from '../Components/Service';
-import Marquee from 'react-fast-marquee';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, Navigation } from 'swiper/modules';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import toast from 'react-hot-toast';
-import { FaThumbsUp, FaSpinner, FaLightbulb, FaRecycle, FaWater, FaCar, FaHome, FaApple, FaFilter } from 'react-icons/fa';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router";
+import { AuthContext } from "../Context/AuthContext";
+import { challengesAPI, tipsAPI, eventsAPI, statsAPI } from "../api/api";
+import Service from "../Components/Service";
+import Marquee from "react-fast-marquee";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay, Navigation } from "swiper/modules";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import toast from "react-hot-toast";
+import {
+  FaThumbsUp,
+  FaSpinner,
+  FaLightbulb,
+  FaRecycle,
+  FaWater,
+  FaCar,
+  FaHome,
+  FaApple,
+  FaFilter,
+} from "react-icons/fa";
 import {
   fallbackEvents,
   fallbackStats,
   fallbackTips,
   getMergedChallenges,
-} from '../data/mockEcoContent';
+} from "../data/mockEcoContent";
 import {
   getChallengeId,
   isLocalChallenge,
   normalizeChallenges,
-} from '../utils/challengeIdentity';
+} from "../utils/challengeIdentity";
 
 // Images
-import bannerOne from '../assets/Json-mages/bannerOne.png';
-import bannerTwo from '../assets/Json-mages/banner2.png';
-import bannerThree from '../assets/Json-mages/banner3.png';
-import bannerFour from '../assets/Json-mages/banner4.png';
-import bannerFive from '../assets/Json-mages/banner5.jpg';
-import reviewBg from '../assets/Json-mages/review.png';
-import user1 from '../assets/Json-mages/user1.jpg';
-import user2 from '../assets/Json-mages/user2.jpg';
-import user3 from '../assets/Json-mages/user3.webp';
+import bannerOne from "../assets/Json-mages/bannerOne.png";
+import bannerTwo from "../assets/Json-mages/banner2.png";
+import bannerThree from "../assets/Json-mages/banner3.png";
+import bannerFour from "../assets/Json-mages/banner4.png";
+import bannerFive from "../assets/Json-mages/banner5.jpg";
+import reviewBg from "../assets/Json-mages/review.png";
+import user1 from "../assets/Json-mages/user1.jpg";
+import user2 from "../assets/Json-mages/user2.jpg";
+import user3 from "../assets/Json-mages/user3.webp";
 
 // Tip Categories
 const TIP_CATEGORIES = [
@@ -98,15 +108,17 @@ const TipSkeletonCard = () => (
 const Home = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const savedTipIdsKey = 'ecotrack.savedTips';
+  const savedTipIdsKey = "ecotrack.savedTips";
   const [savedTipIds, setSavedTipIds] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem(savedTipIdsKey) || '[]');
+      return JSON.parse(localStorage.getItem(savedTipIdsKey) || "[]");
     } catch {
       return [];
     }
   });
-  const [challenges, setChallenges] = useState(() => getMergedChallenges().slice(0, 6));
+  const [challenges, setChallenges] = useState(() =>
+    getMergedChallenges().slice(0, 6),
+  );
   const [tips, setTips] = useState(fallbackTips);
   const [events, setEvents] = useState(fallbackEvents);
   const [stats, setStats] = useState(fallbackStats);
@@ -115,7 +127,12 @@ const Home = () => {
   const [upvotingId, setUpvotingId] = useState(null);
 
   useEffect(() => {
-    AOS.init({ duration: 1000, easing: 'ease-out-cubic', once: false, mirror: true });
+    AOS.init({
+      duration: 1000,
+      easing: "ease-out-cubic",
+      once: false,
+      mirror: true,
+    });
     const requestState = { cancelled: false };
     fetchHomeData(requestState);
 
@@ -127,12 +144,13 @@ const Home = () => {
   const fetchHomeData = async (requestState) => {
     setLoading(true);
     try {
-      const [challengesRes, tipsRes, eventsRes, statsRes] = await Promise.allSettled([
-        challengesAPI.getAll({ limit: 6 }),
-        tipsAPI.getRecent(),
-        eventsAPI.getUpcoming(),
-        statsAPI.getCommunity(),
-      ]);
+      const [challengesRes, tipsRes, eventsRes, statsRes] =
+        await Promise.allSettled([
+          challengesAPI.getAll({ limit: 6 }),
+          tipsAPI.getRecent(),
+          eventsAPI.getUpcoming(),
+          statsAPI.getCommunity(),
+        ]);
 
       if (requestState.cancelled) {
         return;
@@ -143,14 +161,16 @@ const Home = () => {
       const customChallenges = getMergedChallenges().filter(isLocalChallenge);
 
       if (
-        challengesRes.status === 'fulfilled' &&
+        challengesRes.status === "fulfilled" &&
         Array.isArray(challengesRes.value?.data) &&
         challengesRes.value.data.length > 0
       ) {
-        setChallenges([
-          ...customChallenges,
-          ...normalizeChallenges(challengesRes.value.data),
-        ].slice(0, 6));
+        setChallenges(
+          [
+            ...customChallenges,
+            ...normalizeChallenges(challengesRes.value.data),
+          ].slice(0, 6),
+        );
         liveSuccessCount += 1;
       } else {
         setChallenges(getMergedChallenges().slice(0, 6));
@@ -158,7 +178,7 @@ const Home = () => {
       }
 
       if (
-        tipsRes.status === 'fulfilled' &&
+        tipsRes.status === "fulfilled" &&
         Array.isArray(tipsRes.value?.data) &&
         tipsRes.value.data.length > 0
       ) {
@@ -170,7 +190,7 @@ const Home = () => {
       }
 
       if (
-        eventsRes.status === 'fulfilled' &&
+        eventsRes.status === "fulfilled" &&
         Array.isArray(eventsRes.value?.data) &&
         eventsRes.value.data.length > 0
       ) {
@@ -181,7 +201,7 @@ const Home = () => {
         hasFailure = true;
       }
 
-      if (statsRes.status === 'fulfilled' && statsRes.value?.data) {
+      if (statsRes.status === "fulfilled" && statsRes.value?.data) {
         setStats({ ...fallbackStats, ...statsRes.value.data });
         liveSuccessCount += 1;
       } else {
@@ -190,12 +210,14 @@ const Home = () => {
       }
 
       if (hasFailure && liveSuccessCount === 0) {
-        console.warn('Live home data is unavailable. Falling back to local sample content.');
+        console.warn(
+          "Live home data is unavailable. Falling back to local sample content.",
+        );
       }
     } catch (error) {
-      console.error('Error fetching home data:', error);
-      toast.error('Failed to load data. Please refresh the page.', {
-        id: 'home-data-error',
+      console.error("Error fetching home data:", error);
+      toast.error("Failed to load data. Please refresh the page.", {
+        id: "home-data-error",
       });
     } finally {
       if (!requestState.cancelled) {
@@ -206,7 +228,9 @@ const Home = () => {
 
   const handleUpvote = async (tip) => {
     if (!user) {
-      toast.error('Please sign in to upvote tips.', { id: 'upvote-auth-error' });
+      toast.error("Please sign in to upvote tips.", {
+        id: "upvote-auth-error",
+      });
       return;
     }
 
@@ -214,19 +238,21 @@ const Home = () => {
     try {
       const response = await tipsAPI.upvote(tip._id);
       const updatedTip = response?.data?.tip;
-      const updatedUpvotes = Number(response?.data?.upvotes ?? updatedTip?.upvotes ?? 0);
+      const updatedUpvotes = Number(
+        response?.data?.upvotes ?? updatedTip?.upvotes ?? 0,
+      );
 
       setTips((currentTips) =>
         currentTips.map((t) =>
-          t._id === tip._id
-            ? { ...t, upvotes: updatedUpvotes }
-            : t
-        )
+          t._id === tip._id ? { ...t, upvotes: updatedUpvotes } : t,
+        ),
       );
-      toast.success('Thanks for upvoting!', { id: `upvote-${tip._id}` });
+      toast.success("Thanks for upvoting!", { id: `upvote-${tip._id}` });
     } catch (error) {
-      console.error('Failed to upvote tip:', error);
-      toast.error('Unable to upvote this tip right now.', { id: 'upvote-error' });
+      console.error("Failed to upvote tip:", error);
+      toast.error("Unable to upvote this tip right now.", {
+        id: "upvote-error",
+      });
     } finally {
       setUpvotingId(null);
     }
@@ -234,30 +260,34 @@ const Home = () => {
 
   const handleSaveTip = (tip) => {
     if (!user) {
-      toast.error('Please sign in to save tips.', { id: 'save-auth-error' });
+      toast.error("Please sign in to save tips.", { id: "save-auth-error" });
       return;
     }
 
     if (savedTipIds.includes(tip._id)) {
-      const nextSavedTipIds = savedTipIds.filter(id => id !== tip._id);
+      const nextSavedTipIds = savedTipIds.filter((id) => id !== tip._id);
       setSavedTipIds(nextSavedTipIds);
       localStorage.setItem(savedTipIdsKey, JSON.stringify(nextSavedTipIds));
-      toast.success('Tip removed from saved!', { id: `tip-unsaved-${tip._id}` });
+      toast.success("Tip removed from saved!", {
+        id: `tip-unsaved-${tip._id}`,
+      });
       return;
     }
 
     const nextSavedTipIds = [...savedTipIds, tip._id];
     setSavedTipIds(nextSavedTipIds);
     localStorage.setItem(savedTipIdsKey, JSON.stringify(nextSavedTipIds));
-    toast.success(`${tip.title} saved for later.`, { id: `tip-saved-${tip._id}` });
+    toast.success(`${tip.title} saved for later.`, {
+      id: `tip-saved-${tip._id}`,
+    });
   };
 
-  const handleJoinChallenge = () => navigate('/challenges');
-  const handleExploreImpact = () => navigate('/my-activities');
-  const handleRegisterNow = () => navigate('/register');
-  const handleJoinCommunity = () => navigate('/community');
-  const handleExploreChallenges = () => navigate('/challenges');
-  const handleViewAllTips = () => navigate('/eco-tips');
+  const handleJoinChallenge = () => navigate("/challenges");
+  const handleExploreImpact = () => navigate("/my-activities");
+  const handleRegisterNow = () => navigate("/register");
+  const handleJoinCommunity = () => navigate("/community");
+  const handleExploreChallenges = () => navigate("/challenges");
+  const handleViewAllTips = () => navigate("/eco-tips");
 
   const filteredTips = tips.filter((tip) => {
     if (selectedCategory !== "all" && tip.category !== selectedCategory) {
@@ -267,23 +297,48 @@ const Home = () => {
   });
 
   const banners = [
-    { img: bannerOne, title: 'Urban Gardening', desc: 'Grow your own food', color: 'bg-emerald-600' },
-    { img: bannerTwo, title: 'Zero Waste Living', desc: 'Reduce plastic usage', color: 'bg-teal-600' },
-    { img: bannerThree, title: 'Tree Plantation', desc: 'Restore forests', color: 'bg-green-600' },
-    { img: bannerFour, title: 'Clean Energy', desc: 'Switch to renewables', color: 'bg-cyan-600' },
-    { img: bannerFive, title: 'Water Conservation', desc: 'Save every drop', color: 'bg-blue-600' },
+    {
+      img: bannerOne,
+      title: "Urban Gardening",
+      desc: "Grow your own food",
+      color: "bg-emerald-600",
+    },
+    {
+      img: bannerTwo,
+      title: "Zero Waste Living",
+      desc: "Reduce plastic usage",
+      color: "bg-teal-600",
+    },
+    {
+      img: bannerThree,
+      title: "Tree Plantation",
+      desc: "Restore forests",
+      color: "bg-green-600",
+    },
+    {
+      img: bannerFour,
+      title: "Clean Energy",
+      desc: "Switch to renewables",
+      color: "bg-cyan-600",
+    },
+    {
+      img: bannerFive,
+      title: "Water Conservation",
+      desc: "Save every drop",
+      color: "bg-blue-600",
+    },
   ];
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   const getAuthorName = (tip) =>
-    tip.authorName || tip.author?.split('@')[0] || 'EcoTrack User';
+    tip.authorName || tip.author?.split("@")[0] || "EcoTrack User";
 
   const getInitials = (name) =>
-    String(name || 'E')
+    String(name || "E")
       .trim()
       .charAt(0)
       .toUpperCase();
@@ -296,7 +351,10 @@ const Home = () => {
           <div className="py-3" data-aos="fade-down">
             <Marquee gradient={false} speed={50}>
               <span className="text-sm md:text-base font-medium text-white">
-                🌍 Join {stats?.totalParticipants?.toLocaleString() || '12,000+'}+ changemakers making a difference! Track your Impact, transform our planet 🌱
+                🌍 Join{" "}
+                {stats?.totalParticipants?.toLocaleString() || "12,000+"}+
+                changemakers making a difference! Track your Impact, transform
+                our planet 🌱
               </span>
             </Marquee>
           </div>
@@ -309,7 +367,8 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div data-aos="fade-right">
               <span className="inline-block bg-emerald-400/20 text-emerald-300 px-4 py-1 rounded-full text-sm mb-6">
-                🌍 {stats?.totalParticipants?.toLocaleString() || '12k+'}+ changemakers
+                🌍 {stats?.totalParticipants?.toLocaleString() || "12k+"}+
+                changemakers
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
                 Track your <span className="text-emerald-400">Impact</span>,
@@ -317,7 +376,8 @@ const Home = () => {
                 transform our planet
               </h1>
               <p className="text-lg text-slate-300 mb-8 max-w-lg">
-                Turn everyday actions into measurable climate wins. Join our community of eco-conscious heroes making real change.
+                Turn everyday actions into measurable climate wins. Join our
+                community of eco-conscious heroes making real change.
               </p>
               <div className="flex gap-4 flex-wrap">
                 <button
@@ -338,10 +398,18 @@ const Home = () => {
             </div>
             <div data-aos="fade-left" className="relative">
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-500">
-                <img src={bannerOne} alt="Eco Challenge" className="w-full h-64 object-cover" />
+                <img
+                  src={bannerOne}
+                  alt="Eco Challenge"
+                  className="w-full h-64 object-cover"
+                />
                 <div className="p-6">
-                  <h3 className="font-bold text-xl text-gray-800">🌿 Weekend Rewilding</h3>
-                  <p className="text-sm text-gray-600 mt-1">350+ joined this month</p>
+                  <h3 className="font-bold text-xl text-gray-800">
+                    🌿 Weekend Rewilding
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    350+ joined this month
+                  </p>
                   <button
                     type="button"
                     onClick={handleJoinChallenge}
@@ -360,35 +428,55 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Community Impact</h2>
-            <p className="text-gray-600 text-lg">Together we're making a difference</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Community Impact
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Together we're making a difference
+            </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay={0}>
+            <div
+              className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay={0}
+            >
               <div className="text-4xl mb-3">🌳</div>
               <h3 className="text-3xl font-bold text-emerald-600 mb-2">
-                {stats?.treesPlanted?.toLocaleString() || '48K'}
+                {stats?.treesPlanted?.toLocaleString() || "48K"}
               </h3>
               <p className="text-gray-600 font-medium">Trees Planted</p>
             </div>
-            <div className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay={100}>
+            <div
+              className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay={100}
+            >
               <div className="text-4xl mb-3">🌍</div>
               <h3 className="text-3xl font-bold text-emerald-600 mb-2">
-                {stats?.totalCO2Saved?.toLocaleString() || '152T'} kg
+                {stats?.totalCO2Saved?.toLocaleString() || "152T"} kg
               </h3>
               <p className="text-gray-600 font-medium">CO₂ Saved</p>
             </div>
-            <div className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay={200}>
+            <div
+              className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay={200}
+            >
               <div className="text-4xl mb-3">💧</div>
               <h3 className="text-3xl font-bold text-emerald-600 mb-2">
-                {stats?.totalWaterSaved?.toLocaleString() || '2.8M'} L
+                {stats?.totalWaterSaved?.toLocaleString() || "2.8M"} L
               </h3>
               <p className="text-gray-600 font-medium">Water Saved</p>
             </div>
-            <div className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay={300}>
+            <div
+              className="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay={300}
+            >
               <div className="text-4xl mb-3">👥</div>
               <h3 className="text-3xl font-bold text-emerald-600 mb-2">
-                {stats?.totalParticipants?.toLocaleString() || '14K'}
+                {stats?.totalParticipants?.toLocaleString() || "14K"}
               </h3>
               <p className="text-gray-600 font-medium">Active Users</p>
             </div>
@@ -400,8 +488,12 @@ const Home = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Sustainability Challenges</h2>
-            <p className="text-gray-600 text-lg">Choose your path to make a difference</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Sustainability Challenges
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Choose your path to make a difference
+            </p>
           </div>
           <Swiper
             modules={[Autoplay, Pagination, Navigation]}
@@ -414,10 +506,16 @@ const Home = () => {
             {banners.map((slide, idx) => (
               <SwiperSlide key={idx}>
                 <div className="relative h-[500px]">
-                  <img src={slide.img} alt={slide.title} className="w-full h-full object-cover" />
+                  <img
+                    src={slide.img}
+                    alt={slide.title}
+                    className="w-full h-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                   <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full px-4">
-                    <span className={`${slide.color} text-white px-8 py-3 rounded-full text-2xl font-bold shadow-lg inline-block mb-3`}>
+                    <span
+                      className={`${slide.color} text-white px-8 py-3 rounded-full text-2xl font-bold shadow-lg inline-block mb-3`}
+                    >
                       {slide.title}
                     </span>
                     <p className="text-white text-lg">{slide.desc}</p>
@@ -433,13 +531,19 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Active Challenges</h2>
-            <p className="text-gray-600 text-lg">Join these eco-challenges and start making an impact today</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Active Challenges
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Join these eco-challenges and start making an impact today
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
               <>
-                <SkeletonCard /><SkeletonCard /><SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
               </>
             ) : (
               challenges.slice(0, 6).map((challenge, idx) => (
@@ -469,12 +573,19 @@ const Home = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">💡 Eco Wisdom from the Tribe</h2>
-            <p className="text-gray-600 text-lg">Practical tips shared by our community</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              💡 Eco Wisdom from the Tribe
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Practical tips shared by our community
+            </p>
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8" data-aos="fade-up">
+          <div
+            className="flex flex-wrap justify-center gap-2 mb-8"
+            data-aos="fade-up"
+          >
             <button
               onClick={() => setSelectedCategory("all")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
@@ -503,11 +614,13 @@ const Home = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {loading ? (
-              [1, 2, 3, 4].map(i => <TipSkeletonCard key={i} />)
+              [1, 2, 3, 4].map((i) => <TipSkeletonCard key={i} />)
             ) : filteredTips.length === 0 ? (
               <div className="col-span-full text-center py-12 bg-white rounded-2xl">
                 <div className="text-6xl mb-4">🌱</div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">No tips found</h3>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  No tips found
+                </h3>
                 <p className="text-gray-500">
                   {selectedCategory !== "all"
                     ? `No tips available in "${selectedCategory}" category yet.`
@@ -526,7 +639,9 @@ const Home = () => {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="text-3xl">
-                        {categoryIcons[tip.category] || <FaLightbulb className="text-yellow-600" />}
+                        {categoryIcons[tip.category] || (
+                          <FaLightbulb className="text-yellow-600" />
+                        )}
                       </div>
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         {tip.category || "Green Living"}
@@ -535,18 +650,26 @@ const Home = () => {
                     <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors line-clamp-1">
                       {tip.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-3">{tip.content}</p>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                      {tip.content}
+                    </p>
 
                     {/* Author Info */}
                     <div className="flex items-center gap-2 mb-3 pt-2 border-t border-gray-100">
                       <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {tip.authorPhoto ? (
-                          <img src={tip.authorPhoto} alt={authorName} className="w-full h-full rounded-full object-cover" />
+                          <img
+                            src={tip.authorPhoto}
+                            alt={authorName}
+                            className="w-full h-full rounded-full object-cover"
+                          />
                         ) : (
                           getInitials(authorName)
                         )}
                       </div>
-                      <span className="text-xs text-gray-500">{authorName}</span>
+                      <span className="text-xs text-gray-500">
+                        {authorName}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center text-xs">
@@ -569,11 +692,11 @@ const Home = () => {
                         onClick={() => handleSaveTip(tip)}
                         className={`font-medium transition-colors ${
                           savedTipIds.includes(tip._id)
-                            ? 'text-emerald-600'
-                            : 'text-gray-400 hover:text-emerald-600'
+                            ? "text-emerald-600"
+                            : "text-gray-400 hover:text-emerald-600"
                         }`}
                       >
-                        {savedTipIds.includes(tip._id) ? 'Saved ✓' : 'Save Tip'}
+                        {savedTipIds.includes(tip._id) ? "Saved ✓" : "Save Tip"}
                       </button>
                     </div>
                   </div>
@@ -589,8 +712,18 @@ const Home = () => {
               className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold transition-colors"
             >
               View All Tips
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -601,37 +734,59 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">📅 Upcoming Green Events</h2>
-            <p className="text-gray-600 text-lg">Join local events and meet fellow eco-enthusiasts</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              📅 Upcoming Green Events
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Join local events and meet fellow eco-enthusiasts
+            </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {loading ? (
-              [1,2,3].map(i => <SkeletonCard key={i} />)
-            ) : (
-              events.slice(0, 4).map((event, idx) => (
-                <div key={event._id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay={idx * 100}>
-                  <div className="relative overflow-hidden">
-                    <img src={event.imageUrl || bannerFour} alt={event.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute top-4 right-4 bg-emerald-600 text-white text-xs px-3 py-1 rounded-full">Register Now</div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-xl text-gray-900 mb-2">{event.title}</h3>
-                    <div className="space-y-2 text-sm text-gray-600 mb-4">
-                      <p className="flex items-center gap-2">📅 {formatDate(event.date)}</p>
-                      <p className="flex items-center gap-2">📍 {event.location}</p>
-                      <p className="flex items-center gap-2 text-emerald-600 font-medium">👥 {event.currentParticipants}/{event.maxParticipants} spots</p>
+            {loading
+              ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
+              : events.slice(0, 4).map((event, idx) => (
+                  <div
+                    key={event._id}
+                    className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                    data-aos="fade-up"
+                    data-aos-delay={idx * 100}
+                  >
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={event.imageUrl || bannerFour}
+                        alt={event.title}
+                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute top-4 right-4 bg-emerald-600 text-white text-xs px-3 py-1 rounded-full">
+                        Register Now
+                      </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleRegisterNow}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-semibold transition-colors"
-                    >
-                      Register Now
-                    </button>
+                    <div className="p-6">
+                      <h3 className="font-bold text-xl text-gray-900 mb-2">
+                        {event.title}
+                      </h3>
+                      <div className="space-y-2 text-sm text-gray-600 mb-4">
+                        <p className="flex items-center gap-2">
+                          📅 {formatDate(event.date)}
+                        </p>
+                        <p className="flex items-center gap-2">
+                          📍 {event.location}
+                        </p>
+                        <p className="flex items-center gap-2 text-emerald-600 font-medium">
+                          👥 {event.currentParticipants}/{event.maxParticipants}{" "}
+                          spots
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRegisterNow}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-semibold transition-colors"
+                      >
+                        Register Now
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))}
           </div>
         </div>
       </section>
@@ -640,19 +795,46 @@ const Home = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">✨ Why Go Green?</h2>
-            <p className="text-gray-600 text-lg">Benefits beyond just saving the planet</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              ✨ Why Go Green?
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Benefits beyond just saving the planet
+            </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: '📊', title: 'Track Impact', desc: 'See your real environmental contribution' },
-              { icon: '❤️', title: 'Community', desc: 'Connect with like-minded people' },
-              { icon: '🌱', title: 'Wellbeing', desc: 'Improve mental and physical health' },
-              { icon: '💰', title: 'Save Money', desc: 'Reduce bills through sustainable choices' },
+              {
+                icon: "📊",
+                title: "Track Impact",
+                desc: "See your real environmental contribution",
+              },
+              {
+                icon: "❤️",
+                title: "Community",
+                desc: "Connect with like-minded people",
+              },
+              {
+                icon: "🌱",
+                title: "Wellbeing",
+                desc: "Improve mental and physical health",
+              },
+              {
+                icon: "💰",
+                title: "Save Money",
+                desc: "Reduce bills through sustainable choices",
+              },
             ].map((benefit, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-lg transition-all duration-300" data-aos="fade-up" data-aos-delay={idx * 100}>
+              <div
+                key={idx}
+                className="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-lg transition-all duration-300"
+                data-aos="fade-up"
+                data-aos-delay={idx * 100}
+              >
                 <div className="text-4xl mb-3">{benefit.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  {benefit.title}
+                </h3>
                 <p className="text-sm text-gray-600">{benefit.desc}</p>
               </div>
             ))}
@@ -663,16 +845,43 @@ const Home = () => {
       {/* How It Works */}
       <section className="py-20 bg-gradient-to-br from-emerald-900 to-teal-900 text-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12" data-aos="fade-up">⚡ How It Works</h2>
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-12"
+            data-aos="fade-up"
+          >
+            ⚡ How It Works
+          </h2>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
-              { step: '1', title: 'Pick a Challenge', desc: 'Choose from various eco-challenges that match your interests', icon: '🎯' },
-              { step: '2', title: 'Log Your Actions', desc: 'Track your progress and log your sustainable activities', icon: '📝' },
-              { step: '3', title: 'Level Up', desc: 'Earn badges, climb leaderboards, and see your impact', icon: '🏆' },
+              {
+                step: "1",
+                title: "Pick a Challenge",
+                desc: "Choose from various eco-challenges that match your interests",
+                icon: "🎯",
+              },
+              {
+                step: "2",
+                title: "Log Your Actions",
+                desc: "Track your progress and log your sustainable activities",
+                icon: "📝",
+              },
+              {
+                step: "3",
+                title: "Level Up",
+                desc: "Earn badges, climb leaderboards, and see your impact",
+                icon: "🏆",
+              },
             ].map((step, idx) => (
-              <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-all duration-300" data-aos="fade-up" data-aos-delay={idx * 100}>
+              <div
+                key={idx}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-all duration-300"
+                data-aos="fade-up"
+                data-aos-delay={idx * 100}
+              >
                 <div className="text-5xl mb-4">{step.icon}</div>
-                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">{step.step}</div>
+                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {step.step}
+                </div>
                 <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                 <p className="text-gray-200">{step.desc}</p>
               </div>
@@ -691,31 +900,77 @@ const Home = () => {
       {/* Testimonials */}
       <section className="py-20 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" data-aos="fade-up">What Our Community Says</h2>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            data-aos="fade-up"
+          >
+            What Our Community Says
+          </h2>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="rounded-3xl overflow-hidden shadow-2xl min-h-[400px]" style={{ backgroundImage: `url(${reviewBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }} data-aos="fade-right">
+            <div
+              className="rounded-3xl overflow-hidden shadow-2xl min-h-[400px]"
+              style={{
+                backgroundImage: `url(${reviewBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+              data-aos="fade-right"
+            >
               <div className="bg-black/60 h-full flex items-center justify-center p-10">
                 <div className="text-center">
-                  <h3 className="text-3xl md:text-4xl font-bold mb-6">Join the Movement</h3>
-                  <p className="text-xl opacity-90">Together we're making Earth greener, one action at a time.</p>
+                  <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                    Join the Movement
+                  </h3>
+                  <p className="text-xl opacity-90">
+                    Together we're making Earth greener, one action at a time.
+                  </p>
                 </div>
               </div>
             </div>
             <div className="space-y-6" data-aos="fade-left">
               {[
-                { name: 'Sarah Johnson', role: 'Zero Waste Advocate', img: user1, text: 'This platform transformed how I think about sustainability. I\'ve reduced my carbon footprint by 40% in just 3 months!' },
-                { name: 'Michael Chen', role: 'Urban Gardener', img: user2, text: 'The challenges are engaging and the community is so supportive. I\'ve connected with amazing people who share my passion.' },
-                { name: 'Emma Watson', role: 'Eco-Warrior', img: user3, text: 'Tracking my impact has been incredibly motivating. Seeing real numbers makes me want to do even more!' },
+                {
+                  name: "Sarah Johnson",
+                  role: "Zero Waste Advocate",
+                  img: user1,
+                  text: "This platform transformed how I think about sustainability. I've reduced my carbon footprint by 40% in just 3 months!",
+                },
+                {
+                  name: "Michael Chen",
+                  role: "Urban Gardener",
+                  img: user2,
+                  text: "The challenges are engaging and the community is so supportive. I've connected with amazing people who share my passion.",
+                },
+                {
+                  name: "Emma Watson",
+                  role: "Eco-Warrior",
+                  img: user3,
+                  text: "Tracking my impact has been incredibly motivating. Seeing real numbers makes me want to do even more!",
+                },
               ].map((review, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
+                <div
+                  key={i}
+                  className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300"
+                >
                   <div className="flex items-start gap-4">
-                    <img src={review.img} alt={review.name} className="w-14 h-14 rounded-full object-cover border-2 border-emerald-400" />
+                    <img
+                      src={review.img}
+                      alt={review.name}
+                      className="w-14 h-14 rounded-full object-cover border-2 border-emerald-400"
+                    />
                     <div className="flex-1">
                       <div className="flex justify-between items-start flex-wrap gap-2">
-                        <div><h4 className="font-bold text-lg">{review.name}</h4><p className="text-sm text-emerald-300">{review.role}</p></div>
+                        <div>
+                          <h4 className="font-bold text-lg">{review.name}</h4>
+                          <p className="text-sm text-emerald-300">
+                            {review.role}
+                          </p>
+                        </div>
                         <div className="text-emerald-400">⭐⭐⭐⭐⭐</div>
                       </div>
-                      <p className="mt-3 text-gray-200 italic">"{review.text}"</p>
+                      <p className="mt-3 text-gray-200 italic">
+                        "{review.text}"
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -728,8 +983,16 @@ const Home = () => {
       {/* CTA Footer */}
       <section className="bg-gradient-to-r from-emerald-600 to-teal-600 py-16">
         <div className="max-w-7xl mx-auto px-6 text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">Ready to Make an Impact?</h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">Join thousands of changemakers already making a difference. Start your sustainability journey today!</p>
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-6"
+            data-aos="fade-up"
+          >
+            Ready to Make an Impact?
+          </h2>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Join thousands of changemakers already making a difference. Start
+            your sustainability journey today!
+          </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
               type="button"
