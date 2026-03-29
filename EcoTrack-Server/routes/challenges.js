@@ -17,6 +17,7 @@ router.get('/:id', getChallengeById);
 // Protected routes
 router.post('/', protect, createChallenge);
 router.post('/join/:id', protect, joinChallenge);
+router.patch('/:id', protect, updateChallenge);
 router.put('/:id', protect, updateChallenge);
 router.delete('/:id', protect, deleteChallenge);
 

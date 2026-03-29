@@ -41,16 +41,12 @@ const getChallenges = async (req, res) => {
       }
     }
 
-    if (req.query.startDate || req.query.endDate) {
-      query.startDate = {};
+    if (req.query.startDate) {
+      query.startDate = { ...(query.startDate || {}), $gte: new Date(req.query.startDate) };
+    }
 
-      if (req.query.startDate) {
-        query.startDate.$gte = new Date(req.query.startDate);
-      }
-
-      if (req.query.endDate) {
-        query.startDate.$lte = new Date(req.query.endDate);
-      }
+    if (req.query.endDate) {
+      query.endDate = { ...(query.endDate || {}), $lte: new Date(req.query.endDate) };
     }
 
     if (req.query.minParticipants || req.query.maxParticipants) {

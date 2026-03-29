@@ -1,47 +1,82 @@
-# EcoTrack Server
+# EcoTrack API (Server)
 
-Backend API for EcoTrack - Sustainable Living Community Platform.
+Express + MongoDB (native driver) backend for **EcoTrack — Sustainable Living Community**.
 
 ## Features
 
-- **MongoDB Native Driver** - Direct collection access with lightweight validation
-- **Advanced Filtering** - Support for category, date range, and participant range filtering using MongoDB operators ($in, $gte, $lte)
-- **User Challenge Tracking** - Track user participation and progress in challenges
-- **Dynamic Content** - Tips and events collections for dynamic homepage content
-- **Protected Routes** - JWT-based authentication for secure endpoints
-- **Community Statistics** - Aggregated community impact metrics
-- **Error Handling** - Comprehensive error handling with proper status codes
+- REST API for **challenges**, **user challenges** (progress), **tips**, **events**, and **community stats**
+- **Advanced filtering** on `GET /api/challenges` using MongoDB operators (`$in`, `$gte`, `$lte`)
+- **JWT-protected** mutating routes where required
+- **Token issuance** for the SPA after Firebase login (see Auth below)
+- Centralized error handling
 
-## API Endpoints
+## Environment variables
+
+Copy [`.env.example`](./.env.example) to `.env` and set:
+
+| Variable | Purpose |
+|----------|---------|
+| `MONGO_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret for signing JWTs (use a long random value in production) |
+| `CLIENT_URL` | Comma-separated allowed CORS origins (your Netlify URL + local dev) |
+| `PORT` | Listen port (default `5000`) |
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Or:
+
+```bash
+npm start
+```
+
+## Deploy (Vercel)
+
+`vercel.json` routes all traffic to `server.js`. Set environment variables in the Vercel project dashboard.
+
+## API overview
+
+### Auth
+
+| Method | Path | Auth | Description |
+|--------|------|------|---------------|
+| `POST` | `/api/auth/token` | No | Issues a short-lived JWT for the SPA. Body: `{ "email", "userId", "name" }`. The client calls this after Firebase sign-in so `Authorization: Bearer …` works on protected routes. |
+
+**Production hardening:** For a real production system you would verify a Firebase ID token (or session) on this endpoint instead of trusting the request body. The assignment allows a simpler flow; keep secrets in `.env` only.
 
 ### Challenges
-- `GET /api/challenges` - Get all challenges with filtering
-- `GET /api/challenges/:id` - Get single challenge
-- `POST /api/challenges` - Create challenge (protected)
-- `POST /api/challenges/join/:id` - Join challenge (protected)
-- `PUT /api/challenges/:id` - Update challenge (owner only)
-- `DELETE /api/challenges/:id` - Delete challenge (owner only)
 
-### User Challenges
-- `GET /api/user-challenges` - Get user's challenges (protected)
-- `GET /api/user-challenges/stats` - Get user stats (protected)
-- `PATCH /api/user-challenges/:challengeId/progress` - Update progress (protected)
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/challenges` | No |
+| `GET` | `/api/challenges/:id` | No |
+| `POST` | `/api/challenges` | Yes |
+| `PATCH` | `/api/challenges/:id` | Yes (owner) |
+| `PUT` | `/api/challenges/:id` | Yes (owner) — alias of PATCH |
+| `DELETE` | `/api/challenges/:id` | Yes (owner) |
+| `POST` | `/api/challenges/join/:id` | Yes |
 
-### Tips
-- `GET /api/tips` - Get all tips
-- `GET /api/tips/recent` - Get recent tips for homepage
-- `POST /api/tips` - Create tip (protected)
-- `PATCH /api/tips/:id/upvote` - Upvote tip (protected)
+### User challenges
 
-### Events
-- `GET /api/events` - Get all events
-- `GET /api/events/upcoming` - Get upcoming events for homepage
-- `GET /api/events/:id` - Get single event
-- `POST /api/events` - Create event (protected)
-- `POST /api/events/:id/join` - Join event (protected)
+| Method | Path | Auth |
+|--------|------|------|
+| `GET` | `/api/user-challenges` | Yes |
+| `GET` | `/api/user-challenges/stats` | Yes |
+| `PATCH` | `/api/user-challenges/:challengeId/progress` | Yes |
 
-### Statistics
-- `GET /api/stats/community` - Get community impact stats
-- `GET /api/stats/leaderboard` - Get top contributors
+### Tips & events & stats
 
-## Filtering Examples
+See route files under `routes/` for full list (`tips.js`, `events.js`, `stats.js`).
+
+## Filtering examples (`GET /api/challenges`)
+
+- `?category=Waste Reduction,Energy Conservation` — category `$in`
+- `?startDate=2024-01-01` — `startDate >=`
+- `?endDate=2024-12-31` — `endDate <=`
+- `?minParticipants=10&maxParticipants=1000` — participant range
+
+Query parameters are documented in `controllers/challengeController.js`.

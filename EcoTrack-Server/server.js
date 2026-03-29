@@ -50,6 +50,7 @@ app.use("/api/user-challenges", require("./routes/userChallenges"));
 app.use("/api/tips", require("./routes/tips"));
 app.use("/api/events", require("./routes/events"));
 app.use("/api/stats", require("./routes/stats"));
+app.use("/api/auth", require("./routes/auth"));
 
 app.get("/health", (req, res) => {
   res.status(200).json({
