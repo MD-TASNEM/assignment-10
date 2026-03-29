@@ -5,6 +5,17 @@ import bannerFour from "../assets/Json-mages/banner4.png";
 import bannerFive from "../assets/Json-mages/banner5.jpg";
 
 export const CUSTOM_CHALLENGES_KEY = "ecotrack.customChallenges";
+const LOCAL_USER_CHALLENGES_KEY = "ecotrack.localUserChallenges";
+
+const discardedStoredChallengeMatchers = [
+  (challenge) =>
+    challenge?.title === "Non amet in fugiat" &&
+    challenge?.category === "Waste Reduction" &&
+    Number(challenge?.duration) === 27 &&
+    Number(challenge?.participants ?? 0) === 0 &&
+    (challenge?.description || "").startsWith("Aute possimus conse") &&
+    (challenge?.impactMetric || "").startsWith("Velit dolorem vero l"),
+];
 
 const readJson = (key, fallback) => {
   if (typeof window === "undefined") {
@@ -25,6 +36,49 @@ const writeJson = (key, value) => {
   }
 
   window.localStorage.setItem(key, JSON.stringify(value));
+};
+
+const shouldDiscardStoredChallenge = (challenge) =>
+  discardedStoredChallengeMatchers.some((matcher) => matcher(challenge));
+
+const pruneStoredUserChallenges = (challengeIds) => {
+  if (typeof window === "undefined" || challengeIds.length === 0) {
+    return;
+  }
+
+  const currentRecords = readJson(LOCAL_USER_CHALLENGES_KEY, []);
+  const nextRecords = currentRecords.filter(
+    (record) => !challengeIds.includes(record.challengeId),
+  );
+
+  if (nextRecords.length !== currentRecords.length) {
+    writeJson(LOCAL_USER_CHALLENGES_KEY, nextRecords);
+  }
+};
+
+const sanitizeStoredCustomChallenges = (storedChallenges) => {
+  const safeChallenges = Array.isArray(storedChallenges) ? storedChallenges : [];
+  const discardedIds = [];
+  const nextChallenges = [];
+
+  safeChallenges.forEach((challenge) => {
+    if (!challenge) {
+      return;
+    }
+
+    if (shouldDiscardStoredChallenge(challenge)) {
+      if (challenge._id) {
+        discardedIds.push(challenge._id);
+      }
+      return;
+    }
+
+    nextChallenges.push(challenge);
+  });
+
+  pruneStoredUserChallenges(discardedIds);
+
+  return nextChallenges;
 };
 
 export const fallbackStats = {
@@ -214,13 +268,33 @@ export const getFallbackChallengeById = (challengeId) =>
     (challenge) => challenge._id === challengeId,
   ) || null;
 
-export const getStoredCustomChallenges = () =>
-  readJson(CUSTOM_CHALLENGES_KEY, []);
+export const getStoredCustomChallenges = () => {
+  const storedChallenges = readJson(CUSTOM_CHALLENGES_KEY, []);
+  const sanitizedChallenges = sanitizeStoredCustomChallenges(storedChallenges);
+
+  if (sanitizedChallenges.length !== storedChallenges.length) {
+    writeJson(CUSTOM_CHALLENGES_KEY, sanitizedChallenges);
+  }
+
+  return sanitizedChallenges;
+};
 
 export const saveStoredCustomChallenge = (challenge) => {
   const currentChallenges = getStoredCustomChallenges();
   const nextChallenges = [challenge, ...currentChallenges.filter((item) => item._id !== challenge._id)];
   writeJson(CUSTOM_CHALLENGES_KEY, nextChallenges);
+  return nextChallenges;
+};
+
+export const removeStoredCustomChallenge = (challengeId) => {
+  const currentChallenges = getStoredCustomChallenges();
+  const nextChallenges = currentChallenges.filter((item) => item._id !== challengeId);
+
+  if (nextChallenges.length !== currentChallenges.length) {
+    writeJson(CUSTOM_CHALLENGES_KEY, nextChallenges);
+    pruneStoredUserChallenges([challengeId]);
+  }
+
   return nextChallenges;
 };
 

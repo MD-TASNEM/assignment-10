@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { challengesAPI } from '../api/api';
 import toast from 'react-hot-toast';
-import { getMergedChallenges } from '../data/mockEcoContent';
+import { getMergedChallenges, removeStoredCustomChallenge } from '../data/mockEcoContent';
 
 const isLocalChallenge = (challenge) =>
   challenge._id?.toString().startsWith('local-') ||
@@ -100,6 +100,25 @@ const Challenges = () => {
 
   const resetFilters = () => {
     setFilters({ category: '', status: '', search: '' });
+  };
+
+  const handleDeleteLocalChallenge = (challenge) => {
+    const confirmed = window.confirm(
+      `Delete "${challenge.title}" from your local challenge list?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const remainingLocalChallenges = removeStoredCustomChallenge(challenge._id);
+    const persistedChallenges = challenges.filter((item) => !isLocalChallenge(item));
+    const nextChallenges = [...remainingLocalChallenges, ...persistedChallenges];
+
+    setChallenges(nextChallenges);
+    setFilteredChallenges(nextChallenges);
+    setCategories([...new Set(nextChallenges.map((item) => item.category))]);
+    toast.success('Challenge deleted.');
   };
 
   const getDifficultyColor = (difficulty) => {
@@ -250,19 +269,30 @@ const Challenges = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
-                <Link
-                  to={`/challenges/join/${challenge._id}`}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
-                >
-                  Join Challenge
-                </Link>
-                <Link
-                  to={`/challenges/${challenge._id}`}
-                  className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
-                >
-                  View Details
-                </Link>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <div className="flex gap-3">
+                  <Link
+                    to={`/challenges/join/${challenge._id}`}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
+                  >
+                    Join Challenge
+                  </Link>
+                  <Link
+                    to={`/challenges/${challenge._id}`}
+                    className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
+                  >
+                    View Details
+                  </Link>
+                </div>
+                {isLocalChallenge(challenge) && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteLocalChallenge(challenge)}
+                    className="mt-3 w-full rounded-xl border border-red-200 bg-red-50 py-3 text-center font-medium text-red-700 transition-colors duration-300 hover:bg-red-100"
+                  >
+                    Delete Challenge
+                  </button>
+                )}
               </div>
             </div>
           </div>

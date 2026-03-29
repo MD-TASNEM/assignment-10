@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
 import {
   FaArrowLeft,
@@ -14,7 +14,10 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import { challengesAPI } from "../api/api";
-import { getFallbackChallengeById } from "../data/mockEcoContent";
+import {
+  getFallbackChallengeById,
+  removeStoredCustomChallenge,
+} from "../data/mockEcoContent";
 
 const formatDate = (value) => {
   if (!value) return "TBD";
@@ -42,8 +45,13 @@ const detailCard = (
   tone = "bg-white",
 ) => ({ title, value, icon, tone });
 
+const isLocalChallenge = (challenge) =>
+  challenge?._id?.toString().startsWith("local-") ||
+  challenge?._id?.toString().startsWith("custom-");
+
 const ChallengesDetails = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const ChallengesId = params.ChallengesId || params.id;
   const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -154,6 +162,24 @@ const ChallengesDetails = () => {
     ),
   ];
 
+  const handleDeleteLocalChallenge = () => {
+    if (!challenge || !isLocalChallenge(challenge)) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${challenge.title}" from your local challenge list?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    removeStoredCustomChallenge(challenge._id);
+    toast.success("Challenge deleted.");
+    navigate("/challenges");
+  };
+
   return (
     <div className="space-y-8">
       {usingFallbackData && (
@@ -207,6 +233,15 @@ const ChallengesDetails = () => {
               <FaArrowLeft />
               Back to Challenges
             </Link>
+            {isLocalChallenge(challenge) && (
+              <button
+                type="button"
+                onClick={handleDeleteLocalChallenge}
+                className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-5 py-3 font-semibold text-red-700 transition-colors hover:bg-red-100"
+              >
+                Delete Challenge
+              </button>
+            )}
             <Link
               to={`/challenges/join/${ChallengesId}`}
               className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 font-semibold text-emerald-700 shadow-lg transition-colors hover:bg-emerald-50"
