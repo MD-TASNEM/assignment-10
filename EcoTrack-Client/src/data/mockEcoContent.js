@@ -3,6 +3,11 @@ import bannerTwo from "../assets/Json-mages/banner2.png";
 import bannerThree from "../assets/Json-mages/banner3.png";
 import bannerFour from "../assets/Json-mages/banner4.png";
 import bannerFive from "../assets/Json-mages/banner5.jpg";
+import {
+  getChallengeId,
+  normalizeChallenge,
+  normalizeChallenges,
+} from "../utils/challengeIdentity";
 
 export const CUSTOM_CHALLENGES_KEY = "ecotrack.customChallenges";
 const LOCAL_USER_CHALLENGES_KEY = "ecotrack.localUserChallenges";
@@ -67,13 +72,14 @@ const sanitizeStoredCustomChallenges = (storedChallenges) => {
     }
 
     if (shouldDiscardStoredChallenge(challenge)) {
-      if (challenge._id) {
-        discardedIds.push(challenge._id);
+      const challengeId = getChallengeId(challenge);
+      if (challengeId) {
+        discardedIds.push(challengeId);
       }
       return;
     }
 
-    nextChallenges.push(challenge);
+    nextChallenges.push(normalizeChallenge(challenge));
   });
 
   pruneStoredUserChallenges(discardedIds);
@@ -265,7 +271,7 @@ export const fallbackEvents = [
 
 export const getFallbackChallengeById = (challengeId) =>
   [...getStoredCustomChallenges(), ...fallbackChallenges].find(
-    (challenge) => challenge._id === challengeId,
+    (challenge) => getChallengeId(challenge) === getChallengeId(challengeId),
   ) || null;
 
 export const getStoredCustomChallenges = () => {
@@ -281,7 +287,12 @@ export const getStoredCustomChallenges = () => {
 
 export const saveStoredCustomChallenge = (challenge) => {
   const currentChallenges = getStoredCustomChallenges();
-  const nextChallenges = [challenge, ...currentChallenges.filter((item) => item._id !== challenge._id)];
+  const normalizedChallenge = normalizeChallenge(challenge);
+  const challengeId = getChallengeId(normalizedChallenge);
+  const nextChallenges = [
+    normalizedChallenge,
+    ...currentChallenges.filter((item) => getChallengeId(item) !== challengeId),
+  ];
   writeJson(CUSTOM_CHALLENGES_KEY, nextChallenges);
   return nextChallenges;
 };
@@ -300,5 +311,5 @@ export const removeStoredCustomChallenge = (challengeId) => {
 
 export const getMergedChallenges = () => [
   ...getStoredCustomChallenges(),
-  ...fallbackChallenges,
+  ...normalizeChallenges(fallbackChallenges),
 ];

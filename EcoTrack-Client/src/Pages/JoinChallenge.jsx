@@ -14,6 +14,11 @@ import toast from "react-hot-toast";
 import { challengesAPI, userChallengesAPI } from "../api/api";
 import { AuthContext } from "../Context/AuthContext";
 import { getFallbackChallengeById, saveStoredCustomChallenge } from "../data/mockEcoContent";
+import {
+  getChallengeId,
+  isLocalChallenge,
+  normalizeChallenge,
+} from "../utils/challengeIdentity";
 
 const USER_CHALLENGES_KEY = "ecotrack.localUserChallenges";
 
@@ -35,6 +40,7 @@ const writeJson = (key, value) => {
 const JoinChallenge = () => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
+  const challengeRouteId = getChallengeId(id);
   const navigate = useNavigate();
   const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,8 +51,8 @@ const JoinChallenge = () => {
 
   const savedRecord = useMemo(() => {
     const stored = readJson(USER_CHALLENGES_KEY, []);
-    return stored.find((item) => item.challengeId === id) || null;
-  }, [id]);
+    return stored.find((item) => item.challengeId === challengeRouteId) || null;
+  }, [challengeRouteId]);
 
   useEffect(() => {
     let active = true;
@@ -54,12 +60,20 @@ const JoinChallenge = () => {
     const fetchChallenge = async () => {
       setLoading(true);
 
+      if (!challengeRouteId) {
+        if (active) {
+          setChallenge(null);
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
-        const response = await challengesAPI.getById(id);
+        const response = await challengesAPI.getById(challengeRouteId);
         if (!active) return;
-        setChallenge(response.data);
+        setChallenge(normalizeChallenge(response.data));
       } catch (error) {
-        const fallbackChallenge = getFallbackChallengeById(id);
+        const fallbackChallenge = getFallbackChallengeById(challengeRouteId);
         if (!active) return;
         if (fallbackChallenge) {
           setChallenge(fallbackChallenge);
@@ -78,7 +92,7 @@ const JoinChallenge = () => {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [challengeRouteId]);
 
   useEffect(() => {
     if (savedRecord) {
@@ -103,11 +117,16 @@ const JoinChallenge = () => {
       return;
     }
 
+    if (!challengeRouteId) {
+      toast.error("Challenge id is missing.");
+      return;
+    }
+
     setSubmitting(true);
     const record = {
       _id: `local-activity-${Date.now()}`,
       userId: user?.email || user?.uid || "local-user",
-      challengeId: id,
+      challengeId: challengeRouteId,
       status,
       progress: Number(progress),
       joinDate: new Date().toISOString(),
@@ -116,14 +135,14 @@ const JoinChallenge = () => {
     };
 
     try {
-      await challengesAPI.join(id);
+      await challengesAPI.join(challengeRouteId);
       try {
-        await userChallengesAPI.updateProgress(id, Number(progress));
+        await userChallengesAPI.updateProgress(challengeRouteId, Number(progress));
       } catch {
         // The server may only expose join tracking or may be protected in this workspace.
       }
 
-      if (challenge._id?.toString().startsWith("local-")) {
+      if (isLocalChallenge(challenge)) {
         saveStoredCustomChallenge({
           ...challenge,
           participants: (challenge.participants || 0) + 1,

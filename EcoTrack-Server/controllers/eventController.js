@@ -1,17 +1,38 @@
-const Event = require("../models/Event");
+const { COLLECTIONS, getCollection } = require("../config/db");
+const { getErrorResponse } = require("../utils/errors");
+const {
+  prepareEventDocument,
+  serializeDocuments,
+} = require("../utils/entities");
+const { buildIdFilter, findById, serializeDocument } = require("../utils/mongo");
+
+const getEventsCollection = () => getCollection(COLLECTIONS.events);
+
+const parsePositiveInteger = (value, defaultValue) => {
+  const parsed = Number.parseInt(value, 10);
+
+  if (Number.isNaN(parsed) || parsed < 1) {
+    return defaultValue;
+  }
+
+  return parsed;
+};
 
 // @desc    Get all events
 // @route   GET /api/events
 const getEvents = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 10;
-    const events = await Event.find({ date: { $gte: new Date() } })
+    const limit = Math.min(parsePositiveInteger(req.query.limit, 10), 100);
+    const events = await getEventsCollection()
+      .find({ date: { $gte: new Date() } })
       .sort({ date: 1 })
-      .limit(limit);
+      .limit(limit)
+      .toArray();
 
-    res.json(events);
+    res.json(serializeDocuments(events));
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -19,16 +40,26 @@ const getEvents = async (req, res) => {
 // @route   GET /api/events/upcoming
 const getUpcomingEvents = async (req, res) => {
   try {
-    const events = await Event.find({ date: { $gte: new Date() } })
+    const events = await getEventsCollection()
+      .find({ date: { $gte: new Date() } })
+      .project({
+        title: 1,
+        date: 1,
+        location: 1,
+        description: 1,
+        organizer: 1,
+        imageUrl: 1,
+        currentParticipants: 1,
+        maxParticipants: 1,
+      })
       .sort({ date: 1 })
       .limit(4)
-      .select(
-        "title date location description organizer imageUrl currentParticipants maxParticipants",
-      );
+      .toArray();
 
-    res.json(events);
+    res.json(serializeDocuments(events));
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -36,15 +67,16 @@ const getUpcomingEvents = async (req, res) => {
 // @route   GET /api/events/:id
 const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await findById(getEventsCollection(), req.params.id);
 
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    res.json(event);
+    res.json(serializeDocument(event));
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -52,15 +84,18 @@ const getEventById = async (req, res) => {
 // @route   POST /api/events
 const createEvent = async (req, res) => {
   try {
-    const event = new Event({
-      ...req.body,
+    const eventDocument = prepareEventDocument(req.body, {
       organizer: req.user.email,
     });
+    const insertResult = await getEventsCollection().insertOne(eventDocument);
+    const savedEvent = eventDocument._id
+      ? eventDocument
+      : { ...eventDocument, _id: insertResult.insertedId };
 
-    const savedEvent = await event.save();
-    res.status(201).json(savedEvent);
+    res.status(201).json(serializeDocument(savedEvent));
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error, 400);
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -68,29 +103,49 @@ const createEvent = async (req, res) => {
 // @route   POST /api/events/:id/join
 const joinEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const eventsCollection = getEventsCollection();
+    const event = await findById(eventsCollection, req.params.id);
 
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    if (event.currentParticipants >= event.maxParticipants) {
+    if (
+      Number(event.currentParticipants || 0) >= Number(event.maxParticipants || 0)
+    ) {
       return res.status(400).json({ message: "Event is already full" });
     }
 
-    event.currentParticipants += 1;
-    await event.save();
+    const updatedEvent = {
+      ...event,
+      currentParticipants: Number(event.currentParticipants || 0) + 1,
+      updatedAt: new Date(),
+    };
+    const { _id, createdAt, ...eventChanges } = updatedEvent;
 
-    res.json({ message: "Successfully joined the event", event });
+    await eventsCollection.updateOne(buildIdFilter(event._id), {
+      $set: eventChanges,
+    });
+
+    res.json({
+      message: "Successfully joined the event",
+      event: serializeDocument({
+        ...event,
+        ...eventChanges,
+        _id: event._id,
+        createdAt: event.createdAt || createdAt,
+      }),
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
 module.exports = {
+  createEvent,
+  getEventById,
   getEvents,
   getUpcomingEvents,
-  getEventById,
-  createEvent,
   joinEvent,
 };

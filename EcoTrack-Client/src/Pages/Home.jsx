@@ -18,6 +18,11 @@ import {
   fallbackTips,
   getMergedChallenges,
 } from '../data/mockEcoContent';
+import {
+  getChallengeId,
+  isLocalChallenge,
+  normalizeChallenges,
+} from '../utils/challengeIdentity';
 
 // Images
 import bannerOne from '../assets/Json-mages/bannerOne.png';
@@ -45,10 +50,6 @@ const SkeletonCard = () => (
     </div>
   </div>
 );
-
-const isLocalChallenge = (challenge) =>
-  challenge._id?.toString().startsWith('local-') ||
-  challenge._id?.toString().startsWith('custom-');
 
 const Home = () => {
   const { user } = useContext(AuthContext);
@@ -100,7 +101,10 @@ const Home = () => {
         Array.isArray(challengesRes.value?.data) &&
         challengesRes.value.data.length > 0
       ) {
-        setChallenges([...customChallenges, ...challengesRes.value.data].slice(0, 6));
+        setChallenges([
+          ...customChallenges,
+          ...normalizeChallenges(challengesRes.value.data),
+        ].slice(0, 6));
         liveSuccessCount += 1;
       } else {
         setChallenges(getMergedChallenges().slice(0, 6));
@@ -340,7 +344,11 @@ const Home = () => {
               </>
             ) : (
               challenges.slice(0, 6).map((challenge, idx) => (
-                <div key={challenge._id} data-aos="fade-up" data-aos-delay={idx * 100}>
+                <div
+                  key={getChallengeId(challenge) || `${challenge.title}-${idx}`}
+                  data-aos="fade-up"
+                  data-aos-delay={idx * 100}
+                >
                   <Service data={challenge} />
                 </div>
               ))

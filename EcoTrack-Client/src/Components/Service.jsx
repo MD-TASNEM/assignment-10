@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
+import toast from 'react-hot-toast';
+import { getChallengeId, hasChallengeId } from '../utils/challengeIdentity';
 
 const Service = ({ data }) => {
   if (!data) {
@@ -11,7 +13,6 @@ const Service = ({ data }) => {
   }
 
   const {
-    _id,
     title,
     category,
     description,
@@ -22,6 +23,7 @@ const Service = ({ data }) => {
     status,
     imageUrl,
   } = data;
+  const challengeId = getChallengeId(data);
 
   const difficultyColor = {
     Easy: 'text-emerald-600 bg-emerald-100',
@@ -77,18 +79,38 @@ const Service = ({ data }) => {
         </div>
 
         <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
-          <Link
-            to={`/Challenges/${_id}`}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
-          >
-            Join Challenge
-          </Link>
-          <Link
-            to={`/Challenges/${_id}`}
-            className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
-          >
-            View Details
-          </Link>
+          {hasChallengeId(data) ? (
+            <Link
+              to={`/challenges/join/${challengeId}`}
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
+            >
+              Join Challenge
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
+              className="flex-1 rounded-xl bg-slate-200 py-3 text-center font-medium text-slate-600"
+            >
+              Join Challenge
+            </button>
+          )}
+          {hasChallengeId(data) ? (
+            <Link
+              to={`/challenges/${challengeId}`}
+              className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
+            >
+              View Details
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
+              className="flex-1 rounded-xl border-2 border-slate-200 py-3 text-center font-medium text-slate-500"
+            >
+              View Details
+            </button>
+          )}
         </div>
       </div>
     </div>

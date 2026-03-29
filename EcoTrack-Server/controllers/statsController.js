@@ -1,39 +1,43 @@
-const Challenge = require('../models/Challenge');
-const UserChallenge = require('../models/UserChallenge');
-const Tip = require('../models/Tip');
-const Event = require('../models/Event');
+const { COLLECTIONS, getCollection } = require("../config/db");
+const { getErrorResponse } = require("../utils/errors");
+
+const getChallengesCollection = () => getCollection(COLLECTIONS.challenges);
+const getUserChallengesCollection = () =>
+  getCollection(COLLECTIONS.userChallenges);
+const getTipsCollection = () => getCollection(COLLECTIONS.tips);
+const getEventsCollection = () => getCollection(COLLECTIONS.events);
 
 // @desc    Get community statistics
 // @route   GET /api/stats/community
 const getCommunityStats = async (req, res) => {
   try {
-    // Get total participants across all challenges
-    const challenges = await Challenge.find();
-    const totalParticipants = challenges.reduce((sum, c) => sum + c.participants, 0);
+    const [challengeStats] = await getChallengesCollection()
+      .aggregate([
+        {
+          $group: {
+            _id: null,
+            totalParticipants: {
+              $sum: { $ifNull: ["$participants", 0] },
+            },
+          },
+        },
+      ])
+      .toArray();
 
-    // Get total CO2 saved (example calculation)
-    const totalCO2Saved = totalParticipants * 50; // 50kg per participant
+    const totalParticipants = challengeStats?.totalParticipants || 0;
+    const totalTips = await getTipsCollection().countDocuments();
+    const totalEvents = await getEventsCollection().countDocuments();
 
-    // Get total plastic reduced (example calculation)
-    const totalPlasticReduced = totalParticipants * 10; // 10kg per participant
-
-    // Get total tips shared
-    const totalTips = await Tip.countDocuments();
-
-    // Get total events hosted
-    const totalEvents = await Event.countDocuments();
-
-    const stats = {
-      totalCO2Saved,
-      totalPlasticReduced,
+    res.json({
+      totalCO2Saved: totalParticipants * 50,
+      totalPlasticReduced: totalParticipants * 10,
       totalParticipants,
       totalTips,
-      totalEvents
-    };
-
-    res.json(stats);
+      totalEvents,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
@@ -41,28 +45,42 @@ const getCommunityStats = async (req, res) => {
 // @route   GET /api/stats/leaderboard
 const getLeaderboard = async (req, res) => {
   try {
-    const leaderboard = await UserChallenge.aggregate([
-      {
-        $group: {
-          _id: '$userId',
-          totalChallenges: { $sum: 1 },
-          completedChallenges: {
-            $sum: { $cond: [{ $eq: ['$status', 'Finished'] }, 1, 0] }
+    const leaderboard = await getUserChallengesCollection()
+      .aggregate([
+        {
+          $group: {
+            _id: "$userId",
+            totalChallenges: { $sum: 1 },
+            completedChallenges: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "Finished"] }, 1, 0],
+              },
+            },
+            averageProgress: { $avg: "$progress" },
           },
-          averageProgress: { $avg: '$progress' }
-        }
-      },
-      { $sort: { completedChallenges: -1, averageProgress: -1 } },
-      { $limit: 10 }
-    ]);
+        },
+        {
+          $sort: { completedChallenges: -1, averageProgress: -1 },
+        },
+        {
+          $limit: 10,
+        },
+      ])
+      .toArray();
 
-    res.json(leaderboard);
+    res.json(
+      leaderboard.map((entry) => ({
+        ...entry,
+        userId: entry._id,
+      })),
+    );
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { statusCode, message } = getErrorResponse(error);
+    res.status(statusCode).json({ message });
   }
 };
 
 module.exports = {
   getCommunityStats,
-  getLeaderboard
+  getLeaderboard,
 };

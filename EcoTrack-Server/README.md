@@ -4,7 +4,7 @@ Backend API for EcoTrack - Sustainable Living Community Platform.
 
 ## Features
 
-- **MongoDB with Mongoose** - Robust data modeling and validation
+- **MongoDB Native Driver** - Direct collection access with lightweight validation
 - **Advanced Filtering** - Support for category, date range, and participant range filtering using MongoDB operators ($in, $gte, $lte)
 - **User Challenge Tracking** - Track user participation and progress in challenges
 - **Dynamic Content** - Tips and events collections for dynamic homepage content

@@ -18,6 +18,11 @@ import {
   getFallbackChallengeById,
   removeStoredCustomChallenge,
 } from "../data/mockEcoContent";
+import {
+  getChallengeId,
+  isLocalChallenge,
+  normalizeChallenge,
+} from "../utils/challengeIdentity";
 
 const formatDate = (value) => {
   if (!value) return "TBD";
@@ -45,14 +50,10 @@ const detailCard = (
   tone = "bg-white",
 ) => ({ title, value, icon, tone });
 
-const isLocalChallenge = (challenge) =>
-  challenge?._id?.toString().startsWith("local-") ||
-  challenge?._id?.toString().startsWith("custom-");
-
 const ChallengesDetails = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const ChallengesId = params.ChallengesId || params.id;
+  const ChallengesId = getChallengeId(params.ChallengesId || params.id);
   const [challenge, setChallenge] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -66,10 +67,17 @@ const ChallengesDetails = () => {
       setError("");
       setUsingFallbackData(false);
 
+      if (!ChallengesId) {
+        setError("This challenge link is invalid.");
+        setChallenge(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await challengesAPI.getById(ChallengesId);
         if (active) {
-          setChallenge(response.data);
+          setChallenge(normalizeChallenge(response.data));
         }
       } catch (err) {
         const message =
@@ -175,7 +183,14 @@ const ChallengesDetails = () => {
       return;
     }
 
-    removeStoredCustomChallenge(challenge._id);
+    const challengeId = getChallengeId(challenge);
+
+    if (!challengeId) {
+      toast.error("This challenge is missing an identifier.");
+      return;
+    }
+
+    removeStoredCustomChallenge(challengeId);
     toast.success("Challenge deleted.");
     navigate("/challenges");
   };

@@ -3,10 +3,12 @@ import { Link } from 'react-router';
 import { challengesAPI } from '../api/api';
 import toast from 'react-hot-toast';
 import { getMergedChallenges, removeStoredCustomChallenge } from '../data/mockEcoContent';
-
-const isLocalChallenge = (challenge) =>
-  challenge._id?.toString().startsWith('local-') ||
-  challenge._id?.toString().startsWith('custom-');
+import {
+  getChallengeId,
+  hasChallengeId,
+  isLocalChallenge,
+  normalizeChallenges,
+} from '../utils/challengeIdentity';
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState(getMergedChallenges());
@@ -39,7 +41,7 @@ const Challenges = () => {
         return;
       }
 
-      const liveChallenges = Array.isArray(response.data) ? response.data : [];
+      const liveChallenges = normalizeChallenges(response.data);
       const customChallenges = getMergedChallenges().filter(isLocalChallenge);
       const sourceChallenges =
         liveChallenges.length > 0
@@ -111,7 +113,14 @@ const Challenges = () => {
       return;
     }
 
-    const remainingLocalChallenges = removeStoredCustomChallenge(challenge._id);
+    const challengeId = getChallengeId(challenge);
+
+    if (!challengeId) {
+      toast.error('This challenge is missing an identifier and cannot be deleted.');
+      return;
+    }
+
+    const remainingLocalChallenges = removeStoredCustomChallenge(challengeId);
     const persistedChallenges = challenges.filter((item) => !isLocalChallenge(item));
     const nextChallenges = [...remainingLocalChallenges, ...persistedChallenges];
 
@@ -228,8 +237,11 @@ const Challenges = () => {
 
       {/* Challenges Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredChallenges.map((challenge) => (
-          <div key={challenge._id} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
+        {filteredChallenges.map((challenge, index) => {
+          const challengeId = getChallengeId(challenge);
+
+          return (
+          <div key={challengeId || `${challenge.title}-${index}`} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
             <div className="relative overflow-hidden">
               <img
                 src={challenge.imageUrl || 'https://via.placeholder.com/400x250?text=EcoTrack'}
@@ -271,18 +283,38 @@ const Challenges = () => {
 
               <div className="mt-auto pt-4 border-t border-gray-100">
                 <div className="flex gap-3">
-                  <Link
-                    to={`/challenges/join/${challenge._id}`}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
-                  >
-                    Join Challenge
-                  </Link>
-                  <Link
-                    to={`/challenges/${challenge._id}`}
-                    className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
-                  >
-                    View Details
-                  </Link>
+                  {hasChallengeId(challenge) ? (
+                    <Link
+                      to={`/challenges/join/${challengeId}`}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
+                    >
+                      Join Challenge
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
+                      className="flex-1 rounded-xl bg-slate-200 py-3 text-center font-medium text-slate-600"
+                    >
+                      Join Challenge
+                    </button>
+                  )}
+                  {hasChallengeId(challenge) ? (
+                    <Link
+                      to={`/challenges/${challengeId}`}
+                      className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
+                    >
+                      View Details
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
+                      className="flex-1 rounded-xl border-2 border-slate-200 py-3 text-center font-medium text-slate-500"
+                    >
+                      View Details
+                    </button>
+                  )}
                 </div>
                 {isLocalChallenge(challenge) && (
                   <button
@@ -296,7 +328,7 @@ const Challenges = () => {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
 
       {filteredChallenges.length === 0 && (
