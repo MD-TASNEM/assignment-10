@@ -519,6 +519,13 @@ const Home = () => {
                       {slide.title}
                     </span>
                     <p className="text-white text-lg">{slide.desc}</p>
+                    <button
+                      type="button"
+                      onClick={handleExploreChallenges}
+                      className="mt-4 inline-flex items-center rounded-full bg-emerald-600 px-6 py-2 text-white font-semibold hover:bg-emerald-700 transition-colors"
+                    >
+                      View Challenge
+                    </button>
                   </div>
                 </div>
               </SwiperSlide>
@@ -612,7 +619,7 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {loading ? (
               [1, 2, 3, 4].map((i) => <TipSkeletonCard key={i} />)
             ) : filteredTips.length === 0 ? (
@@ -628,7 +635,7 @@ const Home = () => {
                 </p>
               </div>
             ) : (
-              filteredTips.slice(0, 4).map((tip, idx) => {
+              filteredTips.slice(0, 5).map((tip, idx) => {
                 const authorName = getAuthorName(tip);
                 return (
                   <div
@@ -673,6 +680,9 @@ const Home = () => {
                     </div>
 
                     <div className="flex justify-between items-center text-xs">
+                      <span className="text-gray-400">
+                        {formatDate(tip.createdAt)}
+                      </span>
                       <button
                         onClick={() => handleUpvote(tip)}
                         disabled={upvotingId === tip._id}
@@ -741,9 +751,9 @@ const Home = () => {
               Join local events and meet fellow eco-enthusiasts
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {loading
-              ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
+              ? [1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)
               : events.slice(0, 4).map((event, idx) => (
                   <div
                     key={event._id}
@@ -777,6 +787,9 @@ const Home = () => {
                           spots
                         </p>
                       </div>
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                        {event.description}
+                      </p>
                       <button
                         type="button"
                         onClick={handleRegisterNow}
@@ -855,20 +868,20 @@ const Home = () => {
             {[
               {
                 step: "1",
-                title: "Pick a Challenge",
-                desc: "Choose from various eco-challenges that match your interests",
+                title: "Join a challenge",
+                desc: "Pick a sustainability challenge that matches your daily habits.",
                 icon: "🎯",
               },
               {
                 step: "2",
-                title: "Log Your Actions",
-                desc: "Track your progress and log your sustainable activities",
+                title: "Track progress",
+                desc: "Update your percentage and keep your activity progress current.",
                 icon: "📝",
               },
               {
                 step: "3",
-                title: "Level Up",
-                desc: "Earn badges, climb leaderboards, and see your impact",
+                title: "Share tips",
+                desc: "Contribute eco tips so others in the community can learn.",
                 icon: "🏆",
               },
             ].map((step, idx) => (

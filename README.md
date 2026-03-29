@@ -1,80 +1,50 @@
-# 🌿 EcoTrack — Sustainable Living Community
+# EcoTrack — Sustainable Living Community
 
-**Live Site:** [https://ecotrack-app.netlify.app](https://ecotrack-app.netlify.app)
+**Live site:** [https://ecotrack-app.netlify.app](https://ecotrack-app.netlify.app)
 
-EcoTrack is a community-driven platform where eco-conscious individuals discover and join sustainability challenges, share practical eco-tips, explore local green events, and track their personal environmental impact — all focused on measurable, community-driven progress toward a greener planet.
+EcoTrack is a community platform where people discover sustainability challenges, share eco-tips, browse green events, and track personal environmental impact. This repository is a **monorepo-style workspace** with separate client and server folders (submit each to GitHub separately if your course requires two repos).
 
----
-
-## ✨ Key Features
-
-- 🏆 **Sustainability Challenges** — Browse, join, and track progress on real-world eco challenges (e.g., Plastic-Free July, 30-Day Cycling Commute). Each challenge shows live participant counts, categories, duration, and impact metrics.
-
-- 📊 **Personal Impact Dashboard** — Authenticated users get a private activity dashboard to monitor joined challenges, update progress percentage, and visualize their environmental contribution over time.
-
-- 💡 **Community Eco-Tips** — Users can browse the latest community-submitted sustainability tips with upvote counts, author info, and categories — dynamically fetched from the database and displayed on the home page.
-
-- 📅 **Local Green Events** — Discover upcoming environmental events (location, date, description, organizer) pulled live from the database, keeping the community connected and engaged.
-
-- 🔍 **Advanced Challenge Filtering** — Filter challenges by category (using MongoDB `$in`), date range (`$gte`/`$lte` on startDate/endDate), and participant count range — enabling precise discovery of relevant challenges.
+| Folder | Role |
+|--------|------|
+| `EcoTrack-Client/` | React (Vite) SPA — Netlify-friendly with `public/_redirects` |
+| `EcoTrack-Server/` | Express API — MongoDB native driver, deployable on Vercel |
 
 ---
 
-## 🛠️ Tech Stack
+## Key features
 
-| Layer            | Technology                                        |
-| ---------------- | ------------------------------------------------- |
-| Frontend         | React, React Router, TailwindCSS                  |
-| Auth             | Firebase Authentication (Email/Password + Google) |
-| Backend          | Node.js, Express.js                               |
-| Database         | MongoDB (Atlas)                                   |
-| Hosting (Client) | Netlify                                           |
-| Hosting (Server) | Vercel                                            |
+- **Challenges** — List, filter, detail, create (auth), join (auth), progress in **user challenges**
+- **Home** — Stats, challenges, tips, events; static “Why go green” / “How it works”
+- **Auth** — Firebase Email/Password + Google; JWT from `/api/auth/token` for protected API calls
+- **UX** — Toasts, skeletons, error boundary, 404 page
 
 ---
 
-## 📦 NPM Packages Used
+## Tech stack
 
-- `react-router-dom` — Client-side routing & protected routes
-- `firebase` — Authentication (Email/Password + Google OAuth)
-- `axios` — HTTP requests to the Express API
-- `react-hot-toast` — Styled toast notifications (no `alert()`)
-- `react-icons` — Icon library (including X/Twitter logo)
-- `swiper` — Hero banner carousel for featured challenges
-- `react-loading-skeleton` — Skeleton loaders for card lists
+| Layer | Technology |
+|-------|------------|
+| Client | React 19, Vite, React Router 7, Tailwind, Firebase Auth, Axios, react-hot-toast |
+| Server | Node.js, Express, MongoDB driver, JWT, CORS |
+| DB | MongoDB Atlas (or compatible) |
 
 ---
 
-## 🔐 Environment Variables
+## Environment variables
 
-Create a `.env` file in the client root:
+- **Client:** copy `EcoTrack-Client/.env.example` → `.env` (see file for `VITE_*` keys).
+- **Server:** copy `EcoTrack-Server/.env.example` → `.env` — use `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`.
 
-```env
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-VITE_API_BASE_URL=https://your-server.vercel.app
-```
-
-Create a `.env` file in the server root:
-
-```env
-MONGODB_URI=your_mongodb_connection_string
-PORT=5000
-```
+Never commit real `.env` files. Use `.env.example` only as a template.
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## Local development
 
 ### Client
 
 ```bash
-git clone https://github.com/yourusername/ecotrack-client.git
-cd ecotrack-client
+cd EcoTrack-Client
 npm install
 npm run dev
 ```
@@ -82,82 +52,42 @@ npm run dev
 ### Server
 
 ```bash
-git clone https://github.com/yourusername/ecotrack-server.git
-cd ecotrack-server
+cd EcoTrack-Server
 npm install
-node index.js
+npm run dev
 ```
 
----
-
-## 📁 Project Structure (Client)
-
-```
-src/
-├── assets/
-├── components/
-│   ├── Navbar.jsx
-│   ├── Footer.jsx
-│   ├── ChallengeCard.jsx
-│   └── SkeletonLoader.jsx
-├── contexts/
-│   └── AuthContext.jsx
-├── hooks/
-│   └── useAuth.js
-├── layouts/
-│   ├── MainLayout.jsx
-│   └── DashboardLayout.jsx
-├── pages/
-│   ├── Home.jsx
-│   ├── Challenges.jsx
-│   ├── ChallengeDetail.jsx
-│   ├── AddChallenge.jsx
-│   ├── MyActivities.jsx
-│   ├── Login.jsx
-│   ├── Register.jsx
-│   ├── ForgotPassword.jsx
-│   └── NotFound.jsx
-├── routes/
-│   └── PrivateRoute.jsx
-└── main.jsx
-```
+Default API: `http://localhost:5000` — set `VITE_API_BASE_URL=http://localhost:5000/api` in the client `.env` for local testing.
 
 ---
 
-## 🔒 Protected Routes
+## Protected client routes
 
-The following routes require authentication. Unauthenticated users are redirected to `/login` and returned to their intended route after successful login:
+Unauthenticated users are sent to `/login` and return to the intended URL after sign-in:
 
-- `/challenges/add`
-- `/challenges/join/:id`
-- `/my-activities`
-- `/my-activities/:id`
+- `/challenges/add`, `/challenges/join/:id`
+- `/my-activities`, `/my-activities/:id`
+- `/profile`, `/update-profile`
 
----
-
-## 🌍 API Endpoints (Server)
-
-| Method | Endpoint                   | Description                        |
-| ------ | -------------------------- | ---------------------------------- |
-| GET    | `/api/challenges`          | List all challenges (with filters) |
-| GET    | `/api/challenges/:id`      | Get challenge details              |
-| POST   | `/api/challenges`          | Create a new challenge             |
-| PATCH  | `/api/challenges/:id`      | Update a challenge                 |
-| DELETE | `/api/challenges/:id`      | Delete a challenge                 |
-| POST   | `/api/challenges/join/:id` | Join a challenge                   |
-| GET    | `/api/tips`                | Get latest community tips          |
-| GET    | `/api/events`              | Get upcoming events                |
-| GET    | `/api/user-challenges`     | Get user's joined challenges       |
-| PATCH  | `/api/user-challenges/:id` | Update progress on a challenge     |
+Legacy paths (e.g. `/Leaderboard`, `/EcoTips`) redirect to **kebab-case** canonical URLs.
 
 ---
 
-## 🤝 Contributing
+## API (summary)
 
-Pull requests are welcome! Please open an issue first to discuss what you'd like to change.
+| Area | Base path |
+|------|-----------|
+| Challenges | `/api/challenges` |
+| User progress | `/api/user-challenges` |
+| Tips | `/api/tips` |
+| Events | `/api/events` |
+| Stats | `/api/stats` |
+| Auth token | `POST /api/auth/token` |
+
+Details: `EcoTrack-Server/README.md`.
 
 ---
 
-## 📄 License
+## License
 
-© 2025 EcoTrack. All rights reserved.
+© 2025 EcoTrack.

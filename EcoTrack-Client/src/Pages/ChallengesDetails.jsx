@@ -175,14 +175,6 @@ const ChallengesDetails = () => {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Delete "${challenge.title}" from your local challenge list?`,
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     const challengeId = getChallengeId(challenge);
 
     if (!challengeId) {

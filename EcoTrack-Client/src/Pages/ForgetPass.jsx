@@ -1,62 +1,31 @@
-import React, { useContext } from "react";
-import { useLocation } from "react-router";
-import { AuthContext } from "../Context/AuthContext";
-import toast from "react-hot-toast";
+import React from "react";
+import { Link, useLocation } from "react-router";
 
 const ForgetPass = () => {
-  const { forgetpass } = useContext(AuthContext);
   const { state } = useLocation();
   const email = state?.email || "";
-  const handleForgetPass = (e) => {
-    e.preventDefault();
-    if (!email) {
-      toast.error("Please go back to the login page and enter your email first.");
-      return;
-    }
-    forgetpass(email)
-      .then(() => {
-        toast.success("Send to Your Email");
-        window.open("https://mail.google.com", "_blank");
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
-  };
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center mt-2 sm:mt-4 mb-10">
-        <div className="text-center">
-          <h1 className="text-4xl my-2">Update Password</h1>
-          <h1>Please enter your e-mail and password:</h1>
-        </div>
-
-        <div className="mt-5">
-          <form>
-            <fieldset className="fieldset">
-              {/* Email Field */}
-
-              <label className="label">Email:</label>
-              <input
-                type="email"
-                value={email}
-                readOnly
-                className="input sm:w-[400px] sm:h-[50px] border-2 border-gray-400 focus:outline-none"
-                placeholder="Your email"
-              />
-
-              <button
-                type="button"
-                onClick={handleForgetPass}
-                className="btn btn-neutral mt-3 sm:w-[400px] border-none relative group"
-              >
-                <span className="relative z-10 transition-colors duration-300 group-hover:text-black">
-                  Click here
-                </span>
-                <span className="absolute bg-white w-0 h-full right-0 transition-all duration-300  group-hover:w-full group-hover:text-black "></span>
-              </button>
-            </fieldset>
-          </form>
+    <div className="min-h-[60vh] flex items-center justify-center px-4">
+      <div className="max-w-xl w-full rounded-2xl bg-white shadow-md border border-slate-200 p-8 text-center space-y-4">
+        <h1 className="text-3xl font-bold text-slate-900">Forgot Password</h1>
+        <p className="text-slate-600">
+          Password reset flow is intentionally kept simple for assignment
+          evaluation. You can return to login and continue with Email/Password
+          or Google sign-in.
+        </p>
+        {email ? (
+          <p className="text-sm text-emerald-700 bg-emerald-50 rounded-lg py-2 px-3">
+            Entered email: {email}
+          </p>
+        ) : null}
+        <div className="pt-2">
+          <Link
+            to="/login"
+            className="inline-flex items-center rounded-full bg-emerald-600 px-6 py-3 text-white font-semibold hover:bg-emerald-700 transition-colors"
+          >
+            Back to Login
+          </Link>
         </div>
       </div>
     </div>

@@ -1,147 +1,64 @@
-# EcoTrack — Sustainable Living Community
+# EcoTrack — Sustainable Living Community (Client)
 
-**Live Site:** https://your-ecotrack.netlify.app
+**Live site:** [https://ecotrack-app.netlify.app](https://ecotrack-app.netlify.app)
 
-EcoTrack is a community platform for eco-conscious people to discover and join sustainability challenges, share practical eco-EcoTips, explore local green events, and track their personal environmental impact. The focus is on measurable, community-driven progress that encourages real-world habit change.
+EcoTrack is a single-page app where people discover sustainability challenges, share eco-tips, browse green events, and track personal progress. The UI uses React, React Router, Tailwind CSS, Firebase Authentication, and a REST API hosted separately (Express + MongoDB).
 
-## Project Overview
+## Features
 
-EcoTrack brings together people who want to live more sustainably. Users can join challenges (e.g., Plastic-Free July, Energy Saving Week), log their progress, share EcoTips with the community, and see how their actions contribute to collective impact metrics like total CO₂ saved and kilograms of plastic reduced.
+- **Challenges** — Browse challenges, open details, create challenges (authenticated), join a challenge and sync progress.
+- **My Activities** — Protected dashboard listing joined challenges with progress sliders and save-to-API flow (with offline-friendly local fallback when needed).
+- **Home** — Dynamic sections: community stats, active challenges, recent tips, upcoming events; static “Why go green” and “How it works”.
+- **Auth** — Email/password and Google via Firebase; protected routes redirect to `/login` and return to the intended URL after sign-in.
+- **Feedback** — Styled toasts (`react-hot-toast`); runtime errors caught by an error boundary; 404 route for unknown paths.
+- **Hosting** — Netlify-style SPA fallback via `public/_redirects` (`/* /index.html 200`) so deep links reload correctly.
 
-## Key Features
+## Tech stack
 
-- **Sustainability Challenges**
-  - Browse 4–6 active challenges on the home page with title, category, target metric, and image
-  - View full challenge details
-  - Join a challenge and update your progress percentage
+| Area | Choice |
+|------|--------|
+| UI | React 19, Vite 7, Tailwind CSS, DaisyUI |
+| Routing | React Router 7 |
+| Auth | Firebase Auth |
+| HTTP | Axios |
+| Notifications | react-hot-toast |
 
-- **Community EcoTips**
-  - Latest 5 EcoTips displayed on the home page (title, author name, upvotes, date)
-  - Create your own EcoTips with category and content
+## Environment variables
 
-- **Green Events**
-  - Upcoming 4 events with title, date, location, and short description
+See [`.env.example`](./.env.example). Copy it to `.env` and set:
 
-- **Personal Impact Dashboard**
-  - See all challenges you’ve joined
-  - Update progress and view status (Not Started / Ongoing / Finished)
+- `VITE_API_BASE_URL` — your deployed API base (must end with `/api` if your server is mounted that way), e.g. `https://your-project.vercel.app/api`
+- Firebase keys — from the Firebase console (Web app)
 
-- **Authentication**
-  - Email & password registration with password strength validation
-  - Google sign-in via Firebase Auth
-  - Protected routes redirect to `/user` and return you to the intended page after sign-in
-  - Forgot password link (route included; flow optional)
+## Local development
 
-- **Live Statistics**
-  - Community-wide aggregates (e.g., total CO₂ saved, total plastic reduced)
+```bash
+npm install
+npm run dev
+```
 
-## Tech Stack
+Build for production:
 
-**Client**
+```bash
+npm run build
+```
 
-- React + React Router
-- Firebase Authentication
-- Tailwind CSS
-- React Toastify (styled toast notifications)
+Preview the production build:
 
-**Server**
+```bash
+npm run preview
+```
 
-- Node.js + Express
-- MongoDB + Mongoose
-- CORS, dotenv
+## Project structure (high level)
 
-**Hosting**
+- `src/Routes/` — router, legacy URL redirects, private route wrapper
+- `src/Pages/` — page components
+- `src/Context/` — auth context (Firebase + API token sync)
+- `src/api/` — Axios client and API helpers
+- `public/_redirects` — SPA rewrite rules for static hosts
 
-- Client: Netlify / Surge / Firebase
-- Server: Vercel
+## Assignment checklist (maintainer notes)
 
-## Assignment Requirements Met
-
-✓ **Git Commits**
-
-- Client side: 15+ notable commits
-- Server side: 8+ notable commits
-
-✓ **README**
-
-- Meaningful README with project name and live site URL
-- 5+ bullet points highlighting features
-
-✓ **No Lorem Ipsum**
-
-- All copy is original; no default `alert()` — all feedback uses styled toasts
-
-✓ **Deployment**
-
-- SPA hosting with proper 404 fallback so page refresh on any route works
-- Domain added to Firebase authorized domains (if using Netlify/Surge)
-- Authenticated users stay on protected routes after reload
-
-## Layout Structure
-
-**Header**
-
-- Left: Logo + “EcoTrack”
-- Center: Home | Challenges | My Activities
-- Right:
-  - Not logged in → Login | Register
-  - Logged in → Avatar + Name → Profile | My Activities | Logout
-- Mobile: Hamburger menu
-
-**Footer**
-
-- © 2025 EcoTrack
-- Quick links: About, Contact
-- Social media icons (X, Facebook, Instagram)
-- Accessibility & PrivacyPolicy note
-
-**Layouts**
-
-- Public Layout: Home, Challenges listing
-- Dashboard Layout (protected): My Activities, Profile
-
-## Home Page Sections
-
-**Dynamic**
-
-1. Hero Banner — featured challenge carousel with “View Challenge” CTA
-2. Live Statistics — community totals from the database
-3. Active Challenges — 4–6 challenge cards
-4. Recent EcoTips — latest 5 community EcoTips
-5. Upcoming Events — 4 upcoming events
-
-**Static**
-
-- Why Go Green? — concise benefits of sustainable living
-- How It Works — 3 steps: Join a challenge → Track progress → Share EcoTips
-
-## API Endpoints (Server)
-
-**Challenges**
-
-- `GET /api/challenges` — list with optional filters
-  - `category` → `$in`
-  - `startDate` → `$gte`
-  - `endDate` → `$lte`
-  - `participants` → `$gte` / `$lte`
-- `GET /api/challenges/:id`
-- `POST /api/challenges` (protected)
-- `PATCH /api/challenges/:id` (owner/admin)
-- `DELETE /api/challenges/:id` (owner/admin)
-- `POST /api/challenges/join/:id` (protected) — increments `participants` and creates a `userChallenges` record
-
-**UserChallenges**
-
-- Tracks each user’s `status`, `progress`, and `joinDate`
-
-**EcoTips**
-
-- `GET /api/EcoTips` → latest EcoTips for home page
-
-**Events**
-
-- `GET /api/events` → upcoming events for home page
-
-## Database Collections
-
-**challenges**
+- **Commits:** Use meaningful commits on both client and server repos (see your course minimums).
+- **Firebase authorized domains:** Add your Netlify (or other) hostname under Firebase Authentication → Settings → Authorized domains.
+- **Secrets:** Never commit `.env`; use `.env.example` only as a template.

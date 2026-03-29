@@ -117,19 +117,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    if (email) {
-      navigate("/forgot-password", { state: { email } });
-    } else {
-      toast.error("Please enter your email address first to reset password.", {
-        duration: 4000,
-        position: "top-right",
-        style: {
-          background: "#F59E0B",
-          color: "#fff",
-          borderRadius: "12px",
-        },
-      });
-    }
+    navigate("/forgot-password", { state: { email } });
   };
 
   return (
@@ -148,7 +136,7 @@ const Login = () => {
             </div>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome Back! 🌱
+            Login to EcoTrack
           </h1>
           <p className="text-gray-600">
             Sign in to continue your sustainability journey

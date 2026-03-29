@@ -10,7 +10,6 @@ import {
   FaSignOutAlt,
   FaTrophy,
   FaCalendarAlt,
-  FaLightbulb,
   FaSpinner,
 } from "react-icons/fa";
 
@@ -68,11 +67,6 @@ const Navbar = () => {
       label: "My Activities",
       icon: <FaCalendarAlt className="mr-2" />,
       protected: true,
-    },
-    {
-      path: "/EcoTips",
-      label: "Eco Tips",
-      icon: <FaLightbulb className="mr-2" />,
     },
   ];
 
@@ -180,7 +174,7 @@ const Navbar = () => {
                         My Activities
                       </NavLink>
                       <NavLink
-                        to="/Leaderboard"
+                        to="/leaderboard"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         <span className="mr-3">🏆</span>

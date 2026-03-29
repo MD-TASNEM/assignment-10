@@ -65,7 +65,7 @@ const MyProfile = () => {
   }
 
   const handleUpdate = () => {
-    navigate("/updateprofile");
+    navigate("/update-profile");
   };
 
   const handleLogout = async () => {
@@ -406,7 +406,7 @@ const MyProfile = () => {
                 </button>
 
                 <button
-                  onClick={() => navigate("/EcoTips")}
+                  onClick={() => navigate("/eco-tips")}
                   className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
                   <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">
@@ -418,7 +418,7 @@ const MyProfile = () => {
                 </button>
 
                 <button
-                  onClick={() => navigate("/Leaderboard")}
+                  onClick={() => navigate("/leaderboard")}
                   className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
                   <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">

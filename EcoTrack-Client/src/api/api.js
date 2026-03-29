@@ -31,7 +31,7 @@ export const challengesAPI = {
   getAll: (params) => api.get('/challenges', { params }),
   getById: (id) => api.get(`/challenges/${id}`),
   create: (data) => api.post('/challenges', data),
-  update: (id, data) => api.put(`/challenges/${id}`, data),
+  update: (id, data) => api.patch(`/challenges/${id}`, data),
   delete: (id) => api.delete(`/challenges/${id}`),
   join: (id) => api.post(`/challenges/join/${id}`),
 };
@@ -65,6 +65,11 @@ export const eventsAPI = {
 export const statsAPI = {
   getCommunity: () => api.get('/stats/community'),
   getLeaderboard: () => api.get('/stats/leaderboard'),
+};
+
+// Auth API
+export const authAPI = {
+  issueToken: (data) => api.post('/auth/token', data),
 };
 
 export default api;

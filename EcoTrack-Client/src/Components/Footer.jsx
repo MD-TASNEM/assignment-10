@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { FaLeaf, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2025;
 
   const socialLinks = [
     {
@@ -70,16 +70,15 @@ const Footer = () => {
   const quickLinks = [
     { name: "About", path: "/about" },
     { name: "Challenges", path: "/challenges" },
-    { name: "Leaderboard", path: "/Leaderboard" },
-    { name: "Eco Tips", path: "/EcoTips" },
-    { name: "Contact", path: "/about" },
+    { name: "My Activities", path: "/my-activities" },
+    { name: "Contact", path: "/community" },
   ];
 
   const supportLinks = [
-    { name: "FAQs", path: "/FAQs" },
-    { name: "Privacy Policy", path: "/PrivacyPolicy" },
-    { name: "Terms of Service", path: "/TermsOfService" },
-    { name: "Accessibility", path: "/Accessibility" },
+    { name: "FAQs", path: "/faqs" },
+    { name: "Privacy Policy", path: "/privacy-policy" },
+    { name: "Terms of Service", path: "/terms-of-service" },
+    { name: "Accessibility", path: "/accessibility" },
   ];
 
   const contactInfo = [
@@ -233,12 +232,10 @@ const Footer = () => {
       <div className="border-t border-green-800/50">
         <div className="container mx-auto px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">
-              © {currentYear} EcoTrack — every action matters 🌿
-            </p>
+            <p className="text-gray-400 text-sm">© {currentYear} EcoTrack</p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <span>🌍 Together for a greener future</span>
-              <span>♻️ Reduce • Reuse • Recycle</span>
+              <span>Accessibility-first experience with semantic navigation</span>
+              <span>Privacy respected for all community members</span>
             </div>
           </div>
         </div>

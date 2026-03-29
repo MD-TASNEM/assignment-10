@@ -96,6 +96,7 @@ const Register = () => {
     } else {
       const hasUppercase = /[A-Z]/.test(password);
       const hasLowercase = /[a-z]/.test(password);
+      const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
       const isLongEnough = password.length >= 6;
 
       if (!hasUppercase) {
@@ -106,6 +107,9 @@ const Register = () => {
           "Password must contain at least 1 lowercase letter";
       } else if (!isLongEnough) {
         newErrors.password = "Password must be at least 6 characters long";
+      } else if (!hasSpecialChar) {
+        newErrors.password =
+          "Password must contain at least 1 special character";
       }
     }
 
@@ -234,6 +238,7 @@ const Register = () => {
   const hasUppercase = /[A-Z]/.test(currentPassword);
   const hasLowercase = /[a-z]/.test(currentPassword);
   const hasMinLength = currentPassword.length >= 6;
+  const hasSpecialChar = /[^A-Za-z0-9]/.test(currentPassword);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -251,7 +256,7 @@ const Register = () => {
             </div>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Join EcoTrack 🌱
+            Join EcoTrack
           </h1>
           <p className="text-gray-600">
             Start your journey towards sustainable living
@@ -475,6 +480,22 @@ const Register = () => {
                     </svg>
                     One lowercase letter
                   </li>
+                  <li
+                    className={`flex items-center ${hasSpecialChar ? "text-green-600" : ""}`}
+                  >
+                    <svg
+                      className={`w-3 h-3 mr-2 ${hasSpecialChar ? "text-green-500" : "text-gray-300"}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    One special character
+                  </li>
                 </ul>
               </div>
               {errors.password && (
@@ -523,14 +544,14 @@ const Register = () => {
               <label className="text-sm text-gray-600">
                 I agree to the{" "}
                 <Link
-                  to="/TermsOfService"
+                  to="/terms-of-service"
                   className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Terms of Service
                 </Link>{" "}
                 and{" "}
                 <Link
-                  to="/PrivacyPolicy"
+                  to="/privacy-policy"
                   className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Privacy Policy

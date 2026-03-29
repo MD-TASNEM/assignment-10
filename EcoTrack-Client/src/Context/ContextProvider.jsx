@@ -11,10 +11,12 @@ import {
 } from "firebase/auth";
 import { auth, isFirebaseConfigured } from "../Firebase/Firebase.init";
 import AuthContext from "./AuthContext";
+import { authAPI } from "../api/api";
 
 const MOCK_USERS_KEY = "ecotrack.mockUsers";
 const MOCK_SESSION_KEY = "ecotrack.mockSession";
 const MOCK_GOOGLE_EMAIL = "google.user@ecotrack.local";
+const AUTH_TOKEN_KEY = "authToken";
 
 const readStorage = (key, fallback) => {
   if (typeof window === "undefined") {
@@ -43,6 +45,18 @@ const removeStorage = (key) => {
   }
 
   window.localStorage.removeItem(key);
+};
+
+const setAuthToken = (token) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (token) {
+    window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    window.localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
 };
 
 const buildAvatarUrl = (name) =>
@@ -203,10 +217,12 @@ export const ContextProvider = ({ children }) => {
 
   const logOut = () => {
     if (!isFirebaseConfigured) {
+      setAuthToken(null);
       setUser(null);
       return Promise.resolve();
     }
 
+    setAuthToken(null);
     return signOut(auth);
   };
 
@@ -326,6 +342,28 @@ export const ContextProvider = ({ children }) => {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const syncToken = async () => {
+      if (!user?.email || !user?.uid) {
+        setAuthToken(null);
+        return;
+      }
+
+      try {
+        const response = await authAPI.issueToken({
+          email: user.email,
+          userId: user.uid,
+          name: user.displayName || user.name || "EcoTrack User",
+        });
+        setAuthToken(response?.data?.token || null);
+      } catch {
+        setAuthToken(null);
+      }
+    };
+
+    syncToken();
+  }, [user]);
 
   const globalInfo = {
     user,
