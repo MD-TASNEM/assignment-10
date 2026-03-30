@@ -49,11 +49,16 @@ const connectDB = async () => {
     return database;
   }
 
-  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
+  const uri =
+    process.env.MONGO_URI ||
+    process.env.MONGODB_URI ||
+    "mongodb://localhost:27017/ecotrack";
 
   if (!uri) {
     throw new Error("MONGO_URI or MONGODB_URI is not set");
   }
+
+  console.log(`Attempting to connect to MongoDB: ${uri}`);
 
   client = new MongoClient(uri, {
     serverApi: {
@@ -63,18 +68,32 @@ const connectDB = async () => {
     },
     maxPoolSize: 10,
     minPoolSize: 1,
+    connectTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
   });
 
-  await client.connect();
-  database = client.db();
-  await database.command({ ping: 1 });
-  await createIndexes();
+  try {
+    await client.connect();
+    // database = client.db();
+    database = client.db("ecotrack");
+    await database.command({ ping: 1 });
+    await createIndexes();
 
-  console.log(
-    `MongoDB Connected: ${database.databaseName || "default database"}`,
-  );
+    console.log(
+      `MongoDB Connected: ${database.databaseName || "default database"}`,
+    );
 
-  return database;
+    return database;
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    console.log(
+      "Continuing without database connection - some features may not work",
+    );
+
+    // For development, continue without database
+    database = null;
+    return null;
+  }
 };
 
 const getDb = () => {
@@ -85,7 +104,23 @@ const getDb = () => {
   return database;
 };
 
-const getCollection = (collectionName) => getDb().collection(collectionName);
+const getCollection = (collectionName) => {
+  if (!database) {
+    // Return a mock collection for development
+    return {
+      find: () => ({
+        toArray: async () => [],
+        sort: () => ({ limit: () => ({ toArray: async () => [] }) }),
+        limit: () => ({ toArray: async () => [] }),
+      }),
+      insertOne: async () => ({ insertedId: "mock-id" }),
+      updateOne: async () => ({ modifiedCount: 1 }),
+      deleteOne: async () => ({ deletedCount: 1 }),
+      createIndex: async () => {},
+    };
+  }
+  return getDb().collection(collectionName);
+};
 
 const closeDB = async () => {
   if (!client) {

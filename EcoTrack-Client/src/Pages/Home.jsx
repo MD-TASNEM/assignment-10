@@ -23,17 +23,7 @@ import {
   FaApple,
   FaFilter,
 } from "react-icons/fa";
-import {
-  fallbackEvents,
-  fallbackStats,
-  fallbackTips,
-  getMergedChallenges,
-} from "../data/mockEcoContent";
-import {
-  getChallengeId,
-  isLocalChallenge,
-  normalizeChallenges,
-} from "../utils/challengeIdentity";
+import { getChallengeId } from "../utils/challengeIdentity";
 
 // Images
 import bannerOne from "../assets/Json-mages/bannerOne.png";
@@ -116,12 +106,15 @@ const Home = () => {
       return [];
     }
   });
-  const [challenges, setChallenges] = useState(() =>
-    getMergedChallenges().slice(0, 6),
-  );
-  const [tips, setTips] = useState(fallbackTips);
-  const [events, setEvents] = useState(fallbackEvents);
-  const [stats, setStats] = useState(fallbackStats);
+  const [challenges, setChallenges] = useState([]);
+  const [tips, setTips] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [stats, setStats] = useState({
+    treesPlanted: 0,
+    totalCO2Saved: 0,
+    totalWaterSaved: 0,
+    totalParticipants: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [upvotingId, setUpvotingId] = useState(null);
@@ -156,68 +149,67 @@ const Home = () => {
         return;
       }
 
-      let hasFailure = false;
-      let liveSuccessCount = 0;
-      const customChallenges = getMergedChallenges().filter(isLocalChallenge);
-
+      // Set challenges from server
       if (
         challengesRes.status === "fulfilled" &&
-        Array.isArray(challengesRes.value?.data) &&
-        challengesRes.value.data.length > 0
+        Array.isArray(challengesRes.value?.data)
       ) {
-        setChallenges(
-          [
-            ...customChallenges,
-            ...normalizeChallenges(challengesRes.value.data),
-          ].slice(0, 6),
-        );
-        liveSuccessCount += 1;
+        setChallenges(challengesRes.value.data.slice(0, 6));
       } else {
-        setChallenges(getMergedChallenges().slice(0, 6));
-        hasFailure = true;
+        setChallenges([]);
       }
 
+      // Set tips from server
       if (
         tipsRes.status === "fulfilled" &&
-        Array.isArray(tipsRes.value?.data) &&
-        tipsRes.value.data.length > 0
+        Array.isArray(tipsRes.value?.data)
       ) {
         setTips(tipsRes.value.data);
-        liveSuccessCount += 1;
       } else {
-        setTips(fallbackTips);
-        hasFailure = true;
+        setTips([]);
       }
 
+      // Set events from server
       if (
         eventsRes.status === "fulfilled" &&
-        Array.isArray(eventsRes.value?.data) &&
-        eventsRes.value.data.length > 0
+        Array.isArray(eventsRes.value?.data)
       ) {
         setEvents(eventsRes.value.data.slice(0, 4));
-        liveSuccessCount += 1;
       } else {
-        setEvents(fallbackEvents);
-        hasFailure = true;
+        setEvents([]);
       }
 
+      // Set stats from server
       if (statsRes.status === "fulfilled" && statsRes.value?.data) {
-        setStats({ ...fallbackStats, ...statsRes.value.data });
-        liveSuccessCount += 1;
+        setStats({
+          treesPlanted: statsRes.value.data.treesPlanted || 0,
+          totalCO2Saved: statsRes.value.data.totalCO2Saved || 0,
+          totalWaterSaved: statsRes.value.data.totalWaterSaved || 0,
+          totalParticipants: statsRes.value.data.totalParticipants || 0,
+        });
       } else {
-        setStats(fallbackStats);
-        hasFailure = true;
-      }
-
-      if (hasFailure && liveSuccessCount === 0) {
-        console.warn(
-          "Live home data is unavailable. Falling back to local sample content.",
-        );
+        setStats({
+          treesPlanted: 0,
+          totalCO2Saved: 0,
+          totalWaterSaved: 0,
+          totalParticipants: 0,
+        });
       }
     } catch (error) {
       console.error("Error fetching home data:", error);
       toast.error("Failed to load data. Please refresh the page.", {
         id: "home-data-error",
+      });
+
+      // Reset all data on error
+      setChallenges([]);
+      setTips([]);
+      setEvents([]);
+      setStats({
+        treesPlanted: 0,
+        totalCO2Saved: 0,
+        totalWaterSaved: 0,
+        totalParticipants: 0,
       });
     } finally {
       if (!requestState.cancelled) {

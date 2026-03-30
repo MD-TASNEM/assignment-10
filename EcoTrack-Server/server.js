@@ -45,12 +45,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use("/api/challenges", require("./routes/challenges"));
-app.use("/api/user-challenges", require("./routes/userChallenges"));
-app.use("/api/tips", require("./routes/tips"));
-app.use("/api/events", require("./routes/events"));
-app.use("/api/stats", require("./routes/stats"));
-app.use("/api/auth", require("./routes/auth"));
+app.use("/challenges", require("./routes/challenges"));
+app.use("/user-challenges", require("./routes/userChallenges"));
+app.use("/tips", require("./routes/tips"));
+app.use("/events", require("./routes/events"));
+app.use("/stats", require("./routes/stats"));
+app.use("/auth", require("./routes/auth"));
 
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -66,11 +66,11 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     description: "Sustainable Living Community Platform",
     endpoints: {
-      challenges: "/api/challenges",
-      userChallenges: "/api/user-challenges",
-      tips: "/api/tips",
-      events: "/api/events",
-      stats: "/api/stats",
+      challenges: "/challenges",
+      userChallenges: "/user-challenges",
+      tips: "/tips",
+      events: "/events",
+      stats: "/stats",
     },
   });
 });
@@ -95,7 +95,14 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    process.exit(1);
+    console.log("Starting server without database connection...");
+
+    // Start server even if DB fails
+    server = app.listen(PORT, () => {
+      console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port ${PORT} (without database)`,
+      );
+    });
   }
 };
 

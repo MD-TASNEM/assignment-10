@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router';
-import { challengesAPI } from '../api/api';
-import toast from 'react-hot-toast';
-import { getMergedChallenges, removeStoredCustomChallenge } from '../data/mockEcoContent';
-import {
-  getChallengeId,
-  hasChallengeId,
-  isLocalChallenge,
-  normalizeChallenges,
-} from '../utils/challengeIdentity';
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router";
+import { challengesAPI } from "../api/api";
+import toast from "react-hot-toast";
+import { getChallengeId, hasChallengeId } from "../utils/challengeIdentity";
 
 const Challenges = () => {
-  const [challenges, setChallenges] = useState(getMergedChallenges());
-  const [filteredChallenges, setFilteredChallenges] = useState(getMergedChallenges());
+  const [challenges, setChallenges] = useState([]);
+  const [filteredChallenges, setFilteredChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [usingFallbackData, setUsingFallbackData] = useState(false);
   const [filters, setFilters] = useState({
-    category: '',
-    status: '',
-    search: ''
+    category: "",
+    status: "",
+    search: "",
   });
-  const [categories, setCategories] = useState(
-    [...new Set(getMergedChallenges().map((challenge) => challenge.category))],
-  );
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const requestState = { cancelled: false };
@@ -41,27 +32,22 @@ const Challenges = () => {
         return;
       }
 
-      const liveChallenges = normalizeChallenges(response.data);
-      const customChallenges = getMergedChallenges().filter(isLocalChallenge);
-      const sourceChallenges =
-        liveChallenges.length > 0
-          ? [...customChallenges, ...liveChallenges]
-          : getMergedChallenges();
-
-      setChallenges(sourceChallenges);
-      setFilteredChallenges(sourceChallenges);
-      setCategories([...new Set(sourceChallenges.map((challenge) => challenge.category))]);
-      setUsingFallbackData(liveChallenges.length === 0);
+      const serverChallenges = Array.isArray(response.data)
+        ? response.data
+        : [];
+      setChallenges(serverChallenges);
+      setFilteredChallenges(serverChallenges);
+      setCategories([
+        ...new Set(serverChallenges.map((challenge) => challenge.category)),
+      ]);
     } catch (error) {
-      console.error('Error fetching challenges:', error);
+      console.error("Error fetching challenges:", error);
       if (!requestState.cancelled) {
-        const mergedChallenges = getMergedChallenges();
-        setChallenges(mergedChallenges);
-        setFilteredChallenges(mergedChallenges);
-        setCategories([...new Set(mergedChallenges.map((challenge) => challenge.category))]);
-        setUsingFallbackData(true);
+        setChallenges([]);
+        setFilteredChallenges([]);
+        setCategories([]);
+        toast.error("Failed to load challenges from server");
       }
-      console.warn('Live challenge data is unavailable. Falling back to local sample content.');
     } finally {
       if (!requestState.cancelled) {
         setLoading(false);
@@ -69,74 +55,65 @@ const Challenges = () => {
     }
   };
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...challenges];
 
-    if (filters.category && filters.category !== 'all') {
-      filtered = filtered.filter(c => c.category === filters.category);
+    if (filters.category && filters.category !== "all") {
+      filtered = filtered.filter((c) => c.category === filters.category);
     }
 
-    if (filters.status && filters.status !== 'all') {
-      filtered = filtered.filter(c => c.status === filters.status);
+    if (filters.status && filters.status !== "all") {
+      filtered = filtered.filter((c) => c.status === filters.status);
     }
 
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
-      filtered = filtered.filter(c =>
-        c.title.toLowerCase().includes(searchLower) ||
-        c.description.toLowerCase().includes(searchLower)
+      filtered = filtered.filter(
+        (c) =>
+          c.title.toLowerCase().includes(searchLower) ||
+          c.description.toLowerCase().includes(searchLower),
       );
     }
 
     setFilteredChallenges(filtered);
-  };
+  }, [challenges, filters]);
 
   useEffect(() => {
     applyFilters();
-  }, [filters, challenges]);
+  }, [filters, challenges, applyFilters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const resetFilters = () => {
-    setFilters({ category: '', status: '', search: '' });
-  };
-
-  const handleDeleteLocalChallenge = (challenge) => {
-    const challengeId = getChallengeId(challenge);
-
-    if (!challengeId) {
-      toast.error('This challenge is missing an identifier and cannot be deleted.');
-      return;
-    }
-
-    const remainingLocalChallenges = removeStoredCustomChallenge(challengeId);
-    const persistedChallenges = challenges.filter((item) => !isLocalChallenge(item));
-    const nextChallenges = [...remainingLocalChallenges, ...persistedChallenges];
-
-    setChallenges(nextChallenges);
-    setFilteredChallenges(nextChallenges);
-    setCategories([...new Set(nextChallenges.map((item) => item.category))]);
-    toast.success('Challenge deleted.');
+    setFilters({ category: "", status: "", search: "" });
   };
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case 'Easy': return 'text-emerald-600 bg-emerald-100';
-      case 'Medium': return 'text-amber-600 bg-amber-100';
-      case 'Hard': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case "Easy":
+        return "text-emerald-600 bg-emerald-100";
+      case "Medium":
+        return "text-amber-600 bg-amber-100";
+      case "Hard":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Active': return 'bg-green-100 text-green-700';
-      case 'Upcoming': return 'bg-blue-100 text-blue-700';
-      case 'Completed': return 'bg-gray-100 text-gray-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case "Active":
+        return "bg-green-100 text-green-700";
+      case "Upcoming":
+        return "bg-blue-100 text-blue-700";
+      case "Completed":
+        return "bg-gray-100 text-gray-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -156,8 +133,12 @@ const Challenges = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">All Challenges</h1>
-        <p className="text-gray-600">Join our eco-friendly challenges and make a difference</p>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          All Challenges
+        </h1>
+        <p className="text-gray-600">
+          Join our eco-friendly challenges and make a difference
+        </p>
         <div className="mt-6">
           <Link
             to="/challenges/add"
@@ -168,17 +149,13 @@ const Challenges = () => {
         </div>
       </div>
 
-      {usingFallbackData && (
-        <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Live challenge data is unavailable right now, so sample challenges are shown below.
-        </div>
-      )}
-
       {/* Filters Section */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search
+            </label>
             <input
               type="text"
               name="search"
@@ -189,7 +166,9 @@ const Challenges = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category
+            </label>
             <select
               name="category"
               value={filters.category}
@@ -197,13 +176,17 @@ const Challenges = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="all">All Categories</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status
+            </label>
             <select
               name="status"
               value={filters.status}
@@ -233,101 +216,121 @@ const Challenges = () => {
           const challengeId = getChallengeId(challenge);
 
           return (
-          <div key={challengeId || `${challenge.title}-${index}`} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
-            <div className="relative overflow-hidden">
-              <img
-                src={challenge.imageUrl || 'https://via.placeholder.com/400x250?text=EcoTrack'}
-                alt={challenge.title}
-                className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(challenge.status)}`}>
-                {challenge.status}
+            <div
+              key={challengeId || `${challenge.title}-${index}`}
+              className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full flex flex-col"
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  src={
+                    challenge.imageUrl ||
+                    "https://via.placeholder.com/400x250?text=EcoTrack"
+                  }
+                  alt={challenge.title}
+                  className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div
+                  className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(challenge.status)}`}
+                >
+                  {challenge.status}
+                </div>
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
+                  {challenge.category}
+                </div>
               </div>
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
-                {challenge.category}
+
+              <div className="p-6 flex flex-col flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">
+                  {challenge.title}
+                </h3>
+                <p className="text-gray-600 text-sm mb-5 line-clamp-2 flex-1">
+                  {challenge.description}
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 text-sm mb-6">
+                  <div>
+                    <p className="text-gray-500 text-xs mb-1">Duration</p>
+                    <p className="font-semibold">{challenge.duration} Days</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs mb-1">Participants</p>
+                    <p className="font-semibold">
+                      {challenge.participants?.toLocaleString() || 0}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs mb-1">Impact</p>
+                    <p className="text-emerald-600 font-semibold">
+                      {challenge.impactMetric || "kg CO₂"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-xs mb-1">Difficulty</p>
+                    <span
+                      className={`inline-block px-3 py-1 text-xs rounded-full ${getDifficultyColor(challenge.difficulty || "Medium")}`}
+                    >
+                      {challenge.difficulty || "Medium"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-auto pt-4 border-t border-gray-100">
+                  <div className="flex gap-3">
+                    {hasChallengeId(challenge) ? (
+                      <Link
+                        to={`/challenges/join/${challengeId}`}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
+                      >
+                        Join Challenge
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toast.error(
+                            "This challenge cannot be opened because its id is missing.",
+                          )
+                        }
+                        className="flex-1 rounded-xl bg-slate-200 py-3 text-center font-medium text-slate-600"
+                      >
+                        Join Challenge
+                      </button>
+                    )}
+                    {hasChallengeId(challenge) ? (
+                      <Link
+                        to={`/challenges/${challengeId}`}
+                        className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
+                      >
+                        View Details
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toast.error(
+                            "This challenge cannot be opened because its id is missing.",
+                          )
+                        }
+                        className="flex-1 rounded-xl border-2 border-slate-200 py-3 text-center font-medium text-slate-500"
+                      >
+                        View Details
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="p-6 flex flex-col flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">{challenge.title}</h3>
-              <p className="text-gray-600 text-sm mb-5 line-clamp-2 flex-1">{challenge.description}</p>
-
-              <div className="grid grid-cols-2 gap-4 text-sm mb-6">
-                <div>
-                  <p className="text-gray-500 text-xs mb-1">Duration</p>
-                  <p className="font-semibold">{challenge.duration} Days</p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-xs mb-1">Participants</p>
-                  <p className="font-semibold">{challenge.participants?.toLocaleString() || 0}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-xs mb-1">Impact</p>
-                  <p className="text-emerald-600 font-semibold">{challenge.impactMetric || 'kg CO₂'}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-xs mb-1">Difficulty</p>
-                  <span className={`inline-block px-3 py-1 text-xs rounded-full ${getDifficultyColor(challenge.difficulty || 'Medium')}`}>
-                    {challenge.difficulty || 'Medium'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-auto pt-4 border-t border-gray-100">
-                <div className="flex gap-3">
-                  {hasChallengeId(challenge) ? (
-                    <Link
-                      to={`/challenges/join/${challengeId}`}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
-                    >
-                      Join Challenge
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
-                      className="flex-1 rounded-xl bg-slate-200 py-3 text-center font-medium text-slate-600"
-                    >
-                      Join Challenge
-                    </button>
-                  )}
-                  {hasChallengeId(challenge) ? (
-                    <Link
-                      to={`/challenges/${challengeId}`}
-                      className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
-                    >
-                      View Details
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => toast.error('This challenge cannot be opened because its id is missing.')}
-                      className="flex-1 rounded-xl border-2 border-slate-200 py-3 text-center font-medium text-slate-500"
-                    >
-                      View Details
-                    </button>
-                  )}
-                </div>
-                {isLocalChallenge(challenge) && (
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteLocalChallenge(challenge)}
-                    className="mt-3 w-full rounded-xl border border-red-200 bg-red-50 py-3 text-center font-medium text-red-700 transition-colors duration-300 hover:bg-red-100"
-                  >
-                    Delete Challenge
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )})}
+          );
+        })}
       </div>
 
       {filteredChallenges.length === 0 && (
         <div className="text-center py-16">
           <div className="bg-gray-50 rounded-lg p-8 max-w-md mx-auto">
             <p className="text-gray-500 text-lg mb-2">No challenges found.</p>
-            <p className="text-gray-400 text-sm">Try adjusting your filters or check back later for new challenges.</p>
+            <p className="text-gray-400 text-sm">
+              Try adjusting your filters or check back later for new challenges.
+            </p>
           </div>
         </div>
       )}

@@ -62,7 +62,10 @@ const setAuthToken = (token) => {
 const buildAvatarUrl = (name) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "EcoTrack User")}&background=10B981&color=fff&bold=true`;
 
-const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
+const normalizeEmail = (value) =>
+  String(value || "")
+    .trim()
+    .toLowerCase();
 
 const createMockRecord = ({
   email,
@@ -232,7 +235,9 @@ export const ContextProvider = ({ children }) => {
       const users = getMockUsers();
       const avatar = buildAvatarUrl("EcoTrack Google User");
 
-      let record = users.find((item) => normalizeEmail(item.email) === MOCK_GOOGLE_EMAIL);
+      let record = users.find(
+        (item) => normalizeEmail(item.email) === MOCK_GOOGLE_EMAIL,
+      );
 
       if (!record) {
         record = createMockRecord({
@@ -330,7 +335,7 @@ export const ContextProvider = ({ children }) => {
 
   // Observer for auth state
   useEffect(() => {
-    if (!isFirebaseConfigured) {
+    if (!isFirebaseConfigured || !auth) {
       setUserState(readStorage(MOCK_SESSION_KEY, null));
       setLoading(false);
       return undefined;
@@ -378,9 +383,7 @@ export const ContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={globalInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={globalInfo}>{children}</AuthContext.Provider>
   );
 };
 

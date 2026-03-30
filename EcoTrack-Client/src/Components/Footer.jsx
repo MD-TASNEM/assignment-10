@@ -21,7 +21,7 @@ const Footer = () => {
       ),
     },
     {
-      name: "Twitter (X)",
+      name: "X (Twitter)",
       url: "https://twitter.com/",
       icon: (
         <svg
@@ -234,7 +234,9 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">© {currentYear} EcoTrack</p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <span>Accessibility-first experience with semantic navigation</span>
+              <span>
+                Accessibility-first experience with semantic navigation
+              </span>
               <span>Privacy respected for all community members</span>
             </div>
           </div>
