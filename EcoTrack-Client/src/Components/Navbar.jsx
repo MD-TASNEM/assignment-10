@@ -83,8 +83,16 @@ const Navbar = () => {
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
                 >
-                  <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center">
-                    <FaUser className="text-white text-sm" />
+                  <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center overflow-hidden">
+                    {user.photoURL ? (
+                      <img
+                        src={user.photoURL}
+                        alt={user.displayName || user.email}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <FaUser className="text-white text-sm" />
+                    )}
                   </div>
                   <span className="hidden lg:block">
                     {user.displayName || user.email}
@@ -181,8 +189,16 @@ const Navbar = () => {
                 <>
                   <div className="px-3 py-2 text-sm text-gray-700">
                     <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center">
-                        <FaUser className="text-white text-xs" />
+                      <div className="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center overflow-hidden">
+                        {user.photoURL ? (
+                          <img
+                            src={user.photoURL}
+                            alt={user.displayName || user.email}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <FaUser className="text-white text-xs" />
+                        )}
                       </div>
                       <span>{user.displayName || user.email}</span>
                     </div>

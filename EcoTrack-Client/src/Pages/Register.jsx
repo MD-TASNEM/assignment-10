@@ -27,12 +27,11 @@ const Register = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    photoURL: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    photoURL: "",
   });
 
   const [errors, setErrors] = useState({});

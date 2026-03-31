@@ -46,7 +46,7 @@ export const userChallengesAPI = {
 
 // Tips API
 export const tipsAPI = {
-  getAll: () => api.get("/tips"),
+  getAll: (params) => api.get("/tips", { params }),
   getRecent: () => api.get("/tips/recent"),
   create: (data) => api.post("/tips", data),
   upvote: (id) => api.patch(`/tips/${id}/upvote`),

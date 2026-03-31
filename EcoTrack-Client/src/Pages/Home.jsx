@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import { challengesAPI, tipsAPI, eventsAPI, statsAPI } from "../api/api";
 import Service from "../Components/Service";
@@ -96,7 +96,8 @@ const TipSkeletonCard = () => (
 );
 
 const Home = () => {
-  const { user } = useContext(AuthContext);
+  const context = useContext(AuthContext);
+  const user = context?.user;
   const navigate = useNavigate();
   const savedTipIdsKey = "ecotrack.savedTips";
   const [savedTipIds, setSavedTipIds] = useState(() => {
@@ -140,7 +141,7 @@ const Home = () => {
       const [challengesRes, tipsRes, eventsRes, statsRes] =
         await Promise.allSettled([
           challengesAPI.getAll({ limit: 6 }),
-          tipsAPI.getRecent(),
+          tipsAPI.getAll({ limit: 100 }),
           eventsAPI.getUpcoming(),
           statsAPI.getCommunity(),
         ]);
@@ -611,7 +612,7 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {loading ? (
               [1, 2, 3, 4].map((i) => <TipSkeletonCard key={i} />)
             ) : filteredTips.length === 0 ? (
@@ -627,7 +628,7 @@ const Home = () => {
                 </p>
               </div>
             ) : (
-              filteredTips.slice(0, 5).map((tip, idx) => {
+              filteredTips.slice(0, 6).map((tip, idx) => {
                 const authorName = getAuthorName(tip);
                 return (
                   <div
@@ -746,7 +747,7 @@ const Home = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {loading
               ? [1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)
-              : events.slice(0, 4).map((event, idx) => (
+              : events.slice(0, 3).map((event, idx) => (
                   <div
                     key={event._id}
                     className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
@@ -793,6 +794,29 @@ const Home = () => {
                   </div>
                 ))}
           </div>
+        </div>
+
+        {/* View All Events Button */}
+        <div className="text-center mt-8">
+          <Link
+            to="/upcoming-events"
+            className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            <span>View All Events</span>
+            <svg
+              className="w-5 h-5 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5-5m5 5v6m0 0l5 5m0 0l-5-5"
+              />
+            </svg>
+          </Link>
         </div>
       </section>
 

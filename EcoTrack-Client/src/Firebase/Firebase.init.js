@@ -1,70 +1,38 @@
-// import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-
-// const firebaseConfig = {
-//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-// };
-
-// export const isFirebaseConfigured = Object.values(firebaseConfig).every(
-//   (value) =>
-//     value && !String(value).startsWith("your_firebase_") && value !== "",
-// );
-
-// let app;
-// let auth;
-
-// try {
-//   if (isFirebaseConfigured) {
-//     app = initializeApp(firebaseConfig);
-//     auth = getAuth(app);
-//     console.log("✅ Firebase initialized successfully");
-//   } else {
-//     console.warn("⚠️ Firebase not configured - using mock authentication");
-//   }
-// } catch (error) {
-//   console.error("❌ Firebase initialization failed:", error.message);
-//   console.log("🔄 Falling back to mock authentication mode");
-// }
-
-// export const auth = auth || null;
-// export const app = app || null;
-
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
+// Import functions you need from SDKs you need
+// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyAH0PkQ5_7_43kb71ItxAS7XEomb_fdr78",
+  authDomain: "ecotrack-1837c.firebaseapp.com",
+  projectId: "ecotrack-1837c",
+  storageBucket: "ecotrack-1837c.firebasestorage.app",
+  messagingSenderId: "417652671860",
+  appId: "1:417652671860:web:76e5f41758ca67bdf09821",
 };
 
-export const isFirebaseConfigured = Object.values(firebaseConfig).every(
-  (value) =>
-    value && !String(value).startsWith("your_firebase_") && value !== "",
-);
+export const isFirebaseConfigured = true;
 
-// শুরুতেই আমরা লেট ভেরিয়েবলগুলোকে এক্সপোর্ট (export) করে দিচ্ছি
-export let app = null;
-export let auth = null;
+let app;
+let auth;
 
 try {
-  if (isFirebaseConfigured) {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    console.log("✅ Firebase initialized successfully");
-  } else {
-    console.warn("⚠️ Firebase not configured - using mock authentication");
-  }
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  console.log("✅ Firebase initialized successfully");
 } catch (error) {
   console.error("❌ Firebase initialization failed:", error.message);
-  console.log("🔄 Falling back to mock authentication mode");
+  throw error;
 }
+
+export { auth, app };
+
+// Export additional Firebase services you might need
+export const db = getFirestore(app);
+export const storage = getStorage(app);

@@ -134,7 +134,7 @@ const EcoTips = () => {
       setLoading(true);
 
       try {
-        const response = await tipsAPI.getAll();
+        const response = await tipsAPI.getAll({ limit: 100 });
         const liveTips = Array.isArray(response?.data) ? response.data : [];
 
         if (ignore) {
