@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import {
   FaArrowRight,
   FaCalendarAlt,
@@ -149,8 +149,8 @@ const Community = () => {
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
                 Meet people sharing practical eco habits, take on challenges
-                together, and celebrate progress with a community that keeps
-                you moving forward.
+                together, and celebrate progress with a community that keeps you
+                moving forward.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <button
@@ -207,8 +207,12 @@ const Community = () => {
               <div className="inline-flex rounded-2xl bg-emerald-50 p-3 text-emerald-600">
                 {item.icon}
               </div>
-              <h3 className="mt-5 text-xl font-bold text-slate-900">{item.title}</h3>
-              <p className="mt-3 leading-7 text-slate-600">{item.description}</p>
+              <h3 className="mt-5 text-xl font-bold text-slate-900">
+                {item.title}
+              </h3>
+              <p className="mt-3 leading-7 text-slate-600">
+                {item.description}
+              </p>
             </article>
           ))}
         </div>
@@ -232,7 +236,9 @@ const Community = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold">{item.title}</h3>
-                      <p className="mt-1 text-sm leading-7 text-slate-300">{item.text}</p>
+                      <p className="mt-1 text-sm leading-7 text-slate-300">
+                        {item.text}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -247,7 +253,9 @@ const Community = () => {
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h3 className="text-xl font-bold text-slate-900">{story.name}</h3>
+                      <h3 className="text-xl font-bold text-slate-900">
+                        {story.name}
+                      </h3>
                       <p className="text-sm text-emerald-700">{story.role}</p>
                     </div>
                     <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
@@ -255,7 +263,9 @@ const Community = () => {
                       {story.impact}
                     </div>
                   </div>
-                  <p className="mt-4 leading-8 text-slate-600">"{story.quote}"</p>
+                  <p className="mt-4 leading-8 text-slate-600">
+                    "{story.quote}"
+                  </p>
                 </article>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const ChallengesDetailsData = ({ data }) => {
   // Helper function for rating stars display
@@ -127,13 +127,15 @@ const ChallengesDetailsData = ({ data }) => {
 
         <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
           <Link
-            to={`/Challenges/${data.ChallengesId}`}            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
+            to={`/Challenges/${data.ChallengesId}`}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-center font-medium transition-colors duration-300"
           >
             Book Now
           </Link>
 
           <Link
-            to={`/Challenges/${data.ChallengesId}`}            className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
+            to={`/Challenges/${data.ChallengesId}`}
+            className="flex-1 border-2 border-gray-200 hover:border-emerald-600 text-gray-700 hover:text-emerald-600 py-3 rounded-xl text-center font-medium transition-all duration-300"
           >
             View Details
           </Link>

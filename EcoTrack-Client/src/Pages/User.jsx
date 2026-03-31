@@ -1,6 +1,6 @@
 // pages/Login.jsx
 import React, { useState, useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import {
   FaLeaf,

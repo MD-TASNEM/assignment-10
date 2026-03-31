@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaArrowLeft,
   FaCalendarAlt,
@@ -59,15 +59,22 @@ const AddChallenge = () => {
     const nextErrors = {};
 
     if (!form.title.trim()) nextErrors.title = "Title is required.";
-    if (!form.description.trim()) nextErrors.description = "Description is required.";
+    if (!form.description.trim())
+      nextErrors.description = "Description is required.";
     if (!form.target.trim()) nextErrors.target = "Target is required.";
-    if (!form.impactMetric.trim()) nextErrors.impactMetric = "Impact metric is required.";
+    if (!form.impactMetric.trim())
+      nextErrors.impactMetric = "Impact metric is required.";
     if (!form.startDate) nextErrors.startDate = "Start date is required.";
     if (!form.endDate) nextErrors.endDate = "End date is required.";
     if (!form.imageUrl.trim()) nextErrors.imageUrl = "Image URL is required.";
-    if (!form.duration || form.duration < 1) nextErrors.duration = "Duration must be at least 1 day.";
+    if (!form.duration || form.duration < 1)
+      nextErrors.duration = "Duration must be at least 1 day.";
 
-    if (form.startDate && form.endDate && new Date(form.startDate) > new Date(form.endDate)) {
+    if (
+      form.startDate &&
+      form.endDate &&
+      new Date(form.startDate) > new Date(form.endDate)
+    ) {
       nextErrors.endDate = "End date must be after the start date.";
     }
 
@@ -152,7 +159,9 @@ const AddChallenge = () => {
                 className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Plastic-Free July"
               />
-              {errors.title && <p className="mt-2 text-sm text-red-600">{errors.title}</p>}
+              {errors.title && (
+                <p className="mt-2 text-sm text-red-600">{errors.title}</p>
+              )}
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
@@ -185,7 +194,9 @@ const AddChallenge = () => {
                   onChange={handleChange}
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
-                {errors.duration && <p className="mt-2 text-sm text-red-600">{errors.duration}</p>}
+                {errors.duration && (
+                  <p className="mt-2 text-sm text-red-600">{errors.duration}</p>
+                )}
               </div>
             </div>
 
@@ -201,7 +212,11 @@ const AddChallenge = () => {
                 className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Explain the challenge and the sustainable habits users should follow."
               />
-              {errors.description && <p className="mt-2 text-sm text-red-600">{errors.description}</p>}
+              {errors.description && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.description}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
@@ -216,7 +231,9 @@ const AddChallenge = () => {
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                   placeholder="Reduce plastic waste by 90%"
                 />
-                {errors.target && <p className="mt-2 text-sm text-red-600">{errors.target}</p>}
+                {errors.target && (
+                  <p className="mt-2 text-sm text-red-600">{errors.target}</p>
+                )}
               </div>
               <div>
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
@@ -229,7 +246,11 @@ const AddChallenge = () => {
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                   placeholder="kg plastic saved"
                 />
-                {errors.impactMetric && <p className="mt-2 text-sm text-red-600">{errors.impactMetric}</p>}
+                {errors.impactMetric && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.impactMetric}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -245,7 +266,11 @@ const AddChallenge = () => {
                   onChange={handleChange}
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
-                {errors.startDate && <p className="mt-2 text-sm text-red-600">{errors.startDate}</p>}
+                {errors.startDate && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.startDate}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
@@ -258,7 +283,9 @@ const AddChallenge = () => {
                   onChange={handleChange}
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
-                {errors.endDate && <p className="mt-2 text-sm text-red-600">{errors.endDate}</p>}
+                {errors.endDate && (
+                  <p className="mt-2 text-sm text-red-600">{errors.endDate}</p>
+                )}
               </div>
             </div>
 
@@ -273,7 +300,9 @@ const AddChallenge = () => {
                 className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="https://images.unsplash.com/..."
               />
-              {errors.imageUrl && <p className="mt-2 text-sm text-red-600">{errors.imageUrl}</p>}
+              {errors.imageUrl && (
+                <p className="mt-2 text-sm text-red-600">{errors.imageUrl}</p>
+              )}
             </div>
 
             <button
@@ -288,7 +317,9 @@ const AddChallenge = () => {
 
           <aside className="space-y-6">
             <div className="rounded-3xl bg-slate-900 p-6 text-white shadow-xl">
-              <h2 className="text-2xl font-bold">Tips for a strong challenge</h2>
+              <h2 className="text-2xl font-bold">
+                Tips for a strong challenge
+              </h2>
               <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
                 <li className="flex gap-3">
                   <FaUsers className="mt-1 text-emerald-400" />
@@ -314,7 +345,9 @@ const AddChallenge = () => {
             </div>
 
             <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h3 className="text-xl font-bold text-slate-900">Preview requirements</h3>
+              <h3 className="text-xl font-bold text-slate-900">
+                Preview requirements
+              </h3>
               <p className="mt-3 text-sm leading-7 text-slate-600">
                 Your challenge will appear in the challenges grid and, if the
                 backend is unavailable, it will still be saved locally so you
@@ -322,8 +355,8 @@ const AddChallenge = () => {
               </p>
               <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">
                 <FaLeaf className="mb-2 text-emerald-600" />
-                Created challenges should use a measurable impact target like
-                kg CO₂, liters of water, or kg of plastic saved.
+                Created challenges should use a measurable impact target like kg
+                CO₂, liters of water, or kg of plastic saved.
               </div>
             </div>
           </aside>

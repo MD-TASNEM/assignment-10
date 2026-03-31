@@ -32,8 +32,6 @@ const UpcomingEvents = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const { user } = useContext(AuthContext);
-
     let ignore = false;
 
     const loadEvents = async () => {

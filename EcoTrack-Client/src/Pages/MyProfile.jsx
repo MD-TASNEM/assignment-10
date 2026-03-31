@@ -1,7 +1,7 @@
 // pages/MyProfile.jsx
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import { useNavigate, Navigate } from "react-router";
+import { useNavigate, Navigate } from "react-router-dom";
 import {
   FaLeaf,
   FaEnvelope,
@@ -382,7 +382,7 @@ const MyProfile = () => {
               </h3>
               <div className="space-y-3">
                 <button
-                    onClick={() => navigate("/my-activities")}
+                  onClick={() => navigate("/my-activities")}
                   className="w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-green-50 transition-all duration-200 group"
                 >
                   <div className="bg-green-100 p-2 rounded-lg group-hover:bg-green-200 transition-colors">

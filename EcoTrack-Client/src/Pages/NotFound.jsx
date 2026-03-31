@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { FaArrowLeft, FaHome, FaLeaf } from "react-icons/fa";
 
 const NotFound = () => {
@@ -12,9 +12,7 @@ const NotFound = () => {
         <p className="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-300">
           404
         </p>
-        <h1 className="mt-3 text-3xl font-black sm:text-4xl">
-          Page not found
-        </h1>
+        <h1 className="mt-3 text-3xl font-black sm:text-4xl">Page not found</h1>
         <p className="mt-4 max-w-xl text-slate-300">
           The page you&apos;re looking for does not exist or was moved to a
           different route.

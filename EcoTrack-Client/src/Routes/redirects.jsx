@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router";
+import { Navigate, useParams } from "react-router-dom";
 
 /** One-off redirects for legacy / bookmarked URLs (kebab-case is canonical). */
 export function NavigateReplace({ to }) {

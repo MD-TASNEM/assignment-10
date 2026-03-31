@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../Pages/Home";
 import Challenges from "../Pages/Challenges";
 import ChallengeDetail from "../Pages/ChallengeDetail";
+import JoinChallenge from "../Pages/JoinChallenge";
+import AddChallenge from "../Pages/AddChallenge";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import MyActivities from "../Pages/MyActivities";
@@ -40,6 +42,24 @@ export const router = createBrowserRouter([
       <PublicLayout>
         <ChallengeDetail />
       </PublicLayout>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "challenges/join/:id",
+    element: (
+      <ProtectedLayout>
+        <JoinChallenge />
+      </ProtectedLayout>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "challenges/add",
+    element: (
+      <ProtectedLayout>
+        <AddChallenge />
+      </ProtectedLayout>
     ),
     errorElement: <ErrorBoundary />,
   },

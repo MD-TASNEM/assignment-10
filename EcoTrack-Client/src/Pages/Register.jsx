@@ -1,6 +1,6 @@
 // pages/Register.jsx
 import React, { useState, useContext } from "react";
-import { Link, useNavigate, useLocation } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import {
   FaLeaf,

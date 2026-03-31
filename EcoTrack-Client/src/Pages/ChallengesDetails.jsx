@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   FaArrowLeft,
@@ -43,12 +43,12 @@ const statusTone = {
   Completed: "bg-slate-200 text-slate-700 ring-slate-300",
 };
 
-const detailCard = (
+const detailCard = (title, value, icon, tone = "bg-white") => ({
   title,
   value,
   icon,
-  tone = "bg-white",
-) => ({ title, value, icon, tone });
+  tone,
+});
 
 const ChallengesDetails = () => {
   const params = useParams();
@@ -161,7 +161,11 @@ const ChallengesDetails = () => {
       challenge.impactMetric || "kg CO2 saved",
       <FaChartLine />,
     ),
-    detailCard("Start Date", formatDate(challenge.startDate), <FaCalendarAlt />),
+    detailCard(
+      "Start Date",
+      formatDate(challenge.startDate),
+      <FaCalendarAlt />,
+    ),
     detailCard("End Date", formatDate(challenge.endDate), <FaCalendarAlt />),
     detailCard(
       "Created By",
@@ -191,7 +195,8 @@ const ChallengesDetails = () => {
     <div className="space-y-8">
       {usingFallbackData && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Live challenge data is unavailable right now, so a sample challenge is shown below.
+          Live challenge data is unavailable right now, so a sample challenge is
+          shown below.
         </div>
       )}
       <section className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-2xl">
@@ -300,7 +305,9 @@ const ChallengesDetails = () => {
                   <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                     {card.icon}
                   </div>
-                  <p className="text-sm font-medium text-slate-500">{card.title}</p>
+                  <p className="text-sm font-medium text-slate-500">
+                    {card.title}
+                  </p>
                   <p className="mt-1 text-lg font-bold text-slate-900">
                     {card.value}
                   </p>

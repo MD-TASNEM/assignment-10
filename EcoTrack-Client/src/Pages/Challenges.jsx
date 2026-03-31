@@ -1,8 +1,34 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { challengesAPI } from "../api/api";
 import toast from "react-hot-toast";
 import { getChallengeId, hasChallengeId } from "../utils/challengeIdentity";
+
+// Category to emoji mapping for placeholders
+const categoryEmojiMap = {
+  "Waste Reduction": "♻️",
+  "Energy Conservation": "⚡",
+  "Water Conservation": "💧",
+  "Sustainable Transport": "🚴",
+  "Green Living": "🌱",
+  "Food & Diet": "🍎",
+};
+
+// Category to color mapping for placeholder backgrounds
+const categoryColorMap = {
+  "Waste Reduction": "EF4444",
+  "Energy Conservation": "FBBF24",
+  "Water Conservation": "3B82F6",
+  "Sustainable Transport": "22C55E",
+  "Green Living": "10B981",
+  "Food & Diet": "F97316",
+};
+
+const getPlaceholderImage = (category) => {
+  const emoji = categoryEmojiMap[category] || "🌍";
+  const bgColor = categoryColorMap[category] || "10B981";
+  return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250'%3E%3Crect fill='%23${bgColor}' width='400' height='250'/%3E%3Ctext x='50%25' y='50%25' font-size='80' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E${emoji}%3C/text%3E%3C/svg%3E`;
+};
 
 const Challenges = () => {
   const [challenges, setChallenges] = useState([]);
@@ -224,10 +250,13 @@ const Challenges = () => {
                 <img
                   src={
                     challenge.imageUrl ||
-                    "https://via.placeholder.com/400x250?text=EcoTrack"
+                    getPlaceholderImage(challenge.category)
                   }
                   alt={challenge.title}
-                  className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500 bg-gray-100"
+                  onError={(e) => {
+                    e.target.src = getPlaceholderImage(challenge.category);
+                  }}
                 />
                 <div
                   className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(challenge.status)}`}

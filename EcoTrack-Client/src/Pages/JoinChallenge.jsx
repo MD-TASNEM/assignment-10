@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   FaArrowLeft,
   FaCheckCircle,
@@ -13,7 +13,10 @@ import {
 import toast from "react-hot-toast";
 import { challengesAPI, userChallengesAPI } from "../api/api";
 import { AuthContext } from "../Context/AuthContext";
-import { getFallbackChallengeById, saveStoredCustomChallenge } from "../data/mockEcoContent";
+import {
+  getFallbackChallengeById,
+  saveStoredCustomChallenge,
+} from "../data/mockEcoContent";
 import {
   getChallengeId,
   isLocalChallenge,
@@ -137,7 +140,10 @@ const JoinChallenge = () => {
     try {
       await challengesAPI.join(challengeRouteId);
       try {
-        await userChallengesAPI.updateProgress(challengeRouteId, Number(progress));
+        await userChallengesAPI.updateProgress(
+          challengeRouteId,
+          Number(progress),
+        );
       } catch {
         // The server may only expose join tracking or may be protected in this workspace.
       }
@@ -180,7 +186,9 @@ const JoinChallenge = () => {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-md">
             <FaLeaf className="text-2xl text-emerald-600" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900">Challenge not found</h1>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Challenge not found
+          </h1>
           <p className="text-slate-600">
             The challenge you want to join could not be loaded.
           </p>
@@ -202,7 +210,10 @@ const JoinChallenge = () => {
         <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
           <div className="relative min-h-[300px]">
             <img
-              src={challenge.imageUrl || "https://via.placeholder.com/1600x900?text=EcoTrack"}
+              src={
+                challenge.imageUrl ||
+                "https://via.placeholder.com/1600x900?text=EcoTrack"
+              }
               alt={challenge.title}
               className="h-full w-full object-cover"
             />
@@ -212,8 +223,12 @@ const JoinChallenge = () => {
                 <FaLeaf />
                 Join challenge
               </span>
-              <h1 className="mt-4 text-4xl font-black sm:text-5xl">{challenge.title}</h1>
-              <p className="mt-4 max-w-2xl text-slate-200">{challenge.description}</p>
+              <h1 className="mt-4 text-4xl font-black sm:text-5xl">
+                {challenge.title}
+              </h1>
+              <p className="mt-4 max-w-2xl text-slate-200">
+                {challenge.description}
+              </p>
             </div>
           </div>
 
@@ -221,7 +236,9 @@ const JoinChallenge = () => {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl bg-emerald-50 p-4">
                 <p className="text-sm text-emerald-700">Category</p>
-                <p className="mt-1 font-bold text-slate-900">{challenge.category}</p>
+                <p className="mt-1 font-bold text-slate-900">
+                  {challenge.category}
+                </p>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Participants</p>
@@ -231,7 +248,9 @@ const JoinChallenge = () => {
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Duration</p>
-                <p className="mt-1 font-bold text-slate-900">{challenge.duration || 0} days</p>
+                <p className="mt-1 font-bold text-slate-900">
+                  {challenge.duration || 0} days
+                </p>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Impact metric</p>
@@ -289,7 +308,11 @@ const JoinChallenge = () => {
               disabled={submitting}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {submitting ? "Saving..." : savedRecord ? "Update Progress" : "Join Challenge"}
+              {submitting
+                ? "Saving..."
+                : savedRecord
+                  ? "Update Progress"
+                  : "Join Challenge"}
               <FaPaperPlane />
             </button>
           </div>
@@ -299,7 +322,9 @@ const JoinChallenge = () => {
       <section className="grid gap-6 md:grid-cols-3">
         <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <FaChartLine className="text-2xl text-emerald-600" />
-          <h2 className="mt-4 text-xl font-bold text-slate-900">Track progress</h2>
+          <h2 className="mt-4 text-xl font-bold text-slate-900">
+            Track progress
+          </h2>
           <p className="mt-2 text-sm leading-7 text-slate-600">
             Update your progress percentage and keep a simple note on what you
             completed this week.
@@ -307,7 +332,9 @@ const JoinChallenge = () => {
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <FaUsers className="text-2xl text-emerald-600" />
-          <h2 className="mt-4 text-xl font-bold text-slate-900">Community support</h2>
+          <h2 className="mt-4 text-xl font-bold text-slate-900">
+            Community support
+          </h2>
           <p className="mt-2 text-sm leading-7 text-slate-600">
             Your join record is saved locally if the protected API is not
             available, so you can still keep moving forward.
@@ -315,7 +342,9 @@ const JoinChallenge = () => {
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <FaCalendarAlt className="text-2xl text-emerald-600" />
-          <h2 className="mt-4 text-xl font-bold text-slate-900">Return anytime</h2>
+          <h2 className="mt-4 text-xl font-bold text-slate-900">
+            Return anytime
+          </h2>
           <p className="mt-2 text-sm leading-7 text-slate-600">
             Come back later to update your progress and keep building your
             sustainability streak.

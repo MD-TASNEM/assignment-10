@@ -1,7 +1,12 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "./simple-app";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./Routes/Routes";
+import ContextProvider from "./Context/ContextProvider";
+import "./index.css";
 
 createRoot(document.getElementById("root")).render(
-  React.createElement("div", null, "EcoTrack - Testing React Hooks"),
+  <ContextProvider>
+    <RouterProvider router={router} />
+  </ContextProvider>,
 );

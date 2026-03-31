@@ -1,11 +1,28 @@
 // pages/Leaderboard.jsx
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import {
-  FaTrophy, FaMedal, FaStar, FaLeaf, FaRecycle, FaWater,
-  FaBolt, FaCalendarAlt, FaChartLine, FaFilter, FaSearch,
-  FaSpinner, FaUser, FaCrown, FaAward, FaArrowUp, FaArrowDown,
-  FaTree, FaHeart, FaGlobe, FaUsers
+  FaTrophy,
+  FaMedal,
+  FaStar,
+  FaLeaf,
+  FaRecycle,
+  FaWater,
+  FaBolt,
+  FaCalendarAlt,
+  FaChartLine,
+  FaFilter,
+  FaSearch,
+  FaSpinner,
+  FaUser,
+  FaCrown,
+  FaAward,
+  FaArrowUp,
+  FaArrowDown,
+  FaTree,
+  FaHeart,
+  FaGlobe,
+  FaUsers,
 } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -23,7 +40,7 @@ const leaderboardData = [
     categories: { waste: 450, energy: 380, water: 220, transport: 200 },
     streak: 45,
     weeklyImpact: 85,
-    achievements: ["Eco Warrior", "Plastic Free Hero", "Energy Saver"]
+    achievements: ["Eco Warrior", "Plastic Free Hero", "Energy Saver"],
   },
   {
     rank: 2,
@@ -37,7 +54,7 @@ const leaderboardData = [
     categories: { waste: 380, energy: 420, water: 180, transport: 140 },
     streak: 38,
     weeklyImpact: 72,
-    achievements: ["Carbon Champion", "Water Guardian", "Green Leader"]
+    achievements: ["Carbon Champion", "Water Guardian", "Green Leader"],
   },
   {
     rank: 3,
@@ -51,7 +68,7 @@ const leaderboardData = [
     categories: { waste: 320, energy: 280, water: 240, transport: 140 },
     streak: 32,
     weeklyImpact: 68,
-    achievements: ["Water Guardian", "Eco Warrior", "Plastic Free"]
+    achievements: ["Water Guardian", "Eco Warrior", "Plastic Free"],
   },
   {
     rank: 4,
@@ -65,7 +82,7 @@ const leaderboardData = [
     categories: { waste: 290, energy: 240, water: 190, transport: 170 },
     streak: 28,
     weeklyImpact: 62,
-    achievements: ["Sustainable Transport", "Energy Saver"]
+    achievements: ["Sustainable Transport", "Energy Saver"],
   },
   {
     rank: 5,
@@ -79,7 +96,7 @@ const leaderboardData = [
     categories: { waste: 260, energy: 210, water: 160, transport: 150 },
     streak: 25,
     weeklyImpact: 58,
-    achievements: ["Waste Warrior", "Green Living"]
+    achievements: ["Waste Warrior", "Green Living"],
   },
   {
     rank: 6,
@@ -93,7 +110,7 @@ const leaderboardData = [
     categories: { waste: 220, energy: 180, water: 140, transport: 130 },
     streak: 22,
     weeklyImpact: 52,
-    achievements: ["Eco Novice", "Recycle Hero"]
+    achievements: ["Eco Novice", "Recycle Hero"],
   },
   {
     rank: 7,
@@ -107,7 +124,7 @@ const leaderboardData = [
     categories: { waste: 190, energy: 160, water: 120, transport: 120 },
     streak: 19,
     weeklyImpact: 48,
-    achievements: ["Energy Saver"]
+    achievements: ["Energy Saver"],
   },
   {
     rank: 8,
@@ -121,7 +138,7 @@ const leaderboardData = [
     categories: { waste: 170, energy: 140, water: 110, transport: 100 },
     streak: 16,
     weeklyImpact: 44,
-    achievements: ["Green Beginner"]
+    achievements: ["Green Beginner"],
   },
   {
     rank: 9,
@@ -135,7 +152,7 @@ const leaderboardData = [
     categories: { waste: 150, energy: 120, water: 100, transport: 110 },
     streak: 14,
     weeklyImpact: 41,
-    achievements: ["Plastic Free Starter"]
+    achievements: ["Plastic Free Starter"],
   },
   {
     rank: 10,
@@ -149,7 +166,7 @@ const leaderboardData = [
     categories: { waste: 140, energy: 110, water: 90, transport: 110 },
     streak: 12,
     weeklyImpact: 38,
-    achievements: ["Eco Enthusiast"]
+    achievements: ["Eco Enthusiast"],
   },
   {
     rank: 11,
@@ -163,7 +180,7 @@ const leaderboardData = [
     categories: { waste: 130, energy: 100, water: 80, transport: 110 },
     streak: 10,
     weeklyImpact: 35,
-    achievements: ["Getting Started"]
+    achievements: ["Getting Started"],
   },
   {
     rank: 12,
@@ -177,7 +194,7 @@ const leaderboardData = [
     categories: { waste: 120, energy: 90, water: 70, transport: 110 },
     streak: 8,
     weeklyImpact: 32,
-    achievements: ["New Member"]
+    achievements: ["New Member"],
   },
   {
     rank: 13,
@@ -191,7 +208,7 @@ const leaderboardData = [
     categories: { waste: 110, energy: 80, water: 60, transport: 110 },
     streak: 6,
     weeklyImpact: 29,
-    achievements: ["Just Started"]
+    achievements: ["Just Started"],
   },
   {
     rank: 14,
@@ -205,7 +222,7 @@ const leaderboardData = [
     categories: { waste: 100, energy: 70, water: 50, transport: 110 },
     streak: 4,
     weeklyImpact: 26,
-    achievements: []
+    achievements: [],
   },
   {
     rank: 15,
@@ -219,8 +236,8 @@ const leaderboardData = [
     categories: { waste: 90, energy: 60, water: 40, transport: 110 },
     streak: 2,
     weeklyImpact: 23,
-    achievements: ["First Challenge"]
-  }
+    achievements: ["First Challenge"],
+  },
 ];
 
 // Toast Notification Component
@@ -232,11 +249,18 @@ const Toast = ({ message, type, onClose }) => {
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
-  const icon = type === 'success' ? '✓' : type === 'error' ? '⚠️' : 'ℹ️';
+  const bgColor =
+    type === "success"
+      ? "bg-green-500"
+      : type === "error"
+        ? "bg-red-500"
+        : "bg-blue-500";
+  const icon = type === "success" ? "✓" : type === "error" ? "⚠️" : "ℹ️";
 
   return (
-    <div className={`fixed top-4 right-4 z-50 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in flex items-center space-x-2`}>
+    <div
+      className={`fixed top-4 right-4 z-50 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in flex items-center space-x-2`}
+    >
       <span>{icon}</span>
       <span>{message}</span>
     </div>
@@ -254,7 +278,7 @@ const Leaderboard = () => {
   const [toast, setToast] = useState(null);
   const [showUserRank, setShowUserRank] = useState(true);
 
-  const showToast = (message, type = 'success') => {
+  const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
 
@@ -267,8 +291,13 @@ const Leaderboard = () => {
   }, []);
 
   // Find current user in leaderboard (if logged in)
-  const currentUserRank = user ? leaderboardData.findIndex(u => u.name.toLowerCase() === (user.displayName || "").toLowerCase()) : -1;
-  const userStats = currentUserRank !== -1 ? leaderboardData[currentUserRank] : null;
+  const currentUserRank = user
+    ? leaderboardData.findIndex(
+        (u) => u.name.toLowerCase() === (user.displayName || "").toLowerCase(),
+      )
+    : -1;
+  const userStats =
+    currentUserRank !== -1 ? leaderboardData[currentUserRank] : null;
 
   // Filter and sort leaderboard data
   const getFilteredLeaderboard = () => {
@@ -276,9 +305,10 @@ const Leaderboard = () => {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(u =>
-        u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.country.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (u) =>
+          u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          u.country.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -310,10 +340,18 @@ const Leaderboard = () => {
   const globalStats = {
     totalImpact: leaderboardData.reduce((sum, u) => sum + u.impact, 0),
     totalBadges: leaderboardData.reduce((sum, u) => sum + u.badges, 0),
-    totalChallenges: leaderboardData.reduce((sum, u) => sum + u.challengesCompleted, 0),
-    averageWeeklyImpact: Math.floor(leaderboardData.reduce((sum, u) => sum + u.weeklyImpact, 0) / leaderboardData.length),
-    topCountry: [...new Map(leaderboardData.map(u => [u.country, u])).values()]
-      .sort((a, b) => b.impact - a.impact)[0]?.country || "USA"
+    totalChallenges: leaderboardData.reduce(
+      (sum, u) => sum + u.challengesCompleted,
+      0,
+    ),
+    averageWeeklyImpact: Math.floor(
+      leaderboardData.reduce((sum, u) => sum + u.weeklyImpact, 0) /
+        leaderboardData.length,
+    ),
+    topCountry:
+      [...new Map(leaderboardData.map((u) => [u.country, u])).values()].sort(
+        (a, b) => b.impact - a.impact,
+      )[0]?.country || "USA",
   };
 
   const getRankIcon = (rank) => {
@@ -368,7 +406,8 @@ const Leaderboard = () => {
             🏆 Community Leaderboard
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Celebrate our top eco-warriors making the biggest impact on our planet!
+            Celebrate our top eco-warriors making the biggest impact on our
+            planet!
           </p>
         </div>
 
@@ -376,23 +415,33 @@ const Leaderboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-2">🌍</div>
-            <div className="text-2xl font-bold text-green-600">{globalStats.totalImpact.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {globalStats.totalImpact.toLocaleString()}
+            </div>
             <div className="text-xs text-gray-500">Total Impact (kg CO₂)</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-2">🏅</div>
-            <div className="text-2xl font-bold text-green-600">{globalStats.totalBadges}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {globalStats.totalBadges}
+            </div>
             <div className="text-xs text-gray-500">Total Badges Earned</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-2">📊</div>
-            <div className="text-2xl font-bold text-green-600">{globalStats.totalChallenges}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {globalStats.totalChallenges}
+            </div>
             <div className="text-xs text-gray-500">Challenges Completed</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-2">🏆</div>
-            <div className="text-2xl font-bold text-green-600">{globalStats.topCountry}</div>
-            <div className="text-xs text-gray-500">Top Contributing Country</div>
+            <div className="text-2xl font-bold text-green-600">
+              {globalStats.topCountry}
+            </div>
+            <div className="text-xs text-gray-500">
+              Top Contributing Country
+            </div>
           </div>
         </div>
 
@@ -401,12 +450,16 @@ const Leaderboard = () => {
           <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-6 mb-8 text-white shadow-lg">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                <div className={`w-16 h-16 rounded-full ${getRankBadgeColor(userStats.rank)} flex items-center justify-center text-2xl font-bold`}>
+                <div
+                  className={`w-16 h-16 rounded-full ${getRankBadgeColor(userStats.rank)} flex items-center justify-center text-2xl font-bold`}
+                >
                   #{userStats.rank}
                 </div>
                 <div>
                   <p className="text-sm opacity-90">Your Current Rank</p>
-                  <p className="text-2xl font-bold">{user.displayName || userStats.name}</p>
+                  <p className="text-2xl font-bold">
+                    {user.displayName || userStats.name}
+                  </p>
                   <p className="text-sm">{userStats.impact} kg CO₂ saved</p>
                 </div>
               </div>
@@ -416,7 +469,9 @@ const Leaderboard = () => {
                   <p className="text-xs opacity-90">Badges</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{userStats.challengesCompleted}</p>
+                  <p className="text-2xl font-bold">
+                    {userStats.challengesCompleted}
+                  </p>
                   <p className="text-xs opacity-90">Challenges</p>
                 </div>
                 <div>
@@ -496,33 +551,43 @@ const Leaderboard = () => {
               {filteredData.map((user) => (
                 <div
                   key={user.rank}
-                  className={`px-6 py-4 hover:bg-gray-50 transition-colors ${user.name === userStats?.name ? 'bg-green-50 border-l-4 border-green-500' : ''}`}
+                  className={`px-6 py-4 hover:bg-gray-50 transition-colors ${user.name === userStats?.name ? "bg-green-50 border-l-4 border-green-500" : ""}`}
                 >
                   <div className="grid grid-cols-12 gap-4 items-center">
                     {/* Rank */}
                     <div className="col-span-1 flex items-center space-x-2">
                       {getRankIcon(user.rank)}
-                      <span className="font-bold text-gray-900">#{user.rank}</span>
+                      <span className="font-bold text-gray-900">
+                        #{user.rank}
+                      </span>
                     </div>
 
                     {/* Contributor Info */}
                     <div className="col-span-4 flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
                         {user.avatar ? (
-                          <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-full h-full rounded-full object-cover"
+                          />
                         ) : (
                           getInitials(user.name)
                         )}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{user.name}</p>
+                        <p className="font-semibold text-gray-900">
+                          {user.name}
+                        </p>
                         <p className="text-xs text-gray-500">{user.country}</p>
                       </div>
                     </div>
 
                     {/* Impact */}
                     <div className="col-span-2 text-center">
-                      <p className="font-bold text-green-600">{user.impact} kg</p>
+                      <p className="font-bold text-green-600">
+                        {user.impact} kg
+                      </p>
                       <p className="text-xs text-gray-500">CO₂ saved</p>
                     </div>
 
@@ -537,13 +602,17 @@ const Leaderboard = () => {
 
                     {/* Challenges */}
                     <div className="col-span-2 text-center">
-                      <p className="font-semibold">{user.challengesCompleted}</p>
+                      <p className="font-semibold">
+                        {user.challengesCompleted}
+                      </p>
                       <p className="text-xs text-gray-500">completed</p>
                     </div>
 
                     {/* Streak */}
                     <div className="col-span-1 text-center">
-                      <p className="font-semibold text-orange-600">🔥 {user.streak}</p>
+                      <p className="font-semibold text-orange-600">
+                        🔥 {user.streak}
+                      </p>
                       <p className="text-xs text-gray-500">days</p>
                     </div>
                   </div>
@@ -562,29 +631,46 @@ const Leaderboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
               <div className="text-3xl mb-3">👑</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Most Impactful</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Most Impactful
+              </h3>
               <p className="text-gray-600">{leaderboardData[0].name}</p>
-              <p className="text-sm text-green-600 mt-1">{leaderboardData[0].impact} kg CO₂ saved</p>
+              <p className="text-sm text-green-600 mt-1">
+                {leaderboardData[0].impact} kg CO₂ saved
+              </p>
             </div>
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
               <div className="text-3xl mb-3">🏅</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Most Badges</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Most Badges
+              </h3>
               <p className="text-gray-600">{mostBadgesUser.name}</p>
-              <p className="text-sm text-green-600 mt-1">{mostBadgesUser.badges} badges earned</p>
+              <p className="text-sm text-green-600 mt-1">
+                {mostBadgesUser.badges} badges earned
+              </p>
             </div>
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
               <div className="text-3xl mb-3">🔥</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Longest Streak</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Longest Streak
+              </h3>
               <p className="text-gray-600">{longestStreakUser.name}</p>
-              <p className="text-sm text-green-600 mt-1">{longestStreakUser.streak} days active</p>
+              <p className="text-sm text-green-600 mt-1">
+                {longestStreakUser.streak} days active
+              </p>
             </div>
           </div>
         </div>
 
         {/* Call to Action */}
         <div className="mt-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center shadow-xl">
-          <h3 className="text-2xl font-bold mb-4">Want to See Your Name Here?</h3>
-          <p className="text-green-100 mb-6">Join challenges, reduce your carbon footprint, and climb the leaderboard!</p>
+          <h3 className="text-2xl font-bold mb-4">
+            Want to See Your Name Here?
+          </h3>
+          <p className="text-green-100 mb-6">
+            Join challenges, reduce your carbon footprint, and climb the
+            leaderboard!
+          </p>
           <button
             type="button"
             onClick={() => navigate("/challenges")}

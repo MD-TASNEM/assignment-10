@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaChartLine, FaLeaf, FaSpinner } from "react-icons/fa";
 import { AuthContext } from "../Context/AuthContext";
@@ -26,7 +26,10 @@ const writeLocalRecords = (records) => {
   if (typeof window === "undefined") {
     return;
   }
-  window.localStorage.setItem(LOCAL_USER_CHALLENGES_KEY, JSON.stringify(records));
+  window.localStorage.setItem(
+    LOCAL_USER_CHALLENGES_KEY,
+    JSON.stringify(records),
+  );
 };
 
 const resolveChallengeTitle = (record) => {
@@ -65,7 +68,9 @@ const Impact = () => {
           userChallengesAPI.getAll(),
           userChallengesAPI.getStats(),
         ]);
-        const apiRecords = Array.isArray(recordsRes?.data) ? recordsRes.data : [];
+        const apiRecords = Array.isArray(recordsRes?.data)
+          ? recordsRes.data
+          : [];
         setRecords(apiRecords);
         setStats({
           totalChallenges: statsRes?.data?.totalChallenges || apiRecords.length,
@@ -76,12 +81,18 @@ const Impact = () => {
       } catch {
         const localRecords = readLocalRecords();
         setRecords(localRecords);
-        const completed = localRecords.filter((item) => item.status === "Finished").length;
-        const ongoing = localRecords.filter((item) => item.status === "Ongoing").length;
+        const completed = localRecords.filter(
+          (item) => item.status === "Finished",
+        ).length;
+        const ongoing = localRecords.filter(
+          (item) => item.status === "Ongoing",
+        ).length;
         const avg = localRecords.length
           ? Math.round(
-              localRecords.reduce((sum, item) => sum + Number(item.progress || 0), 0) /
-                localRecords.length,
+              localRecords.reduce(
+                (sum, item) => sum + Number(item.progress || 0),
+                0,
+              ) / localRecords.length,
             )
           : 0;
         setStats({
@@ -102,21 +113,27 @@ const Impact = () => {
     if (!records.length) {
       return "No tracked activities yet.";
     }
-    const finished = records.filter((item) => item.status === "Finished").length;
+    const finished = records.filter(
+      (item) => item.status === "Finished",
+    ).length;
     return `${finished} finished challenge(s), ${stats.averageProgress}% average progress`;
   }, [records, stats.averageProgress]);
 
   const handleProgressChange = (recordId, value) => {
     setRecords((current) =>
       current.map((record) =>
-        record._id === recordId ? { ...record, progress: Number(value) } : record,
+        record._id === recordId
+          ? { ...record, progress: Number(value) }
+          : record,
       ),
     );
   };
 
   const handleProgressSave = async (record) => {
     const challengeId =
-      typeof record.challengeId === "object" ? record.challengeId?._id : record.challengeId;
+      typeof record.challengeId === "object"
+        ? record.challengeId?._id
+        : record.challengeId;
     if (!challengeId) {
       toast.error("Challenge id is missing for this record.");
       return;
@@ -124,7 +141,11 @@ const Impact = () => {
 
     const nextProgress = Number(record.progress || 0);
     const nextStatus =
-      nextProgress >= 100 ? "Finished" : nextProgress > 0 ? "Ongoing" : "Not Started";
+      nextProgress >= 100
+        ? "Finished"
+        : nextProgress > 0
+          ? "Ongoing"
+          : "Not Started";
     setUpdatingId(record._id);
 
     try {
@@ -248,7 +269,9 @@ const Impact = () => {
                 <div className="mt-4 h-2 w-full rounded-full bg-slate-200">
                   <div
                     className="h-2 rounded-full bg-emerald-600"
-                    style={{ width: `${Math.max(0, Math.min(100, Number(record.progress || 0)))}%` }}
+                    style={{
+                      width: `${Math.max(0, Math.min(100, Number(record.progress || 0)))}%`,
+                    }}
                   />
                 </div>
 
