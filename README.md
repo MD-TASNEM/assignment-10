@@ -1,6 +1,6 @@
 # EcoTrack — Sustainable Living Community
 
-**Live site:** [https://ecotrack-app.netlify.app](https://ecotrack-app.netlify.app)
+**Live site:** [https://neon-zabaione-e08eb0.netlify.app/](https://neon-zabaione-e08eb0.netlify.app/)
 
 EcoTrack is a community platform where people discover sustainability challenges, share eco-tips, browse green events, and track personal environmental impact. This repository is a **monorepo-style workspace** with separate client and server folders (submit each to GitHub separately if your course requires two repos).
 

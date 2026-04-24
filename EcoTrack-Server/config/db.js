@@ -107,6 +107,114 @@ const getDb = () => {
 const getCollection = (collectionName) => {
   if (!database) {
     // Return a mock collection for development with sample data
+    const mockChallenges = [
+      {
+        _id: "69c8f712b6920d482930850f",
+        title: "Plastic-Free Week Challenge",
+        description:
+          "Go one week without using single-use plastics. Track your progress and share tips with the community!",
+        category: "Waste Reduction",
+        difficulty: "Medium",
+        duration: 7,
+        participants: 245,
+        maxParticipants: 500,
+        points: 50,
+        startDate: new Date("2026-04-01T00:00:00.000Z"),
+        endDate: new Date("2026-04-07T23:59:59.000Z"),
+        createdBy: "admin@ecotrack.com",
+        status: "Active",
+        createdAt: new Date("2026-03-15T10:00:00.000Z"),
+        updatedAt: new Date("2026-03-25T14:30:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=600",
+      },
+      {
+        _id: "69c8f712b6920d4829308510",
+        title: "30-Day Bike to Work Challenge",
+        description:
+          "Replace your daily commute with cycling for 30 days. Reduce carbon emissions and improve your health!",
+        category: "Transportation",
+        difficulty: "Hard",
+        duration: 30,
+        participants: 89,
+        maxParticipants: 200,
+        points: 100,
+        startDate: new Date("2026-04-10T00:00:00.000Z"),
+        endDate: new Date("2026-05-09T23:59:59.000Z"),
+        createdBy: "admin@ecotrack.com",
+        status: "Upcoming",
+        createdAt: new Date("2026-03-20T09:00:00.000Z"),
+        updatedAt: new Date("2026-03-28T16:45:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
+      },
+      {
+        _id: "69c8f712b6920d4829308511",
+        title: "Meatless Mondays",
+        description:
+          "Go vegetarian every Monday for a month. Discover delicious plant-based recipes and reduce your environmental impact.",
+        category: "Food",
+        difficulty: "Easy",
+        duration: 30,
+        participants: 412,
+        maxParticipants: 1000,
+        points: 25,
+        startDate: new Date("2026-03-01T00:00:00.000Z"),
+        endDate: new Date("2026-03-31T23:59:59.000Z"),
+        createdBy: "admin@ecotrack.com",
+        status: "Completed",
+        createdAt: new Date("2026-02-20T11:00:00.000Z"),
+        updatedAt: new Date("2026-04-01T10:00:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600",
+      },
+    ];
+
+    const mockTips = [
+      {
+        _id: "69c8f712b6920d4829308512",
+        title: "Use Reusable Shopping Bags",
+        content:
+          "Keep reusable bags in your car or by the door so you never forget them. A single reusable bag can eliminate hundreds of plastic bags per year.",
+        category: "Waste Reduction",
+        author: "Sarah Green",
+        authorName: "Sarah Green",
+        upvotes: 156,
+        createdAt: new Date("2026-04-20T08:00:00.000Z"),
+        updatedAt: new Date("2026-04-22T14:30:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
+      },
+      {
+        _id: "69c8f712b6920d4829308513",
+        title: "Start a Compost Bin",
+        content:
+          "Composting food scraps reduces methane emissions from landfills. You can create nutrient-rich soil for your garden while reducing waste.",
+        category: "Waste Reduction",
+        author: "Mike Earth",
+        authorName: "Mike Earth",
+        upvotes: 203,
+        createdAt: new Date("2026-04-18T10:30:00.000Z"),
+        updatedAt: new Date("2026-04-21T09:15:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1582719471383-4b6e5c4b7b1c?w=600",
+      },
+      {
+        _id: "69c8f712b6920d4829308514",
+        title: "Fix Leaky Faucets",
+        content:
+          "A dripping faucet can waste over 3,000 gallons of water per year. Fixing leaks is an easy way to conserve water and reduce your utility bill.",
+        category: "Water Conservation",
+        author: "Lisa Blue",
+        authorName: "Lisa Blue",
+        upvotes: 89,
+        createdAt: new Date("2026-04-15T14:20:00.000Z"),
+        updatedAt: new Date("2026-04-19T16:45:00.000Z"),
+        imageUrl:
+          "https://images.unsplash.com/photo-1548705085-7e5a5e5b8d8c?w=600",
+      },
+    ];
+
     const mockEvents = [
       {
         _id: "69c8f712b6920d482930850b",
@@ -173,6 +281,106 @@ const getCollection = (collectionName) => {
         updatedAt: new Date("2026-03-01T13:00:00.000Z"),
       },
     ];
+
+    if (collectionName === "challenges") {
+      return {
+        find: (query = {}) => {
+          let filteredChallenges = mockChallenges;
+
+          // Apply filters if present
+          if (query.category && query.category.$in) {
+            filteredChallenges = filteredChallenges.filter((challenge) =>
+              query.category.$in.includes(challenge.category),
+            );
+          }
+
+          if (query.startDate && query.startDate.$gte) {
+            filteredChallenges = filteredChallenges.filter(
+              (challenge) =>
+                new Date(challenge.startDate) >= query.startDate.$gte,
+            );
+          }
+
+          if (query.endDate && query.endDate.$lte) {
+            filteredChallenges = filteredChallenges.filter(
+              (challenge) => new Date(challenge.endDate) <= query.endDate.$lte,
+            );
+          }
+
+          if (query.participants) {
+            if (query.participants.$gte) {
+              filteredChallenges = filteredChallenges.filter(
+                (challenge) =>
+                  challenge.participants >= query.participants.$gte,
+              );
+            }
+            if (query.participants.$lte) {
+              filteredChallenges = filteredChallenges.filter(
+                (challenge) =>
+                  challenge.participants <= query.participants.$lte,
+              );
+            }
+          }
+
+          return {
+            toArray: async () => filteredChallenges,
+            sort: () => ({
+              limit: () => ({
+                toArray: async () => filteredChallenges,
+              }),
+            }),
+            limit: (limit) => ({
+              toArray: async () => filteredChallenges.slice(0, limit),
+            }),
+            project: () => ({
+              sort: () => ({
+                limit: () => ({
+                  toArray: async () => filteredChallenges,
+                }),
+              }),
+            }),
+          };
+        },
+        insertOne: async () => ({ insertedId: "mock-id" }),
+        insertMany: async () => ({ insertedCount: 0, insertedIds: [] }),
+        updateOne: async () => ({ modifiedCount: 1 }),
+        deleteOne: async () => ({ deletedCount: 1 }),
+        countDocuments: async () => mockChallenges.length,
+        createIndex: async () => {},
+      };
+    }
+
+    if (collectionName === "tips") {
+      return {
+        find: () => ({
+          toArray: async () => mockTips,
+          sort: () => ({
+            limit: () => ({
+              toArray: async () => mockTips,
+            }),
+            limit: (limit) => ({
+              toArray: async () => mockTips.slice(0, limit),
+            }),
+          }),
+          limit: (limit) => ({
+            toArray: async () => mockTips.slice(0, limit),
+          }),
+          project: () => ({
+            sort: () => ({
+              limit: () => ({
+                toArray: async () => mockTips,
+              }),
+            }),
+          }),
+        }),
+        insertOne: async () => ({ insertedId: "mock-id" }),
+        insertMany: async () => ({ insertedCount: 0, insertedIds: [] }),
+        updateOne: async () => ({ modifiedCount: 1 }),
+        deleteOne: async () => ({ deletedCount: 1 }),
+        countDocuments: async () => mockTips.length,
+        createIndex: async () => {},
+      };
+    }
 
     if (collectionName === "events") {
       return {

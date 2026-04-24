@@ -13,6 +13,7 @@ const defaultAllowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://neon-zabaione-e08eb0.netlify.app",
 ];
 const allowedOrigins = [
   ...new Set([
@@ -45,11 +46,11 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use("/challenges", require("./routes/challenges"));
-app.use("/user-challenges", require("./routes/userChallenges"));
-app.use("/tips", require("./routes/tips"));
-app.use("/events", require("./routes/events"));
-app.use("/stats", require("./routes/stats"));
+app.use("/api/challenges", require("./routes/challenges"));
+app.use("/api/user-challenges", require("./routes/userChallenges"));
+app.use("/api/tips", require("./routes/tips"));
+app.use("/api/events", require("./routes/events"));
+app.use("/api/stats", require("./routes/stats"));
 app.use("/auth", require("./routes/auth"));
 
 app.get("/health", (req, res) => {
@@ -66,11 +67,11 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     description: "Sustainable Living Community Platform",
     endpoints: {
-      challenges: "/challenges",
-      userChallenges: "/user-challenges",
-      tips: "/tips",
-      events: "/events",
-      stats: "/stats",
+      challenges: "/api/challenges",
+      userChallenges: "/api/user-challenges",
+      tips: "/api/tips",
+      events: "/api/events",
+      stats: "/api/stats",
     },
   });
 });
